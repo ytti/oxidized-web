@@ -47,7 +47,10 @@ module Oxidized
 
       get '/node/next/:node' do
         node, @json = route_parse :node
-        nodes.next node
+        begin
+          nodes.next node
+        rescue NodeNotFound
+        end
         redirect '/nodes' unless @json
         @data = 'ok'
         out
