@@ -25,12 +25,19 @@ module Oxidized
         out :nodes
       end
 
+      get '/nodes/stats.?:format?' do
+        @data = {}
+        nodes.each do |node|
+          @data[node.name] = node.stats.get
+        end
+        out :stats
+      end
+
       get '/reload.?:format?' do
         nodes.load
         @data = 'reloaded list of nodes'
         out
       end
-
 
       get '/node/fetch/:node' do
         node, @json = route_parse :node
