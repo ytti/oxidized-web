@@ -43,4 +43,5 @@ end
 desc 'Push to rubygems'
 task :push do
   system "gem push gems/#{file}"
+  system "git tag #{gemspec.version}"
 end

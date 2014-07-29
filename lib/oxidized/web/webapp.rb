@@ -40,8 +40,12 @@ module Oxidized
       end
 
       get '/node/fetch/:node' do
-        node, @json = route_parse :node
-        @data = nodes.fetch node, nil
+        begin
+          node, @json = route_parse :node
+          @data = nodes.fetch node, nil
+        rescue NodeNotFound => error
+          @data = error.message
+        end
         out :text
       end
 
