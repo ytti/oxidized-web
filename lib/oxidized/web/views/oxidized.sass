@@ -1,51 +1,45 @@
-$font-stack: Helvetica, sans-serif
-$base03:     #002b36
-$base02:     #073642
-$base01:     #586e75
-$base00:     #657b83
-$base0:      #839496
-$base1:      #93a1a1
-$base2:      #eee8d5
-$base3:      #fdf6e3
-$yellow:     #b58900
-$orange:     #cb4b16
-$red:        #dc322f
-$magenta:    #d33682
-$violet:     #6c71c4
-$blue:       #268bd2
-$cyan:       #2aa198
-$green:      #859900
+body table
+    font-size: 14px
 
-body
-  font: 100% $font-stack
-  color: $base03
-  background: $base3
+.ox-nav
+    background-color: #FFF
+    border-bottom: 1px solid #000
 
-a:link
-  color: $red
-  text-decoration: none
+.ox-nav .navbar-brand
+    color: #000
+    font-weight: 600
+    padding: 5px
 
-// a:visited
-// a:active
+.ox-nav .navbar-brand img
+    height: 40px
+    margin: 0 10px
 
-a:hover
-  color: $magenta
-  text-decoration: underline
+.table a, .table a:visited
+    color: #000
 
-.center
-  margin-left: auto
-  margin-right: auto
-  text-align: center
+.tbl-header
+    margin: 20px -20px
 
-th
-  color: $cyan
 
-tr.odd
-  background: $base2
+.tablesorter-headerAsc .tablesorter-header-inner
+    display: inline-block
+    border-bottom: 1px dotted #333
 
-tr.even
-  background: $base3
+.tablesorter-headerDesc .tablesorter-header-inner
+    display: inline-block
+    border-bottom: 1px solid #333
 
-tr:hover
-  background: $base01
-  color: $base3
+tr.ox-status-no_connection
+    background-color: #fcf8e3
+
+input#search
+    border-color: 0 !important
+    border: none !important
+    box-shadow: 0 !important
+    border-bottom: 1px dotted #000 !important
+    -webkit-box-shadow: none !important
+    border-radius: 0 !important
+    width: 150px
+
+input#search .focused
+    border-bottom: 1px dotted #FFA600 !important

@@ -1,6 +1,11 @@
 %html
   !=haml :head
   %body
+    %h4
+      %a{:href=>'/'} nodes
+      %span /
+      =@data[:name]
+
     -out='';PP.pp(@data,out)
     %pre
-      =out
+      = preserve "#{out}"
