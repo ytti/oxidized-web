@@ -7,6 +7,8 @@ module Oxidized
   module API
     class WebApp < Sinatra::Base
 
+      set :public_folder, Proc.new { File.join(root, "public") }
+
       get '/' do
         redirect '/nodes'
       end
@@ -96,7 +98,7 @@ module Oxidized
           content_type :text
           @data
         else
-          haml template
+          haml template, :layout => true
         end
       end
 

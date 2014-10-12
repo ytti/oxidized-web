@@ -1,0 +1,15 @@
+%html
+  !=haml :head
+  %body
+    %header{:class=>'navbar navbar-static-top ox-nav', :role=>'navigation'}
+      %div{:class=>'container'}
+        %div{:class=>'navbar-header'}
+          %div{:class=>'collapse navbar-collapse'}
+            %a{:class=>'navbar-brand', :href=>'/'}
+              %img{:src=>'/oxidizing_40px.png'} Oxidized
+            %form{:class=>'navbar-form pull-right col-xs-offset-4',:role=>'Search'}
+              %div{:class=>'form-group'}
+                %input{:class=>'form-control',:placeholder=>'Search',:id=>'search'}
+
+    %div{:class=>'container'}
+      =yield
