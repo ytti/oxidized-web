@@ -23,28 +23,28 @@
         -klass = trclass.rotate!.first
         %tr{:class=>"#{klass} ox-status-#{node[:status]}"}
           %td
-            %a(href="/node/show/#{node[:name]}") #{node[:name]}
+            %a{:href => url_for("/node/show/#{node[:name]}") } #{node[:name]}
           %td= node[:ip]
           %td= node[:group]
           %td= node[:status]
           %td= node[:time]
           %td
-            %a(href="/node/fetch/#{node[:full_name]}")
+            %a{:href => url_for("/node/fetch/#{node[:full_name]}") }
               %span{:class=>'glyphicon glyphicon-cloud-download'}
           %td
-            %a(href="/node/next/#{node[:full_name]}")
+            %a{:href => url_for("/node/next/#{node[:full_name]}") }
               %span{:class=>'glyphicon glyphicon-repeat'}
 
-%script{:src=>'/jquery.min.js'}
-%script{:src=>'/jquery.tablesorter.min.js'}
-%script{:src=>'/jquery.quicksearch.js'}
+%script{:src=>'scripts/jquery.min.js'}
+%script{:src=>'scripts/jquery.tablesorter.min.js'}
+%script{:src=>'scripts/jquery.quicksearch.js'}
 :javascript
   $(function() {
 
     $('table.tablesorter').tablesorter();
 
     $('#reload').click(function() {
-      $.get( "/reload", function( data ) {
+      $.get( "reload", function( data ) {
           location.reload();
       });
     });

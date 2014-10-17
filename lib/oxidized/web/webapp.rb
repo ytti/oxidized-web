@@ -1,16 +1,17 @@
 require 'sinatra/base'
 require 'sinatra/json'
+require 'sinatra/url_for'
 require 'haml'
 require 'sass'
 require 'pp'
 module Oxidized
   module API
     class WebApp < Sinatra::Base
-
+      helpers Sinatra::UrlForHelper
       set :public_folder, Proc.new { File.join(root, "public") }
-
+      
       get '/' do
-        redirect '/nodes'
+        redirect url_for('/nodes')
       end
 
       get '/nodes.?:format?' do
@@ -57,14 +58,13 @@ module Oxidized
         out :text
       end
 
-
       get '/node/next/:node' do
         node, @json = route_parse :node
         begin
           nodes.next node
         rescue NodeNotFound
         end
-        redirect '/nodes' unless @json
+        redirect url_for('/nodes') unless @json
         @data = 'ok'
         out
       end
@@ -74,7 +74,7 @@ module Oxidized
         node, @json = route_parse :node
         opt = JSON.load request.body.read
         nodes.next node, opt
-        redirect '/nodes' unless @json
+        redirect url_for('/nodes') unless @json
         @data = 'ok'
         out
       end
@@ -85,10 +85,10 @@ module Oxidized
         out :node
       end
 
-      get '/stylesheets/*.css' do
-        sass params[:splat].first.to_sym
+      get '/css/*.css' do
+        sass "sass/#{params[:splat].first}".to_sym
       end
-
+      
       private
 
       def out template=:default
