@@ -1,11 +1,21 @@
+%script{:src=>url_for('/scripts/jquery-2.1.1.min.js')}
+%script{:src=>url_for('/scripts/jquery.dataTables.min.js')}
+%script{:src=>url_for('/scripts/dataTables.bootstrap.js')}
+%link{:rel=>'stylesheet', :href=>url_for('/css/dataTables.bootstrap.css')}
+:javascript
+  $(function() {
+    $('#nodesTable').dataTable({
+      "dom": '<"H"flr>tip',
+      "lengthMenu": [[50, 250, 500, -1], [50, 250, 500, "All"]]
+    });
+  });
 %div{:class=>'row tbl-header'}
   %div{:class=>'col-xs-12 col-md-2'}
     %h4 nodes /
   %div{:class=>'col-xs-12 col-md-10'}
-    %a{:class=>"btn btn-default tbl-action col-xs-12 col-md-2 col-md-offset-10", :id=>"reload", :href=>"#"}
+    %a{:class=>"btn btn-default tbl-action col-xs-12 col-md-2 col-md-offset-10", :id=>"reload", :href=>url_for("/nodes")}
       %span{:class=>"glyphicon glyphicon-repeat"}
       Refresh
-
 %div{:class=>'row'}
   %table{:id=>'nodesTable', :class=>'table table-responsive tablesorter'}
     %thead
@@ -34,36 +44,3 @@
           %td
             %a{:href => url_for("/node/next/#{node[:full_name]}") }
               %span{:class=>'glyphicon glyphicon-repeat'}
-
-%script{:src=>'scripts/jquery.min.js'}
-%script{:src=>'scripts/jquery.tablesorter.min.js'}
-%script{:src=>'scripts/jquery.quicksearch.js'}
-:javascript
-  $(function() {
-
-    $('table.tablesorter').tablesorter();
-
-    $('#reload').click(function() {
-      $.get( "reload", function( data ) {
-          location.reload();
-      });
-    });
-
-    $('input#search').focusin(function(){
-        $(this).animate({ width:'300px' }, 400);
-        $(this).toggleClass("focused");
-    })
-
-    $('input#search').focusout(function(){
-        $(this).animate({ width:'150px' }, 800);
-        $(this).toggleClass("focused");
-    })
-
-    $('input#search').quicksearch('#nodesTable tbody tr');
-
-    $(document).bind('keyup', 't', function() {
-        if ( $('input:focus').length == 0 ) {
-           $('input#search').focus();
-        }
-    });
-  });
