@@ -14,7 +14,7 @@ Gem::Specification.new do |s|
   s.require_path      = 'lib'
 
   s.required_ruby_version =                       '>= 1.9.3'
-  s.add_runtime_dependency 'oxidized',            '~> 0.2.2'
+  s.add_runtime_dependency 'oxidized',            '~> 0.3.0'
   s.add_runtime_dependency 'puma',                '~> 2.8'
   s.add_runtime_dependency 'sinatra',             '~> 1.4'
   s.add_runtime_dependency 'sinatra-contrib',     '~> 1.4'
