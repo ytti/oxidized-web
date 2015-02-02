@@ -1,10 +1,10 @@
 Gem::Specification.new do |s|
   s.name              = 'oxidized-web'
-  s.version           = '0.2.0'
+  s.version           = '0.1.1'
   s.licenses          = %w( Apache-2.0 )
   s.platform          = Gem::Platform::RUBY
-  s.authors           = [ 'Saku Ytti' ]
-  s.email             = %w( saku@ytti.fi )
+  s.authors           = [ 'Saku Ytti', 'Samer Abdel-Hafez' ]
+  s.email             = %w( saku@ytti.fi sam@arahant.net )
   s.homepage          = 'http://github.com/ytti/oxidized-web'
   s.summary           = 'sinatra API + webUI for oxidized'
   s.description       = 'puma+sinatra+haml webUI + REST API for oxidized'
@@ -14,7 +14,7 @@ Gem::Specification.new do |s|
   s.require_path      = 'lib'
 
   s.required_ruby_version =                       '>= 1.9.3'
-  s.add_runtime_dependency 'oxidized',            '~> 0.3.0'
+  s.add_runtime_dependency 'oxidized',            '~> 0.2.4'
   s.add_runtime_dependency 'puma',                '~> 2.8'
   s.add_runtime_dependency 'sinatra',             '~> 1.4'
   s.add_runtime_dependency 'sinatra-contrib',     '~> 1.4'
