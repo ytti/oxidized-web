@@ -79,6 +79,26 @@ module Oxidized
         out
       end
 
+      get '/node/next/:group/:node' do
+        node, @json = route_parse :node
+        begin
+          nodes.next node
+        rescue NodeNotFound
+        end
+        redirect url_for('/nodes') unless @json
+        @data = 'ok'
+        out
+      end
+
+      put '/node/next/:group/:node' do
+        node, @json = route_parse :node
+        opt = JSON.load request.body.read
+        nodes.next node, opt
+        redirect url_for('/nodes') unless @json
+        @data = 'ok'
+        out
+      end
+
       get '/node/show/:node' do
         node, @json = route_parse :node
         @data = nodes.show node
