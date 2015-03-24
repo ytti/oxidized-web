@@ -1,3 +1,5 @@
+require 'json'
+
 module Oxidized
   module API
     class Web
@@ -21,9 +23,9 @@ module Oxidized
           end
         end
       end
-      
+
       def run
-        @thread = Thread.new { Rack::Handler::Puma.run @app, @opts } 
+        @thread = Thread.new { Rack::Handler::Puma.run @app, @opts }
       end
     end
   end
