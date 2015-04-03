@@ -3,7 +3,7 @@ begin
   require 'bundler'
   # Bundler.setup
 rescue LoadError
-  warn 'bunler missing'
+  warn 'bundler missing'
 end
 
 gemspec = eval(File.read(Dir['*.gemspec'].first))
@@ -40,8 +40,12 @@ task :clean do
   FileUtils.rm_rf 'gems'
 end
 
-desc 'Push to rubygems'
-task :push do
-  system "gem push gems/#{file}"
+desc 'Tag the release'
+task :tag do
   system "git tag #{gemspec.version}"
+end
+
+desc 'Push to rubygems'
+task :push => :tag do
+  system "gem push gems/#{file}"
 end
