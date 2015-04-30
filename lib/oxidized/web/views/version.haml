@@ -1,0 +1,19 @@
+!=haml :head
+%body
+  %h4
+    - if @info[:group] != ''
+      %a{:href=>url_for("/node/version?node_full=#{@info[:group] + '/' + @info[:node]}")} versions
+    - else    
+      %a{:href=>url_for("/node/version?node_full=#{@info[:node]}")} versions
+    \/ version #{@info[:num]}  for Node 
+    %span{:class=>'node_title'} #{@info[:node]}
+    
+  - date_version = Time.parse @info[:date]
+  Date of version: #{date_version.strftime("%d-%m-%y at %r")}
+  %br
+  %br
+  %div{:class=>'diffs'}
+    - @data.each_line do |line|
+      %div #{line}
+
+  
