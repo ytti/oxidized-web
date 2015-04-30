@@ -44,6 +44,49 @@ input#search
 input#search .focused
     border-bottom: 1px dotted #FFA600 !important
     
+.added
+    background-color: #DBFFDB
+
+.deleted
+    background-color: #FFDDDD
+
+.diff-index
+    background-color: #FFFF99
+    
+.diff-empty
+    background-color: #F0F0F0 
+    
+.diffs
+    background-color: FAFAFA
+    border: 2px solid #ccc
+    border-radius: 5px
+    padding: 3px
+    
+.diffs_old
+    @extend .diffs
+    float: left
+    width: 49%
+    white-space: nowrap
+    overflow: auto
+
+.diffs_new
+    @extend .diffs
+    margin-left: 51%
+    width: 49%
+    white-space: nowrap
+    overflow: auto
+
+.node_title
+    @extend .diffs
+    border-radius: 0px
+
+.old_version_title
+    float: left
+    width: 49%
+    font-weight: bold
+.new_version_title
+    margin-left: 51%
+    font-weight: bold
 
 .refresh-div
     float: right

@@ -54,5 +54,8 @@
             %a{:title => "configuration", :href => url_for("/node/fetch/#{node[:full_name]}") }
               %span{:class=>'glyphicon glyphicon-cloud-download'}
             &nbsp;&nbsp;
+            %a{:title => "versions", :href => url_for("/node/version?node_full=#{node[:full_name]}") }
+              %img{:src=>url_for('/images/versioning_18px.png')}
+            &nbsp;&nbsp;
             %a{:title => "update", :href => url_for("/node/next/#{node[:full_name]}") }
               %span{:class=>'glyphicon glyphicon-repeat'}
