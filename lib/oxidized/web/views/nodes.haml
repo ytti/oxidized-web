@@ -1,22 +1,33 @@
 %script{:src=>url_for('/scripts/jquery-2.1.1.min.js')}
 %script{:src=>url_for('/scripts/jquery.dataTables.min.js')}
 %script{:src=>url_for('/scripts/dataTables.bootstrap.js')}
+%script{:src=>url_for('/scripts/dataTables.colVis.js')}
 %link{:rel=>'stylesheet', :href=>url_for('/css/dataTables.bootstrap.css')}
+%link{:rel=>'stylesheet', :href=>url_for('/css/dataTables.colVis.css')}
 :javascript
   $(function() {
     $('#nodesTable').dataTable({
-      "dom": '<"H"flr>tip',
-      "lengthMenu": [[50, 250, 500, -1], [50, 250, 500, "All"]]
+      dom: 'C<"clear">lfrtip',
+      "lengthMenu": [[50, 250, 500, -1], [50, 250, 500, "All"]],
+      columnDefs: [
+        { visible: false, targets: 1 },
+        {type: "string", targets: 3}
+      ],
+      colVis: {
+            exclude: [ 0, 5 ]
+        }
     });
   });
 %div{:class=>'row tbl-header'}
   %div{:class=>'col-xs-12 col-md-2'}
     %h4 nodes /
-  %div{:class=>'col-xs-12 col-md-10'}
-    %a{:class=>"btn btn-default tbl-action col-xs-12 col-md-2 col-md-offset-10", :id=>"reload", :href=>url_for("/nodes")}
-      %span{:class=>"glyphicon glyphicon-repeat"}
-      Refresh
+  
 %div{:class=>'row'}
+  %div{:class=>'refresh-div'}
+    %form
+      %button{:class => "ColVis_Button", :type => "button", :onclick => "history.go();"}
+        %span{:class=>"glyphicon glyphicon-repeat"}
+        Refresh
   %table{:id=>'nodesTable', :class=>'table table-responsive tablesorter'}
     %thead
       %tr
@@ -25,8 +36,8 @@
         %th Group
         %th Last Status
         %th Last Update
-        %th Config
-        %th Update
+        %th Actions
+
     %tbody
       -trclass = %w(even odd)
       -@data.sort_by{|e|e[:name]}.each do |node|
@@ -36,11 +47,12 @@
             %a{:href => url_for("/node/show/#{node[:name]}") } #{node[:name]}
           %td= node[:ip]
           %td= node[:group]
-          %td= node[:status]
+          %td
+            %div{:title=>node[:status], :class=>node[:status]}
           %td= node[:time]
           %td
-            %a{:href => url_for("/node/fetch/#{node[:full_name]}") }
+            %a{:title => "configuration", :href => url_for("/node/fetch/#{node[:full_name]}") }
               %span{:class=>'glyphicon glyphicon-cloud-download'}
-          %td
-            %a{:href => url_for("/node/next/#{node[:full_name]}") }
+            &nbsp;&nbsp;
+            %a{:title => "update", :href => url_for("/node/next/#{node[:full_name]}") }
               %span{:class=>'glyphicon glyphicon-repeat'}

@@ -2,6 +2,7 @@ div.dataTables_length label {
 	font-weight: normal;
 	float: left;
 	text-align: left;
+	width: 45%;
 }
 
 div.dataTables_length select {
@@ -11,6 +12,7 @@ div.dataTables_length select {
 div.dataTables_filter label {
 	font-weight: normal;
 	float: right;
+	
 }
 
 div.dataTables_filter input {
