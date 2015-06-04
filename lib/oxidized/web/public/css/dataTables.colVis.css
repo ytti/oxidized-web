@@ -81,7 +81,7 @@ ul.ColVis_collection {
 	border: 1px solid #ccc;
 	border: 1px solid rgba( 0, 0, 0, 0.4 );
 	background-color: #f3f3f3;
-	background-color: rgba( 255, 255, 255, 0.3 );
+	background-color: rgb( 255, 255, 255);
 	overflow: hidden;
 	z-index: 2002;
 
