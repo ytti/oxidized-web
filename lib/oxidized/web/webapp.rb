@@ -4,6 +4,8 @@ require 'sinatra/url_for'
 require 'haml'
 require 'sass'
 require 'pp'
+require 'pp'
+require 'oxidized/web/mig'
 module Oxidized
   module API
     class WebApp < Sinatra::Base
@@ -84,7 +86,32 @@ module Oxidized
         @data = nodes.show node
         out :node
       end
+      
+      #redirect to the web page for rancid - oxidized migration
+      get '/migration' do
+        out :migration
+      end
+      
+      #get the files send
+      post '/migration' do
+        number = params[:number].to_i
+        cloginrc_file = params['cloginrc'][:tempfile]
+        path_new_file = params['path_new_file']
 
+        router_db_files = Array.new
+        
+        i = 1
+        while i <= number do
+          router_db_files.push({:file=>(params["file"+i.to_s][:tempfile]), :group=>params["group"+i.to_s]})
+          i = i+1
+        end
+
+        migration = Mig.new(router_db_files, cloginrc_file, path_new_file)
+        migration.go_rancid_migration
+        redirect url_for("//nodes")
+     
+      end
+      
       get '/css/*.css' do
         sass "sass/#{params[:splat].first}".to_sym
       end
