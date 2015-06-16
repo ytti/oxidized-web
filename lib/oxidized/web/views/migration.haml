@@ -1,0 +1,41 @@
+!=haml :head
+%script{:src=>url_for('/scripts/script-migration.js')}
+%body
+  
+  %span{:id=>"migration_span"}
+    Here you can migrate from your Rancid to Oxidized.
+    %br
+    To do it, just execute te following actions :
+  %br
+  %br
+  %form(method="post" enctype="multipart/form-data")
+    %label{:for=>"path_new_file"} Set the path for your future equipement file in .db format
+    %br
+    %input{:type=>"text", :name=>"path_new_file", :value=>"Path/to_file/here.db"}
+    %br
+    %br
+    %label{:for=>"cloginrc"} Select your .cloginrc file, must be readeable
+    %input{:type=>"file", :name=>"cloginrc"}
+    %br
+    %label{:for=>"files"} Select all your router.db fies of rancid, and add their group (Click "Add file" if you have multiple files)
+    %table{:id=>"files", :name=>"files"}
+      %th{:id=>"file"} Group
+      %th{:id=>"file"} File
+      %tbody
+        %tr
+          %td{:id=>"file"}
+            %input{:type=>"text", :name=>"group1", :value=>"default"}
+          %td{:id=>"file"}
+            %input{:type=>"file", :name=>"file1", :required=>""}
+    %br
+    %input(type='button' value ='Add file' onclick="add_file_upload();")
+    %br
+    %br
+    %label{:for=>"upload_button"}Then Click "Migrate" to do your migration
+    %br
+    %input(type='submit' value='Migrate !' id="upload_button")
+    /
+      used to know the numbers of files router.db
+    %input(type='hidden' value='1' id='number' name='number')
+    
+  
