@@ -60,7 +60,7 @@ module Oxidized
         out :text
       end
 
-      get '/node/next/:node' do
+      get '/node/next/?:group?/:node' do
         node, @json = route_parse :node
         begin
           nodes.next node
@@ -72,7 +72,7 @@ module Oxidized
       end
 
       # use this to attach author/email/message to commit
-      put '/node/next/:node' do
+      put '/node/next/?:group?/:node' do
         node, @json = route_parse :node
         opt = JSON.load request.body.read
         nodes.next node, opt
