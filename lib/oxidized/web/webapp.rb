@@ -4,7 +4,6 @@ require 'sinatra/url_for'
 require 'haml'
 require 'sass'
 require 'pp'
-require 'pp'
 require 'oxidized/web/mig'
 module Oxidized
   module API

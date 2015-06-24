@@ -34,6 +34,7 @@
       %tr
         %th Name
         %th IP
+        %th Model
         %th Group
         %th Last Status
         %th Last Update
@@ -47,6 +48,7 @@
           %td
             %a{:href => url_for("/node/show/#{node[:name]}") } #{node[:name]}
           %td= node[:ip]
+          %td= node[:model]
           %td= node[:group]
           %td
             %div{:title=>node[:status], :class=>node[:status]}
