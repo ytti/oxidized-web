@@ -1,0 +1,43 @@
+%script{:src=>url_for('/scripts/jquery-2.1.1.min.js')}
+%script{:src=>url_for('/scripts/jquery.dataTables.min.js')}
+%script{:src=>url_for('/scripts/dataTables.bootstrap.js')}
+%script{:src=>url_for('/scripts/dataTables.colVis.js')}
+%link{:rel=>'stylesheet', :href=>url_for('/css/dataTables.bootstrap.css')}
+%link{:rel=>'stylesheet', :href=>url_for('/css/dataTables.colVis.css')}
+:javascript
+  $(function() {
+    $('#versionsTable').dataTable({
+      dom: 'C<"clear">lfrtip',
+      "order": [[ 0, "desc" ]]
+    });
+  });
+%div{:class=>'row tbl-header'}
+  %div{:class=>'col-xs-12 '}
+    %h4
+      %a{:href=>url_for('/nodes')} nodes
+      \/ Node whish contains 
+      %span " #{@to_research} "
+  
+%div{:class=>'row'}
+  %div{:class=>'refresh-div'}
+    %form
+      %button{:class => "ColVis_Button", :type => "button", :onclick => "history.go();"}
+        %span{:class=>"glyphicon glyphicon-repeat"}
+        Refresh
+  %table{:id=>'versionsTable', :class=>'table table-responsive tablesorter'}
+    %thead
+      %tr
+        %th Name
+        %th Configuration
+
+    %tbody
+      -trclass = %w(even odd)
+      - @nodes_match.each do |x|
+        %tr
+          %td
+            #{x[:node]}
+          %td
+            %a{:title => "configuration", :href => url_for("/node/fetch/#{x[:full_name]}") }
+              %span{:class=>'glyphicon glyphicon-cloud-download'} 
+
+          

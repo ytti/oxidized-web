@@ -23,6 +23,12 @@
     %h4 nodes /
 %button{:onclick => "location.href='/migration'" }
   %span migration
+%form{ :action => "/nodes/conf_search", :method => "post"}
+  %div{:name => "to_search_in_config", :id => "to_search_in_config"}
+    %input{:type => "submit", :value => "Search in confs"}
+    %input{:type => "text", :name => "search_in_conf_textbox"}
+  
+  
 %div{:class=>'row'}
   %div{:class=>'refresh-div'}
     %form
