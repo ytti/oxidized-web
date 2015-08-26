@@ -130,7 +130,7 @@ module Oxidized
       end
       
       #show the lists of versions for a node
-      get '/node/version' do
+      get '/node/version.?:format?' do
         @data = nil
         @group = nil
         @node = nil
