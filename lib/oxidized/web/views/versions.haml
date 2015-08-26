@@ -9,8 +9,8 @@
     $('#versionsTable').dataTable({
       dom: 'C<"clear">lfrtip',
       "order": [[ 0, "desc" ]],
-      colVis: {
-            exclude: [ 2 ]
+      columnDefs: [
+            { visible: false, targets: [2, 3] }
         }
     });
   });
@@ -32,6 +32,8 @@
       %tr
         %th Version
         %th Dates
+        %th Author
+        %th Message
         %th Actions
 
     %tbody
@@ -43,6 +45,10 @@
             #{nb -= 1}
           %td
             #{time_from_now x[:date]}
+          %td
+            #{x[:author][:name]}
+          %td
+            #{x[:message]}
           %td
             %a{:title => "configuration", :href => url_for("/node/version/view?node=#{@node}&group=#{@group}&oid=#{x[:oid]}&date=#{x[:date]}&num=#{nb}") }
               %span{:class=>'glyphicon glyphicon-cloud-download'} 
