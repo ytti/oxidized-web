@@ -202,7 +202,7 @@ module Oxidized
       def out template=:default
         if @json or params[:format] == 'json'
           json @data
-        elsif template == :text
+        elsif template == :text or params[:format] == 'text'
           content_type :text
           @data
         else
