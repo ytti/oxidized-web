@@ -148,7 +148,7 @@ module Oxidized
       end
       
       #show the blob of a version
-      get '/node/version/view' do
+      get '/node/version/view.?:format?' do
         node, @json = route_parse :node
         @info = {:node => node, :group => params[:group],:oid => params[:oid],:date => params[:date],:num => params[:num]}
         @data = nodes.get_version node, @info[:group], @info[:oid]
@@ -201,7 +201,11 @@ module Oxidized
 
       def out template=:default
         if @json or params[:format] == 'json'
-          json @data
+          if @data.respond_to?(:to_s)
+            json @data.lines
+          else
+            json @data
+          end
         elsif template == :text or params[:format] == 'text'
           content_type :text
           @data
