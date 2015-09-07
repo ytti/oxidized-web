@@ -201,7 +201,7 @@ module Oxidized
 
       def out template=:default
         if @json or params[:format] == 'json'
-          if @data.respond_to?(:to_s)
+          if @data.is_a?(String)
             json @data.lines
           else
             json @data
