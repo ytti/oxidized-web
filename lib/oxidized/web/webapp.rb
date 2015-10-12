@@ -15,6 +15,22 @@ module Oxidized
         redirect url_for('/nodes')
       end
 
+      get '/nodes/:filter/:value.?:format?' do
+        @data = nodes.list.select do |node|
+          if node[params[:filter].to_sym] == params[:value]
+            node[:status]    = 'never'
+            node[:time]      = 'never'
+            node[:group]     = 'default' unless node[:group]
+            if node[:last]
+              node[:status] = node[:last][:status]
+              node[:time]   = node[:last][:end]
+            end
+            node
+          end
+        end
+        out :nodes
+      end
+
       get '/nodes.?:format?' do
         @data = nodes.list.map do |node|
           node[:status]    = 'never'
