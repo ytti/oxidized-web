@@ -10,9 +10,25 @@ module Oxidized
     class WebApp < Sinatra::Base
       helpers Sinatra::UrlForHelper
       set :public_folder, Proc.new { File.join(root, "public") }
-      
+
       get '/' do
         redirect url_for('/nodes')
+      end
+
+      get '/nodes/:filter/:value.?:format?' do
+        @data = nodes.list.select do |node|
+          if node[params[:filter].to_sym] == params[:value]
+            node[:status]    = 'never'
+            node[:time]      = 'never'
+            node[:group]     = 'default' unless node[:group]
+            if node[:last]
+              node[:status] = node[:last][:status]
+              node[:time]   = node[:last][:end]
+            end
+            node
+          end
+        end
+        out :nodes
       end
 
       get '/nodes.?:format?' do
@@ -28,8 +44,8 @@ module Oxidized
         end
         out :nodes
       end
-      
-      post '/nodes/conf_search' do 
+
+      post '/nodes/conf_search' do
         @to_research = params[:search_in_conf_textbox]
         nodes_list = nodes.list.map
         @nodes_match = []
@@ -99,12 +115,12 @@ module Oxidized
         @data = nodes.show node
         out :node
       end
-      
+
       #redirect to the web page for rancid - oxidized migration
       get '/migration' do
         out :migration
       end
-      
+
       #get the files send
       post '/migration' do
         number = params[:number].to_i
@@ -112,7 +128,7 @@ module Oxidized
         path_new_file = params['path_new_file']
 
         router_db_files = Array.new
-        
+
         i = 1
         while i <= number do
           router_db_files.push({:file=>(params["file"+i.to_s][:tempfile]), :group=>params["group"+i.to_s]})
@@ -122,13 +138,13 @@ module Oxidized
         migration = Mig.new(router_db_files, cloginrc_file, path_new_file)
         migration.go_rancid_migration
         redirect url_for("//nodes")
-     
+
       end
-      
+
       get '/css/*.css' do
         sass "sass/#{params[:splat].first}".to_sym
       end
-      
+
       #show the lists of versions for a node
       get '/node/version' do
         @data = nil
@@ -146,7 +162,7 @@ module Oxidized
         end
         out :versions
       end
-      
+
       #show the blob of a version
       get '/node/version/view' do
         node, @json = route_parse :node
@@ -154,7 +170,7 @@ module Oxidized
         @data = nodes.get_version node, @info[:group], @info[:oid]
         out :version
       end
-      
+
       #show diffs between 2 version
       get '/node/version/diffs' do
         node, @json = route_parse :node
@@ -191,12 +207,12 @@ module Oxidized
         @diff = diff_view @data
         out :diffs
       end
-      
+
       #used for diff between 2 distant commit
       post '/node/version/diffs' do
         redirect url_for("/node/version/diffs?node=#{params[:node]}&group=#{params[:group]}&oid=#{params[:oid]}&date=#{params[:date]}&num=#{params[:num]}&oid2=#{params[:oid2]}")
       end
-      
+
       private
 
       def out template=:default
@@ -227,7 +243,7 @@ module Oxidized
         end
         [e.join('.'), json]
       end
-      
+
       #give the time enlapsed between now and a date
       def time_from_now date
         if date
@@ -251,12 +267,12 @@ module Oxidized
         end
         date
       end
-      
+
       #method the give diffs in separate view (the old and the new) as in github
       def diff_view diff
         old_diff = []
         new_diff = []
-        
+
         diff.each_line do |line|
           if /^\+/.match(line)
             new_diff.push(line)
@@ -267,7 +283,7 @@ module Oxidized
             old_diff.push(line)
           end
         end
-        
+
         length_o = old_diff.count
         length_n = new_diff.count
         for i in 0..[length_o, length_n].max
