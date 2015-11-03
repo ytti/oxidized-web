@@ -58,6 +58,7 @@
           %td= node[:group]
           %td
             %div{:title=>node[:status], :class=>node[:status]}
+              %span{:style=>'visibility: hidden'}#{node[:status]}
           %td= node[:time]
           %td
             %a{:title => "configuration", :href => url_for("/node/fetch/#{node[:full_name]}") }
