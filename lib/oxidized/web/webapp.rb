@@ -2,7 +2,7 @@ require 'sinatra/base'
 require 'sinatra/json'
 require 'sinatra/url_for'
 require 'tilt/haml'
-require 'tilt/sass'
+require 'sass'
 require 'pp'
 require 'oxidized/web/mig'
 module Oxidized
