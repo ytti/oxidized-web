@@ -8,14 +8,14 @@
 .row.tbl-header
   .col-xs-12
     %h4
-      %a{:href=>url_for('/nodes')} nodes
+      %a{href: url_for('/nodes')} nodes
       \/ Nodes that contain 
       %span " #{@to_research} "
   
 .row
   .refresh-div
     %form
-      %button.ColVis_Button{:type => "button", :onclick => "history.go();"}
+      %button.ColVis_Button{type: 'button', onclick: 'history.go();'}
         %span.glyphicon.glyphicon-repeat Refresh
   %table.table.table-responsive.tablesorter#versionsTable
     %thead
@@ -30,7 +30,7 @@
           %td
             #{x[:node]}
           %td
-            %a{:title => "configuration", :href => url_for("/node/fetch/#{x[:full_name]}") }
+            %a{title: 'configuration', href: url_for("/node/fetch/#{x[:full_name]}")}
               %span.glyphicon.glyphicon-cloud-download
 
 

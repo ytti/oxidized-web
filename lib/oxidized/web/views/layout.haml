@@ -1,27 +1,27 @@
 %html
   !=haml :head
   %body
-    %header.navbar.navbar-static-top.ox-nav{:role=>'navigation'}
+    %header.navbar.navbar-static-top.ox-nav{role: 'navigation'}
       .container
         .navbar-header
           .collapse.navbar-collapse
 	    %ul.nav.navbar-nav
 	      %li
-                %a.navbar-brand{:href=>url_for('/')}
-                  %img{:src=>url_for('/images/oxidizing_40px.png')} Oxidized
-              %li{:class=>request.path_info == '/nodes/stats' ? 'active' : ''}
-                %a.navbar-link{:href=>url_for('/nodes/stats')} Stats
+                %a.navbar-brand{href: url_for('/')}
+                  %img{src: url_for('/images/oxidizing_40px.png')} Oxidized
+              %li{class: request.path_info == '/nodes/stats' ? 'active' : ''}
+                %a.navbar-link{href: url_for('/nodes/stats')} Stats
 	      %li
-	        %a.navbar-link{:href=>url_for('/migration')} Migration
-            %form.navbar-form.navbar-right{:role=>'search',
-	                                   :action => "/nodes/conf_search",
-					   :method => "post"}
-	      .form-group#to_search_in_config{:name => "to_search_in_config"}
-	        %input.form-control.input-sm{:type => "text",
-		                             :name => "search_in_conf_textbox",
-		                             :placeholder=>'Search in Configs'}
-		%button.btn.btn-primary{:type => "submit"}
+	        %a.navbar-link{href: url_for('/migration')} Migration
+            %form.navbar-form.navbar-right{role: 'search',
+	                                   action: '/nodes/conf_search',
+					   method: 'post'}
+	      .form-group#to_search_in_config{name: 'to_search_in_config'}
+	        %input.form-control.input-sm{type: 'text',
+		                             name: 'search_in_conf_textbox',
+		                             placeholder: 'Search in Configs'}
+		%button.btn.btn-primary{type: 'submit'}
 		  %span.glyphicon.glyphicon-search
     .container
       =yield
-    %script{:src=>url_for('/scripts/oxidized.js')}
+    %script{src: url_for('/scripts/oxidized.js')}

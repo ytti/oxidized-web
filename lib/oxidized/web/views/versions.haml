@@ -11,14 +11,14 @@
 .row.tbl-header
   .col-xs-12
     %h4
-      %a{:href=>url_for('/nodes')} nodes
+      %a{href: url_for('/nodes')} nodes
       \/ Versions for Node 
       %span.node_title #{@node}
   
 .row
   .refresh-div
     %form
-      %button.ColVis_Button{:type => "button", :onclick => "history.go();"}
+      %button.ColVis_Button{type: 'button', onclick: 'history.go();'}
         %span.glyphicon.glyphicon-repeat
         Refresh
   %table.table.table-responsive.tablesorter#versionsTable
@@ -44,8 +44,9 @@
           %td
             #{x[:message]}
           %td
-            %a{:title => "configuration", :href => url_for("/node/version/view?node=#{@node}&group=#{@group}&oid=#{x[:oid]}&date=#{x[:date]}&num=#{nb}") }
+	    - params = "node=#{@node}&group=#{@group}&oid=#{x[:oid]}&date=#{x[:date]}&num=#{nb}"
+            %a{title: 'configuration', href: url_for("/node/version/view?#{params}")}
               %span.glyphicon.glyphicon-cloud-download
             &nbsp;&nbsp;
-            %a{:title => "diff", :href => url_for("/node/version/diffs?node=#{@node}&group=#{@group}&oid=#{x[:oid]}&date=#{x[:date]}&num=#{nb}") }
-              %img{:src=>url_for('/images/diff_15x17.png')}
+            %a{title: 'diff', href: url_for("/node/version/diffs?#{params}") }
+              %img{src: url_for('/images/diff_15x17.png')}

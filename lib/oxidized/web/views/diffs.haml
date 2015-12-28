@@ -4,7 +4,7 @@
     - node_full = "#{@info[:group] + '/' + @info[:node]}"
   - else
     - node_full = "#{@info[:node]}"
-  %a{:href=>url_for("/node/version?node_full=#{node_full}")} versions
+  %a{href: url_for("/node/version?node_full=#{node_full}")} versions
   \/ Diff version #{@info[:num]} - #{@info[:num2]} for Node 
   %span.node_title #{@info[:node]}
 - date_version = Time.parse @info[:date]
@@ -16,21 +16,23 @@ Number of lines changed:
 %span.deleted removed #{@stat[1]}
 %br
 %br
-%form{ :action => "/node/version/diffs?node=#{@info[:node]}&group=#{@info[:group]}&oid=#{@info[:oid]}&date=#{@info[:date]}&num=#{@info[:num]}", :method => "post"}
-  %select#oid2{:name => "oid2"}
+- params = "node=#{@info[:node]}&group=#{@info[:group]}&oid=#{@info[:oid]}"
+- params = "&date=#{@info[:date]}&num=#{@info[:num]}"
+%form{action: "/node/version/diffs?#{params}", method: 'post'}
+  %select#oid2{name: 'oid2'}
     - diff2 = {}
     - num = @oids_dates.count + 1
     - next_id = false
     - @oids_dates.each do |x|
-      %option{:value => x[:oid]} Version #{num -= 1} (#{time_from_now x[:date]})
+      %option{value: x[:oid]} Version #{num -= 1} (#{time_from_now x[:date]})
       - if (x[:oid].to_s == @info[:oid2]) || (next_id)
-        - diff2 = {:num => num, :date => x[:date]}
+        - diff2 = {num: num, date: x[:date]}
         - next_id = false
       - elsif (x[:oid].to_s == @info[:oid]) && !(@info[:oid2])
         - next_id = true
       
         
-  %input{:type => "submit", :value => "Get diffs !"}
+  %input{type: 'submit', value: 'Get diffs !'}
 %br
 .old_version_title Version #{diff2[:num]} (#{time_from_now diff2[:date]})
 .new_version_title Version #{@info[:num]} (#{time_from_now @info[:date]})
