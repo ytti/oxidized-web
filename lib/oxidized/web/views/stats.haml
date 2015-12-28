@@ -1,10 +1,10 @@
-%div.row.tbl-header
-  %div.col-xs-12
+.row.tbl-header
+  .col-xs-12
     %h4
       %a{href: url_for('/nodes')} nodes
       \/ stats
-%div.row
-  %table.table.table-responsive.tablesorter{id: 'versionsTable'}
+.row
+  %table.table.table-responsive.tablesorter#versionsTable
     %caption
       %span Failures in Previous 24 Hours
       %button.ColVis_Button{type: 'button', onclick: 'history.go();'}
@@ -14,14 +14,14 @@
       %tr
         %th Name
         %th Last Success
-      %tbody
-        - @data.select do |node, stats|
-          - not stats[:success] or (stats[:success].last[:end] < Time.now.utc-60*60*24)
-        - end.map do |node, stats|
-          - last = stats[:success] ? last.last[:end] : 'never'
-          %tr
-            %td= node
-            %td= last
+    %tbody
+      - @data.select do |node, stats|
+        - not stats[:success] or (stats[:success].last[:end] < Time.now.utc-60*60*24)
+      - end.map do |node, stats|
+        - last = stats[:success] ? last.last[:end] : 'never'
+        %tr
+          %td= node
+          %td= last
 :javascript
   $(function(){
     $("#statsTable").tablesorter();
