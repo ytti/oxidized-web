@@ -5,7 +5,20 @@
       %div{:class=>'container'}
         %div{:class=>'navbar-header'}
           %div{:class=>'collapse navbar-collapse'}
-            %a{:class=>'navbar-brand', :href=>url_for('/')}
-              %img{:src=>url_for('/images/oxidizing_40px.png')} Oxidized
+	    %ul{:class=>'nav navbar-nav'}
+	      %li
+                %a{:class=>'navbar-brand', :href=>url_for('/')}
+                  %img{:src=>url_for('/images/oxidizing_40px.png')} Oxidized
+	      %li
+	        %a{:class=>'navbar-link', :href=>url_for('/migration')} Migration
+            %form{:class=>'navbar-form navbar-right', :role=>'search',
+	          :action => "/nodes/conf_search", :method => "post"}
+	      %div{:class=>'form-group', :name => "to_search_in_config",
+	           :id => "to_search_in_config"}
+	        %input{:class=>'form-control input-sm', :type => "text",
+		       :name => "search_in_conf_textbox",
+		       :placeholder=>'Search in Configs'}
+		%button{:class=>'btn btn-primary', :type => "submit"}
+		  %span{:class=>'glyphicon glyphicon-search'}
     %div{:class=>'container'}
       =yield

@@ -1,9 +1,3 @@
-%script{:src=>url_for('/scripts/jquery-2.1.1.min.js')}
-%script{:src=>url_for('/scripts/jquery.dataTables.min.js')}
-%script{:src=>url_for('/scripts/dataTables.bootstrap.js')}
-%script{:src=>url_for('/scripts/dataTables.colVis.js')}
-%link{:rel=>'stylesheet', :href=>url_for('/css/dataTables.bootstrap.css')}
-%link{:rel=>'stylesheet', :href=>url_for('/css/dataTables.colVis.css')}
 :javascript
   $(function() {
     $('#nodesTable').dataTable({
@@ -21,13 +15,6 @@
 %div{:class=>'row tbl-header'}
   %div{:class=>'col-xs-12 col-md-2'}
     %h4 nodes /
-%button{:onclick => "location.href='/migration'" }
-  %span migration
-%form{ :action => "/nodes/conf_search", :method => "post"}
-  %div{:name => "to_search_in_config", :id => "to_search_in_config"}
-    %input{:type => "submit", :value => "Search in confs"}
-    %input{:type => "text", :name => "search_in_conf_textbox"}
-  
   
 %div{:class=>'row'}
   %div{:class=>'refresh-div'}

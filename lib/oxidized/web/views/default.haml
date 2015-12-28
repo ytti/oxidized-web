@@ -2,3 +2,7 @@
   !=haml :head
   %body
     =@data
+    %script{:src=>url_for('/scripts/jquery-2.1.1.min.js')}
+    %script{:src=>url_for('/scripts/jquery.dataTables.min.js')}
+    %script{:src=>url_for('/scripts/dataTables.bootstrap.js')}
+    %script{:src=>url_for('/scripts/dataTables.colVis.js')}
