@@ -40,30 +40,30 @@
   %div{:class=>'diffs_old', :id=>'Test'}
     - @diff[:old_diff].each do |line|
       - if /^\+.*/.match(line)
-        %div{:class=>'added',:id=>'Test'} #{line}
+        %div{:class=>'added',:id=>'Test'}> #{line}
         
       - elsif /^\-.*/.match(line)
-        %div{:class=>'deleted'} #{line}
+        %div{:class=>'deleted'}> #{line}
         
       - elsif /^@@\s.*@@.*$/.match(line)
-        %div{:class=>'diff-index', :id=>'Test'} #{line}
+        %div{:class=>'diff-index', :id=>'Test'}> #{line}
       - elsif /^empty_line&nbsp;/.match(line)
         - line.slice! "empty_line"
-        %div{:class=>'diff-empty'} #{line}
+        %div{:class=>'diff-empty'}> #{line}
       - else
-        %div #{line}
+        %div> #{line}
   %div{:class=>'diffs_new'}
     -  @diff[:new_diff].each do |line|
       - if /^\+.*/.match(line)
-        %div{:class=>'added'} #{line}
+        %div{:class=>'added'}> #{line}
       
       - elsif /^\-.*/.match(line)
-        %div{:class=>'deleted'} #{line}
+        %div{:class=>'deleted'}> #{line}
       
       - elsif /^@@\s.*@@.*$/.match(line)
-        %div{:class=>'diff-index'} #{line}
+        %div{:class=>'diff-index'}> #{line}
       - elsif /^empty_line&nbsp;/.match(line)
         - line.slice! "empty_line"
-        %div{:class=>'diff-empty'} #{line}
+        %div{:class=>'diff-empty'}> #{line}
       - else
-        %div #{line}
+        %div> #{line}
