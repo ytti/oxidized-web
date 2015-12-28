@@ -46,13 +46,13 @@ module Oxidized
       end
 
       post '/nodes/conf_search' do
-        @to_research = params[:search_in_conf_textbox]
+        @to_research = Regexp.new params[:search_in_conf_textbox]
         nodes_list = nodes.list.map
         @nodes_match = []
         nodes_list.each do |n|
           node, @json = route_parse n[:name]
           config = nodes.fetch node, n[:group]
-          if config.include? @to_research
+          if config[@to_research]
             @nodes_match.push({:node => n[:name], :full_name => n[:full_name]})
           end
         end
