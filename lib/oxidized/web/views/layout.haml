@@ -9,6 +9,8 @@
 	      %li
                 %a{:class=>'navbar-brand', :href=>url_for('/')}
                   %img{:src=>url_for('/images/oxidizing_40px.png')} Oxidized
+              %li{:class=>request.path_info == '/nodes/stats' ? 'active' : ''}
+                %a{:class=>'navbar-link', :href=>url_for('/nodes/stats')} Stats
 	      %li
 	        %a{:class=>'navbar-link', :href=>url_for('/migration')} Migration
             %form{:class=>'navbar-form navbar-right', :role=>'search',
@@ -22,3 +24,4 @@
 		  %span{:class=>'glyphicon glyphicon-search'}
     %div{:class=>'container'}
       =yield
+

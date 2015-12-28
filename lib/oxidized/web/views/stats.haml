@@ -1,23 +1,29 @@
-%html
-  !=haml :head
-  %body
-    %h1 no success in a day
-    %table{:id=>'statsTable', :class=>'center tablesorter'}
-      %thead
+.row.tbl-header
+  .col-xs-12
+    %h4
+      %a{href: url_for('/nodes')} nodes
+      \/ stats
+.row
+  %table.table.table-responsive.tablesorter#versionsTable
+    %caption
+      %span Failures in Previous 24 Hours
+      %button.ColVis_Button{type: 'button', onclick: 'history.go();'}
+        %span.glyphicon.glyphicon-repeat
+        Refresh
+    %thead
+      %tr
+        %th Name
+        %th Last Success
+    %tbody
+      - @data.select do |node, stats|
+        - not stats[:success] or (stats[:success].last[:end] < Time.now.utc-60*60*24)
+      - end.map do |node, stats|
+        - last = stats[:success] ? last.last[:end] : 'never'
         %tr
-          %th Name
-          %th Last success
-      %tbody
-        -@data.select do |node,stats|
-          - not stats[:success] or (stats[:success].last[:end] < Time.now.utc-60*60*24)
-        - end.map do |node,stats|
-          - last = stats[:success]
-          - last = last.last[:end] if last
-          - last ||= 'never'
-          %tr
-            %td= node
-            %td= last
-    :javascript
-      $(function(){
-        $("#statsTable").tablesorter();
-      });
+          %td= node
+          %td= last
+:javascript
+  $(function(){
+    $("#statsTable").tablesorter();
+  });
+
