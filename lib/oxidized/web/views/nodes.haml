@@ -12,17 +12,17 @@
         }
     });
   });
-%div{:class=>'row tbl-header'}
-  %div{:class=>'col-xs-12 col-md-2'}
+.row.tbl-header
+  .col-xs-12.col-md-2
     %h4 nodes /
   
-%div{:class=>'row'}
-  %div{:class=>'refresh-div'}
+.row
+  .refresh-div
     %form
-      %button{:class => "ColVis_Button", :type => "button", :onclick => "history.go();"}
-        %span{:class=>"glyphicon glyphicon-repeat"}
+      %button.ColVis_Button{:type => "button", :onclick => "history.go();"}
+        %span.glyphicon.glyphicon-repeat
         Refresh
-  %table{:id=>'nodesTable', :class=>'table table-responsive tablesorter'}
+  %table.table.table-responsive.tablesorter#nodesTable
     %thead
       %tr
         %th Name
@@ -46,13 +46,13 @@
           %td
             %div{:title=>node[:status], :class=>node[:status]}
               %span{:style=>'visibility: hidden'}#{node[:status]}
-          %td{:class=>'time'}= node[:time]
+          %td.time= node[:time]
           %td
             %a{:title => "configuration", :href => url_for("/node/fetch/#{node[:full_name]}") }
-              %span{:class=>'glyphicon glyphicon-cloud-download'}
+              %span.glyphicon.glyphicon-cloud-download
             &nbsp;&nbsp;
             %a{:title => "versions", :href => url_for("/node/version?node_full=#{node[:full_name]}") }
               %img{:src=>url_for('/images/versioning_18px.png')}
             &nbsp;&nbsp;
             %a{:title => "update", :href => url_for("/node/next/#{node[:full_name]}") }
-              %span{:class=>'glyphicon glyphicon-repeat'}
+              %span.glyphicon.glyphicon-repeat

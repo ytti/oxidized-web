@@ -8,20 +8,20 @@
         }
     });
   });
-%div{:class=>'row tbl-header'}
-  %div{:class=>'col-xs-12 '}
+.row.tbl-header
+  .col-xs-12
     %h4
       %a{:href=>url_for('/nodes')} nodes
       \/ Versions for Node 
-      %span{:class=>'node_title'} #{@node}
+      %span.node_title #{@node}
   
-%div{:class=>'row'}
-  %div{:class=>'refresh-div'}
+.row
+  .refresh-div
     %form
-      %button{:class => "ColVis_Button", :type => "button", :onclick => "history.go();"}
-        %span{:class=>"glyphicon glyphicon-repeat"}
+      %button.ColVis_Button{:type => "button", :onclick => "history.go();"}
+        %span.glyphicon.glyphicon-repeat
         Refresh
-  %table{:id=>'versionsTable', :class=>'table table-responsive tablesorter'}
+  %table.table.table-responsive.tablesorter#versionsTable
     %thead
       %tr
         %th Version
@@ -45,10 +45,7 @@
             #{x[:message]}
           %td
             %a{:title => "configuration", :href => url_for("/node/version/view?node=#{@node}&group=#{@group}&oid=#{x[:oid]}&date=#{x[:date]}&num=#{nb}") }
-              %span{:class=>'glyphicon glyphicon-cloud-download'} 
+              %span.glyphicon.glyphicon-cloud-download
             &nbsp;&nbsp;
             %a{:title => "diff", :href => url_for("/node/version/diffs?node=#{@node}&group=#{@group}&oid=#{x[:oid]}&date=#{x[:date]}&num=#{nb}") }
               %img{:src=>url_for('/images/diff_15x17.png')}
-          
-
-    

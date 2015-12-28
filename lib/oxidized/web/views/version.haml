@@ -4,7 +4,7 @@
   - else    
     %a{:href=>url_for("/node/version?node_full=#{@info[:node]}")} versions
   \/ version #{@info[:num]}  for Node 
-  %span{:class=>'node_title'} #{@info[:node]}
+  %span.node_title #{@info[:node]}
   
 - date_version = Time.parse @info[:date]
 Date of version: 

@@ -6,18 +6,18 @@
     - node_full = "#{@info[:node]}"
   %a{:href=>url_for("/node/version?node_full=#{node_full}")} versions
   \/ Diff version #{@info[:num]} - #{@info[:num2]} for Node 
-  %span{:class=>'node_title'} #{@info[:node]}
+  %span.node_title #{@info[:node]}
 - date_version = Time.parse @info[:date]
 Date of version:
 %span.time #{date_version.strftime("%d-%m-%y at %r")}
 %br
 Number of lines changed: 
-%span{:class=>'added'}added #{@stat[0]} 
-%span{:class=>'deleted'}removed #{@stat[1]}
+%span.added added #{@stat[0]} 
+%span.deleted removed #{@stat[1]}
 %br
 %br
 %form{ :action => "/node/version/diffs?node=#{@info[:node]}&group=#{@info[:group]}&oid=#{@info[:oid]}&date=#{@info[:date]}&num=#{@info[:num]}", :method => "post"}
-  %select{:name => "oid2", :id => "oid2"}
+  %select#oid2{:name => "oid2"}
     - diff2 = {}
     - num = @oids_dates.count + 1
     - next_id = false
@@ -32,37 +32,37 @@ Number of lines changed:
         
   %input{:type => "submit", :value => "Get diffs !"}
 %br
-%div{:class=>'old_version_title'} Version #{diff2[:num]} (#{time_from_now diff2[:date]})
-%div{:class=>'new_version_title'} Version #{@info[:num]} (#{time_from_now @info[:date]})
+.old_version_title Version #{diff2[:num]} (#{time_from_now diff2[:date]})
+.new_version_title Version #{@info[:num]} (#{time_from_now @info[:date]})
 %br
-%div{:class=>'diffs_old', :id=>'Test'}
+.diffs_old#Test
   - @diff[:old_diff].each do |line|
     - if /^\+.*/.match(line)
-      %div{:class=>'added',:id=>'Test'}> #{line}
+      .added#Test> #{line}
       
     - elsif /^\-.*/.match(line)
-      %div{:class=>'deleted'}> #{line}
+      .deleted> #{line}
       
     - elsif /^@@\s.*@@.*$/.match(line)
-      %div{:class=>'diff-index', :id=>'Test'}> #{line}
+      .diff-index#Test> #{line}
     - elsif /^empty_line&nbsp;/.match(line)
       - line.slice! "empty_line"
-      %div{:class=>'diff-empty'}> #{line}
+      .diff-empty> #{line}
     - else
       %div> #{line}
-%div{:class=>'diffs_new'}
+.diffs_new
   -  @diff[:new_diff].each do |line|
     - if /^\+.*/.match(line)
-      %div{:class=>'added'}> #{line}
+      .added> #{line}
     
     - elsif /^\-.*/.match(line)
-      %div{:class=>'deleted'}> #{line}
+      .deleted> #{line}
     
     - elsif /^@@\s.*@@.*$/.match(line)
-      %div{:class=>'diff-index'}> #{line}
+      .diff-index> #{line}
     - elsif /^empty_line&nbsp;/.match(line)
       - line.slice! "empty_line"
-      %div{:class=>'diff-empty'}> #{line}
+      .diff-empty> #{line}
     - else
       %div> #{line}
 %script{:src=>url_for('/scripts/jquery-2.1.1.min.js')}
