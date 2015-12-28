@@ -5,7 +5,11 @@
       %div{:class=>'container'}
         %div{:class=>'navbar-header'}
           %div{:class=>'collapse navbar-collapse'}
-            %a{:class=>'navbar-brand', :href=>url_for('/')}
-              %img{:src=>url_for('/images/oxidizing_40px.png')} Oxidized
+	    %ul{:class=>'nav navbar-nav'}
+	      %li
+                %a{:class=>'navbar-brand', :href=>url_for('/')}
+                  %img{:src=>url_for('/images/oxidizing_40px.png')} Oxidized
+	      %li
+	        %a{:class=>'navbar-link', :href=>url_for('/migration')} Migration
     %div{:class=>'container'}
       =yield
