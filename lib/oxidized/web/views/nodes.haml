@@ -1,17 +1,3 @@
-:javascript
-  $(function() {
-    $('#nodesTable').dataTable({
-      dom: 'C<"clear">lfrtip',
-      "lengthMenu": [[50, 250, 500, -1], [50, 250, 500, "All"]],
-      columnDefs: [
-        { visible: false, targets: 1 },
-        {type: "string", targets: 3}
-      ],
-      colVis: {
-            exclude: [ 0, 5 ]
-        }
-    });
-  });
 .row.tbl-header
   .col-xs-12.col-md-2
     %h4 nodes /
@@ -56,3 +42,21 @@
             &nbsp;&nbsp;
             %a{title: 'update', href: url_for("/node/next/#{node[:full_name]}")}
               %span.glyphicon.glyphicon-repeat
+:javascript
+  $(function() {
+    $('#nodesTable').dataTable({
+      dom: 'C<"clear">lfrtip',
+      "lengthMenu": [[50, 250, 500, -1], [50, 250, 500, "All"]],
+      columnDefs: [{
+        visible: false,
+        targets: 1
+      }, {
+        type: "string",
+        targets: 3
+      }],
+      colVis: {
+        exclude: [0, 5]
+      }
+    });
+  });
+

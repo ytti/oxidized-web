@@ -1,13 +1,3 @@
-:javascript
-  $(function() {
-    $('#versionsTable').dataTable({
-      dom: 'C<"clear">lfrtip',
-      "order": [[ 0, "desc" ]],
-      columnDefs: [
-            { visible: false, targets: [2, 3] }
-        }
-    });
-  });
 .row.tbl-header
   .col-xs-12
     %h4
@@ -44,9 +34,20 @@
           %td
             #{x[:message]}
           %td
-	    - params = "node=#{@node}&group=#{@group}&oid=#{x[:oid]}&date=#{x[:date]}&num=#{nb}"
+            - params = "node=#{@node}&group=#{@group}&oid=#{x[:oid]}&date=#{x[:date]}&num=#{nb}"
             %a{title: 'configuration', href: url_for("/node/version/view?#{params}")}
               %span.glyphicon.glyphicon-cloud-download
             &nbsp;&nbsp;
             %a{title: 'diff', href: url_for("/node/version/diffs?#{params}") }
               %img{src: url_for('/images/diff_15x17.png')}
+:javascript
+  $(function() {
+    $('#versionsTable').dataTable({
+      dom: 'C<"clear">lfrtip',
+      "order": [[0, "desc"]],
+      columnDefs: [{
+        visible: false,
+        targets: [2, 3]
+      }]
+    });
+  });
