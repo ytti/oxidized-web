@@ -1,11 +1,12 @@
 %h4
   - if @info[:group] != ''
-    %a{href: url_for("/node/version?node_full=#{@info[:group] + '/' + @info[:node]}")} versions
-  - else    
-    %a{href: url_for("/node/version?node_full=#{@info[:node]}")} versions
-  \/ version #{@info[:num]}  for Node 
+    - params = "node_full=#{@info[:group] + '/' + @info[:node]}"
+  - else
+    - params = "node_full=#{@info[:node]}"
+  %a{href: url_for("/node/version?#{params}")} versions
+  \/ version #{@info[:num]} for Node
   %span.node_title #{@info[:node]}
-  
+
 - date_version = Time.parse @info[:date]
 Date of version: 
 %span.time #{date_version.strftime('%Y-%m-%d %H:%M:%S %Z')}

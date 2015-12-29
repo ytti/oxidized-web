@@ -6,8 +6,8 @@
   .refresh-div
     %form
       %button.ColVis_Button{type: 'button', onclick: 'history.go();'}
-        %span.glyphicon.glyphicon-repeat
-        Refresh
+        %span.glyphicon.glyphicon-repeat Refresh
+
   %table.table.table-responsive.tablesorter#nodesTable
     %thead
       %tr
@@ -20,9 +20,9 @@
         %th Actions
 
     %tbody
-      -trclass = %w(even odd)
-      -@data.sort_by{|e|e[:name]}.each do |node|
-        -klass = trclass.rotate!.first
+      - trclass = %w(even odd)
+      - @data.sort_by{|e|e[:name]}.each do |node|
+        - klass = trclass.rotate!.first
         %tr{class: "#{klass} ox-status-#{node[:status]}"}
           %td
             %a{href: url_for("/node/show/#{node[:name]}")} #{node[:name]}
@@ -34,14 +34,17 @@
               %span{style: 'visibility: hidden'}#{node[:status]}
           %td.time= node[:time]
           %td
-            %a{title: 'configuration', href: url_for("/node/fetch/#{node[:full_name]}")}
+            %a{title: 'configuration',
+               href: url_for("/node/fetch/#{node[:full_name]}")}
               %span.glyphicon.glyphicon-cloud-download
             &nbsp;&nbsp;
-            %a{title: 'versions', href: url_for("/node/version?node_full=#{node[:full_name]}")}
+            %a{title: 'versions',
+               href: url_for("/node/version?node_full=#{node[:full_name]}")}
               %img{src: url_for('/images/versioning_18px.png')}
             &nbsp;&nbsp;
             %a{title: 'update', href: url_for("/node/next/#{node[:full_name]}")}
               %span.glyphicon.glyphicon-repeat
+
 :javascript
   $(function() {
     $('#nodesTable').dataTable({

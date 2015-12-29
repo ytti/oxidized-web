@@ -1,7 +1,6 @@
 %h4
-  - node_full = ''
   - if @info[:group] != ''
-    - node_full = "#{@info[:group] + '/' + @info[:node]}"
+    - node_full = "#{@info[:group]}/#{@info[:node]}"
   - else
     - node_full = "#{@info[:node]}"
   %a{href: url_for("/node/version?node_full=#{node_full}")} versions
@@ -17,7 +16,7 @@ Number of lines changed:
 %br
 %br
 - params = "node=#{@info[:node]}&group=#{@info[:group]}&oid=#{@info[:oid]}"
-- params = "&date=#{@info[:date]}&num=#{@info[:num]}"
+- params = "#{params}&date=#{@info[:date]}&num=#{@info[:num]}"
 %form{action: "/node/version/diffs?#{params}", method: 'post'}
   %select#oid2{name: 'oid2'}
     - diff2 = {}
@@ -30,9 +29,8 @@ Number of lines changed:
         - next_id = false
       - elsif (x[:oid].to_s == @info[:oid]) && !(@info[:oid2])
         - next_id = true
-      
-        
-  %input{type: 'submit', value: 'Get diffs !'}
+
+  %input{type: 'submit', value: 'Get diffs!'}
 %br
 .old_version_title Version #{diff2[:num]} (#{time_from_now diff2[:date]})
 .new_version_title Version #{@info[:num]} (#{time_from_now @info[:date]})
@@ -47,13 +45,16 @@ Number of lines changed:
       
     - elsif /^@@\s.*@@.*$/.match(line)
       .diff-index#Test> #{line}
+
     - elsif /^empty_line&nbsp;/.match(line)
       - line.slice! "empty_line"
       .diff-empty> #{line}
+
     - else
       %div> #{line}
+
 .diffs_new
-  -  @diff[:new_diff].each do |line|
+  - @diff[:new_diff].each do |line|
     - if /^\+.*/.match(line)
       .added> #{line}
     
@@ -62,8 +63,11 @@ Number of lines changed:
     
     - elsif /^@@\s.*@@.*$/.match(line)
       .diff-index> #{line}
+
     - elsif /^empty_line&nbsp;/.match(line)
       - line.slice! "empty_line"
       .diff-empty> #{line}
+
     - else
       %div> #{line}
+

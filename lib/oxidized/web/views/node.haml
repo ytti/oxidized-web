@@ -7,7 +7,8 @@
     &nbsp;
     %a{title: 'configuration', href: url_for("/node/fetch/#{@data[:full_name]}")}
       %span.glyphicon.glyphicon-cloud-download{style: 'color: #000; font-size: 14px;'}
-    %a{title: 'versions', href: url_for("/node/version?node_full=#{@data[:full_name]}")}
+    %a{title: 'versions',
+       href: url_for("/node/version?node_full=#{@data[:full_name]}")}
       %img{src: url_for('/images/versioning_18px.png')}
     %a{title: 'update', href: url_for("/node/next/#{@data[:full_name]}")}
       %span.glyphicon.glyphicon-repeat{style: 'color: #000; font-size: 14px;'}

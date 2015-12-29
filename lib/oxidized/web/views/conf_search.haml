@@ -3,7 +3,7 @@
     %h4
       %a{href: url_for('/nodes')} nodes
       \/ Nodes that contain 
-      %span " #{@to_research} "
+      %span "#{@to_research}"
   
 .row
   .refresh-div
@@ -17,14 +17,14 @@
         %th Configuration
 
     %tbody
-      -trclass = %w(even odd)
       - @nodes_match.each do |x|
         %tr
+          %td #{x[:node]}
           %td
-            #{x[:node]}
-          %td
-            %a{title: 'configuration', href: url_for("/node/fetch/#{x[:full_name]}")}
+            %a{title: 'configuration',
+               href: url_for("/node/fetch/#{x[:full_name]}")}
               %span.glyphicon.glyphicon-cloud-download
+
 :javascript
   $(function() {
     $('#versionsTable').dataTable({
