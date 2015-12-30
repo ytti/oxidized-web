@@ -1,27 +1,17 @@
-:javascript
-  $(function() {
-    $('#versionsTable').dataTable({
-      dom: 'C<"clear">lfrtip',
-      "order": [[ 0, "desc" ]],
-      columnDefs: [
-            { visible: false, targets: [2, 3] }
-        }
-    });
-  });
-%div{:class=>'row tbl-header'}
-  %div{:class=>'col-xs-12 '}
+.row.tbl-header
+  .col-xs-12
     %h4
-      %a{:href=>url_for('/nodes')} nodes
+      %a{href: url_for('/nodes')} nodes
       \/ Versions for Node 
-      %span{:class=>'node_title'} #{@node}
-  
-%div{:class=>'row'}
-  %div{:class=>'refresh-div'}
+      %span.node_title #{@node}
+
+.row
+  .refresh-div
     %form
-      %button{:class => "ColVis_Button", :type => "button", :onclick => "history.go();"}
-        %span{:class=>"glyphicon glyphicon-repeat"}
-        Refresh
-  %table{:id=>'versionsTable', :class=>'table table-responsive tablesorter'}
+      %button.ColVis_Button{type: 'button', onclick: 'history.go();'}
+        %span.glyphicon.glyphicon-repeat Refresh
+
+  %table.table.table-responsive.tablesorter#versionsTable
     %thead
       %tr
         %th Version
@@ -31,24 +21,31 @@
         %th Actions
 
     %tbody
-      -trclass = %w(even odd)
       - nb = @data.count + 1
       - @data.each do |x|
         %tr
+          %td #{nb -= 1}
+          %td #{time_from_now x[:date]}
+          %td #{x[:author][:name]}
+          %td #{x[:message]}
           %td
-            #{nb -= 1}
-          %td
-            #{time_from_now x[:date]}
-          %td
-            #{x[:author][:name]}
-          %td
-            #{x[:message]}
-          %td
-            %a{:title => "configuration", :href => url_for("/node/version/view?node=#{@node}&group=#{@group}&oid=#{x[:oid]}&date=#{x[:date]}&num=#{nb}") }
-              %span{:class=>'glyphicon glyphicon-cloud-download'} 
+            - params = "node=#{@node}&group=#{@group}&oid=#{x[:oid]}"
+            - params = "#{params}&date=#{x[:date]}&num=#{nb}"
+            %a{title: 'configuration',
+               href: url_for("/node/version/view?#{params}")}
+              %span.glyphicon.glyphicon-cloud-download
             &nbsp;&nbsp;
-            %a{:title => "diff", :href => url_for("/node/version/diffs?node=#{@node}&group=#{@group}&oid=#{x[:oid]}&date=#{x[:date]}&num=#{nb}") }
-              %img{:src=>url_for('/images/diff_15x17.png')}
-          
+            %a{title: 'diff', href: url_for("/node/version/diffs?#{params}")}
+              %img{src: url_for('/images/diff_15x17.png')}
 
-    
+:javascript
+  $(function() {
+    $('#versionsTable').dataTable({
+      dom: 'C<"clear">lfrtip',
+      "order": [[0, "desc"]],
+      columnDefs: [{
+        visible: false,
+        targets: [2, 3]
+      }]
+    });
+  });

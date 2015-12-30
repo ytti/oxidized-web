@@ -1,28 +1,14 @@
-:javascript
-  $(function() {
-    $('#nodesTable').dataTable({
-      dom: 'C<"clear">lfrtip',
-      "lengthMenu": [[50, 250, 500, -1], [50, 250, 500, "All"]],
-      columnDefs: [
-        { visible: false, targets: 1 },
-        {type: "string", targets: 3}
-      ],
-      colVis: {
-            exclude: [ 0, 5 ]
-        }
-    });
-  });
-%div{:class=>'row tbl-header'}
-  %div{:class=>'col-xs-12 col-md-2'}
+.row.tbl-header
+  .col-xs-12.col-md-2
     %h4 nodes /
   
-%div{:class=>'row'}
-  %div{:class=>'refresh-div'}
+.row
+  .refresh-div
     %form
-      %button{:class => "ColVis_Button", :type => "button", :onclick => "history.go();"}
-        %span{:class=>"glyphicon glyphicon-repeat"}
-        Refresh
-  %table{:id=>'nodesTable', :class=>'table table-responsive tablesorter'}
+      %button.ColVis_Button{type: 'button', onclick: 'history.go();'}
+        %span.glyphicon.glyphicon-repeat Refresh
+
+  %table.table.table-responsive.tablesorter#nodesTable
     %thead
       %tr
         %th Name
@@ -34,25 +20,46 @@
         %th Actions
 
     %tbody
-      -trclass = %w(even odd)
-      -@data.sort_by{|e|e[:name]}.each do |node|
-        -klass = trclass.rotate!.first
-        %tr{:class=>"#{klass} ox-status-#{node[:status]}"}
+      - trclass = %w(even odd)
+      - @data.sort_by{|e|e[:name]}.each do |node|
+        - klass = trclass.rotate!.first
+        %tr{class: "#{klass} ox-status-#{node[:status]}"}
           %td
-            %a{:href => url_for("/node/show/#{node[:name]}") } #{node[:name]}
+            %a{href: url_for("/node/show/#{node[:name]}")} #{node[:name]}
           %td= node[:ip]
           %td= node[:model]
           %td= node[:group]
           %td
-            %div{:title=>node[:status], :class=>node[:status]}
-              %span{:style=>'visibility: hidden'}#{node[:status]}
-          %td{:class=>'time'}= node[:time]
+            %div{title: node[:status], class: node[:status]}
+              %span{style: 'visibility: hidden'}#{node[:status]}
+          %td.time= node[:time]
           %td
-            %a{:title => "configuration", :href => url_for("/node/fetch/#{node[:full_name]}") }
-              %span{:class=>'glyphicon glyphicon-cloud-download'}
+            %a{title: 'configuration',
+               href: url_for("/node/fetch/#{node[:full_name]}")}
+              %span.glyphicon.glyphicon-cloud-download
             &nbsp;&nbsp;
-            %a{:title => "versions", :href => url_for("/node/version?node_full=#{node[:full_name]}") }
-              %img{:src=>url_for('/images/versioning_18px.png')}
+            %a{title: 'versions',
+               href: url_for("/node/version?node_full=#{node[:full_name]}")}
+              %img{src: url_for('/images/versioning_18px.png')}
             &nbsp;&nbsp;
-            %a{:title => "update", :href => url_for("/node/next/#{node[:full_name]}") }
-              %span{:class=>'glyphicon glyphicon-repeat'}
+            %a{title: 'update', href: url_for("/node/next/#{node[:full_name]}")}
+              %span.glyphicon.glyphicon-repeat
+
+:javascript
+  $(function() {
+    $('#nodesTable').dataTable({
+      dom: 'C<"clear">lfrtip',
+      "lengthMenu": [[50, 250, 500, -1], [50, 250, 500, "All"]],
+      columnDefs: [{
+        visible: false,
+        targets: 1
+      }, {
+        type: "string",
+        targets: 3
+      }],
+      colVis: {
+        exclude: [0, 5]
+      }
+    });
+  });
+

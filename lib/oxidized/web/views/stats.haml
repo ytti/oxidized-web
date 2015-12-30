@@ -3,17 +3,19 @@
     %h4
       %a{href: url_for('/nodes')} nodes
       \/ stats
+
 .row
   %table.table.table-responsive.tablesorter#versionsTable
     %caption
       %span Failures in Previous 24 Hours
       %button.ColVis_Button{type: 'button', onclick: 'history.go();'}
-        %span.glyphicon.glyphicon-repeat
-        Refresh
+        %span.glyphicon.glyphicon-repeat Refresh
+
     %thead
       %tr
         %th Name
         %th Last Success
+
     %tbody
       - @data.select do |node, stats|
         - not stats[:success] or (stats[:success].last[:end] < Time.now.utc-60*60*24)
@@ -22,6 +24,7 @@
         %tr
           %td= node
           %td= last
+
 :javascript
   $(function(){
     $("#statsTable").tablesorter();

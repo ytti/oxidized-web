@@ -1,37 +1,35 @@
-:javascript
-  $(function() {
-    $('#versionsTable').dataTable({
-      dom: 'C<"clear">lfrtip',
-      "order": [[ 0, "desc" ]]
-    });
-  });
-%div{:class=>'row tbl-header'}
-  %div{:class=>'col-xs-12 '}
+.row.tbl-header
+  .col-xs-12
     %h4
-      %a{:href=>url_for('/nodes')} nodes
+      %a{href: url_for('/nodes')} nodes
       \/ Nodes that contain 
-      %span " #{@to_research} "
+      %span "#{@to_research}"
   
-%div{:class=>'row'}
-  %div{:class=>'refresh-div'}
+.row
+  .refresh-div
     %form
-      %button{:class => "ColVis_Button", :type => "button", :onclick => "history.go();"}
-        %span{:class=>"glyphicon glyphicon-repeat"}
-        Refresh
-  %table{:id=>'versionsTable', :class=>'table table-responsive tablesorter'}
+      %button.ColVis_Button{type: 'button', onclick: 'history.go();'}
+        %span.glyphicon.glyphicon-repeat Refresh
+  %table.table.table-responsive.tablesorter#versionsTable
     %thead
       %tr
         %th Name
         %th Configuration
 
     %tbody
-      -trclass = %w(even odd)
       - @nodes_match.each do |x|
         %tr
+          %td #{x[:node]}
           %td
-            #{x[:node]}
-          %td
-            %a{:title => "configuration", :href => url_for("/node/fetch/#{x[:full_name]}") }
-              %span{:class=>'glyphicon glyphicon-cloud-download'} 
+            %a{title: 'configuration',
+               href: url_for("/node/fetch/#{x[:full_name]}")}
+              %span.glyphicon.glyphicon-cloud-download
 
-          
+:javascript
+  $(function() {
+    $('#versionsTable').dataTable({
+      dom: 'C<"clear">lfrtip',
+      "order": [[0, "desc"]]
+    });
+  });
+
