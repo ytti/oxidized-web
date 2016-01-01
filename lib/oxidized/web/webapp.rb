@@ -131,8 +131,7 @@ module Oxidized
 
         i = 1
         while i <= number do
-          router_db_files.push({ file: (params["file#{i}"][:tempfile]),
-	                         group: params["group#{i}"] })
+          router_db_files.push({ file: params["file#{i}"][:tempfile], group: params["group#{i}"] })
           i = i + 1
         end
 
@@ -167,13 +166,13 @@ module Oxidized
       get '/node/version/view.?:format?' do
         node, @json = route_parse :node
         @info = {
-	  node: node,
-	  group: params[:group],
-	  oid: params[:oid],
-	  date: params[:date],
-	  num: params[:num]
-	}
-	          
+          node: node,
+          group: params[:group],
+          oid: params[:oid],
+          date: params[:date],
+          num: params[:num]
+        }
+
         @data = nodes.get_version node, @info[:group], @info[:oid]
         out :version
       end
