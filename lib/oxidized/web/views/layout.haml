@@ -21,7 +21,7 @@
             %li{class: request.path_info == '/nodes/stats' ? 'active' : ''}
               %a.navbar-link{href: url_for('/nodes/stats')} Stats
 
-            %li
+            %li{class: request.path_info == '/migration' ? 'active' : ''}
               %a.navbar-link{href: url_for('/migration')} Migration
 
           %form.navbar-form.navbar-right{role: 'search',
