@@ -53,7 +53,7 @@ module Oxidized
           node, @json = route_parse n[:name]
           config = nodes.fetch node, n[:group]
           if config[@to_research]
-            @nodes_match.push({node: n[:name], full_name: n[:full_name]})
+            @nodes_match.push({ node: n[:name], full_name: n[:full_name] })
           end
         end
         out :conf_search
@@ -116,12 +116,12 @@ module Oxidized
         out :node
       end
 
-      #redirect to the web page for rancid - oxidized migration
+      # redirect to the web page for rancid - oxidized migration
       get '/migration' do
         out :migration
       end
 
-      #get the files send
+      # get the files send
       post '/migration' do
         number = params[:number].to_i
         cloginrc_file = params['cloginrc'][:tempfile]
@@ -131,21 +131,21 @@ module Oxidized
 
         i = 1
         while i <= number do
-          router_db_files.push({file: (params["file#{i}"][:tempfile]), group: params["group#{i}"]})
-          i = i+1
+          router_db_files.push({ file: (params["file#{i}"][:tempfile]),
+	                         group: params["group#{i}"] })
+          i = i + 1
         end
 
         migration = Mig.new(router_db_files, cloginrc_file, path_new_file)
         migration.go_rancid_migration
         redirect url_for('//nodes')
-
       end
 
       get '/css/*.css' do
         sass "sass/#{params[:splat].first}".to_sym
       end
 
-      #show the lists of versions for a node
+      # show the lists of versions for a node
       get '/node/version.?:format?' do
         @data = nil
         @group = nil
@@ -163,15 +163,22 @@ module Oxidized
         out :versions
       end
 
-      #show the blob of a version
+      # show the blob of a version
       get '/node/version/view.?:format?' do
         node, @json = route_parse :node
-        @info = {node: node, group: params[:group], oid: params[:oid], date: params[:date], num: params[:num]}
+        @info = {
+	  node: node,
+	  group: params[:group],
+	  oid: params[:oid],
+	  date: params[:date],
+	  num: params[:num]
+	}
+	          
         @data = nodes.get_version node, @info[:group], @info[:oid]
         out :version
       end
 
-      #show diffs between 2 version
+      # show diffs between 2 version
       get '/node/version/diffs' do
         node, @json = route_parse :node
         @data = nil
@@ -208,14 +215,14 @@ module Oxidized
         out :diffs
       end
 
-      #used for diff between 2 distant commit
+      # used for diff between 2 distant commit
       post '/node/version/diffs' do
         redirect url_for("/node/version/diffs?node=#{params[:node]}&group=#{params[:group]}&oid=#{params[:oid]}&date=#{params[:date]}&num=#{params[:num]}&oid2=#{params[:oid2]}")
       end
 
       private
 
-      def out template=:default
+      def out template = :default
         if @json or params[:format] == 'json'
           if @data.is_a?(String)
             json @data.lines
@@ -248,10 +255,10 @@ module Oxidized
         [e.join('.'), json]
       end
 
-      #give the time enlapsed between now and a date
+      # give the time enlapsed between now and a date
       def time_from_now date
         if date
-          #if the + is missing
+          # if the + is missing
           unless date.include? '+'
             date.insert(21, '+')
           end
@@ -262,7 +269,7 @@ module Oxidized
           hh, mm = mm.divmod(60)
           dd, hh = hh.divmod(24)
           if dd > 0
-           date = "#{dd} days #{hh} hours ago"
+            date = "#{dd} days #{hh} hours ago"
           elsif hh > 0
             date = "#{hh} hours #{mm} min ago"
           else
@@ -272,7 +279,7 @@ module Oxidized
         date
       end
 
-      #method the give diffs in separate view (the old and the new) as in github
+      # method the give diffs in separate view (the old and the new) as in github
       def diff_view diff
         old_diff = []
         new_diff = []
@@ -295,20 +302,20 @@ module Oxidized
             break
           end
           if (/^\-.*/.match(old_diff[i])) && !(/^\+.*/.match(new_diff[i]))
-            #tag removed latter to add color syntax
+            # tag removed latter to add color syntax
             insert = 'empty_line'
-            #ugly way to avoid asymmetry if at display the line takes 2 line on the screen
+            # ugly way to avoid asymmetry if at display the line takes 2 line on the screen
             insert = "&nbsp;\n"
-            new_diff.insert(i,insert)
+            new_diff.insert(i, insert)
             length_n += 1
           elsif !(/^\-.*/.match(old_diff[i])) && (/^\+.*/.match(new_diff[i]))
             insert = 'empty_line'
             insert = "&nbsp;\n"
-            old_diff.insert(i,insert)
+            old_diff.insert(i, insert)
             length_o += 1
           end
         end
-        {old_diff: old_diff, new_diff: new_diff}
+        { old_diff: old_diff, new_diff: new_diff }
       end
     end
   end
