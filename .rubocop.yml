@@ -1,0 +1,5 @@
+---
+
+LineLength:
+  # Default line length is silly.  100 is more realistic.
+  Max: 100
