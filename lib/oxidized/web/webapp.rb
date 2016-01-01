@@ -53,7 +53,7 @@ module Oxidized
           node, @json = route_parse n[:name]
           config = nodes.fetch node, n[:group]
           if config[@to_research]
-            @nodes_match.push({:node => n[:name], :full_name => n[:full_name]})
+            @nodes_match.push({node: n[:name], full_name: n[:full_name]})
           end
         end
         out :conf_search
@@ -131,7 +131,7 @@ module Oxidized
 
         i = 1
         while i <= number do
-          router_db_files.push({:file=>(params["file"+i.to_s][:tempfile]), :group=>params["group"+i.to_s]})
+          router_db_files.push({file: (params["file"+i.to_s][:tempfile]), group: params["group"+i.to_s]})
           i = i+1
         end
 
@@ -166,7 +166,7 @@ module Oxidized
       #show the blob of a version
       get '/node/version/view.?:format?' do
         node, @json = route_parse :node
-        @info = {:node => node, :group => params[:group],:oid => params[:oid],:date => params[:date],:num => params[:num]}
+        @info = {node: node, group: params[:group], oid: params[:oid], date: params[:date], num: params[:num]}
         @data = nodes.get_version node, @info[:group], @info[:oid]
         out :version
       end
@@ -175,7 +175,7 @@ module Oxidized
       get '/node/version/diffs' do
         node, @json = route_parse :node
         @data = nil
-        @info = {:node => node, :group => params[:group],:oid => params[:oid],:date => params[:date],:num => params[:num], :num2 => (params[:num].to_i - 1)}
+        @info = {node: node, group: params[:group], oid: params[:oid], date: params[:date], num: params[:num], num2: (params[:num].to_i - 1)}
         group = nil
         if @info[:group] != ''
           group = @info[:group]
@@ -226,7 +226,7 @@ module Oxidized
           content_type :text
           @data
         else
-          haml template, :layout => true
+          haml template, layout: true
         end
       end
 
@@ -308,7 +308,7 @@ module Oxidized
             length_o += 1
           end
         end
-        {:old_diff => old_diff, :new_diff => new_diff}
+        {old_diff: old_diff, new_diff: new_diff}
       end
     end
   end
