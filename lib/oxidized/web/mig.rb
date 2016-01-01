@@ -28,7 +28,7 @@ module Oxidized
                 if line.length > i + 2
                   h = hash[line[i + 1]]
                   h[:password] = line[i + 2]
-                  h[:enable] = line[i + 3] if line[i + 3].match(/\s*/)
+                  h[:enable] = line[i + 3] if /\s*/.match(line[i + 3])
                   hash[line[i + 1]] = h
                 elsif line.length = i + 2
                   h = hash[line[i + 1]]
