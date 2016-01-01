@@ -209,7 +209,7 @@ module Oxidized
           @data = nodes.get_diff node, @info[:group], @info[:oid], nil
         end
         @stat = %w(null null)
-        unless @data == 'no diffs' && @data.nil?
+        if @data != 'no diffs' && !@data.nil?
           @stat = @data[:stat]
           @data = @data[:patch]
         else
@@ -226,7 +226,7 @@ module Oxidized
 
       private
 
-      def out(template=:default)
+      def out(template = :default)
         if @json || params[:format] == 'json'
           if @data.is_a?(String)
             json @data.lines
