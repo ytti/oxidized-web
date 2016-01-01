@@ -10,33 +10,33 @@
     %form
       %button.ColVis_Button{type: 'button', onclick: 'history.go();'}
         %span.glyphicon.glyphicon-repeat Refresh
-
-  %table.table.table-responsive.tablesorter#versionsTable
-    %thead
-      %tr
-        %th Version
-        %th Dates
-        %th Author
-        %th Message
-        %th Actions
-
-    %tbody
-      - nb = @data.count + 1
-      - @data.each do |x|
+  .table-responsive
+    %table.table.table-condensed.table-striped.table-hover#versionsTable
+      %thead
         %tr
-          %td #{nb -= 1}
-          %td #{time_from_now x[:date]}
-          %td #{x[:author][:name]}
-          %td #{x[:message]}
-          %td
-            - params = "node=#{@node}&group=#{@group}&oid=#{x[:oid]}"
-            - params = "#{params}&date=#{x[:date]}&num=#{nb}"
-            %a{title: 'configuration',
-               href: url_for("/node/version/view?#{params}")}
-              %span.glyphicon.glyphicon-cloud-download
-            &nbsp;&nbsp;
-            %a{title: 'diff', href: url_for("/node/version/diffs?#{params}")}
-              %img{src: url_for('/images/diff_15x17.png')}
+          %th Version
+          %th Dates
+          %th Author
+          %th Message
+          %th Actions
+
+      %tbody
+        - nb = @data.count + 1
+        - @data.each do |x|
+          %tr
+            %td #{nb -= 1}
+            %td #{time_from_now x[:date]}
+            %td #{x[:author][:name]}
+            %td #{x[:message]}
+            %td
+              - params = "node=#{@node}&group=#{@group}&oid=#{x[:oid]}"
+              - params = "#{params}&date=#{x[:date]}&num=#{nb}"
+              %a{title: 'configuration',
+                 href: url_for("/node/version/view?#{params}")}
+                %span.glyphicon.glyphicon-cloud-download
+              &nbsp;&nbsp;
+              %a{title: 'diff', href: url_for("/node/version/diffs?#{params}")}
+                %img{src: url_for('/images/diff_15x17.png')}
 
 :javascript
   $(function() {

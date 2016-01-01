@@ -1,73 +1,84 @@
-%h4
-  - if @info[:group] != ''
-    - node_full = "#{@info[:group]}/#{@info[:node]}"
-  - else
-    - node_full = "#{@info[:node]}"
-  %a{href: url_for("/node/version?node_full=#{node_full}")} versions
-  \/ Diff version #{@info[:num]} - #{@info[:num2]} for Node 
-  %span.node_title #{@info[:node]}
-- date_version = Time.parse @info[:date]
-Date of version:
-%span.time #{date_version.strftime("%d-%m-%y at %r")}
-%br
-Number of lines changed: 
-%span.added added #{@stat[0]} 
-%span.deleted removed #{@stat[1]}
-%br
-%br
-- params = "node=#{@info[:node]}&group=#{@info[:group]}&oid=#{@info[:oid]}"
-- params = "#{params}&date=#{@info[:date]}&num=#{@info[:num]}"
-%form{action: "/node/version/diffs?#{params}", method: 'post'}
-  %select#oid2{name: 'oid2'}
-    - diff2 = {}
-    - num = @oids_dates.count + 1
-    - next_id = false
-    - @oids_dates.each do |x|
-      %option{value: x[:oid]} Version #{num -= 1} (#{time_from_now x[:date]})
-      - if (x[:oid].to_s == @info[:oid2]) || (next_id)
-        - diff2 = {num: num, date: x[:date]}
-        - next_id = false
-      - elsif (x[:oid].to_s == @info[:oid]) && !(@info[:oid2])
-        - next_id = true
+.row
+  .col-sm-12
+    %h4
+      - if @info[:group] != ''
+        - node_full = "#{@info[:group]}/#{@info[:node]}"
+      - else
+        - node_full = "#{@info[:node]}"
+      %a{href: url_for("/node/version?node_full=#{node_full}")} versions
+      \/ Diff version #{@info[:num]} - #{@info[:num2]} for Node
+      %span.node_title #{@info[:node]}
+.row
+  .col-sm-12
+    - date_version = Time.parse @info[:date]
+    Date of version:
+    %span.time #{date_version.strftime("%d-%m-%y at %r")}
+.row
+  .col-sm-12
+    Number of lines changed:
+    %span.added added #{@stat[0]}
+    %span.deleted removed #{@stat[1]}
 
-  %input{type: 'submit', value: 'Get diffs!'}
-%br
-.old_version_title Version #{diff2[:num]} (#{time_from_now diff2[:date]})
-.new_version_title Version #{@info[:num]} (#{time_from_now @info[:date]})
-%br
-.diffs_old#Test
-  - @diff[:old_diff].each do |line|
-    - if /^\+.*/.match(line)
-      .added#Test> #{line}
-      
-    - elsif /^\-.*/.match(line)
-      .deleted> #{line}
-      
-    - elsif /^@@\s.*@@.*$/.match(line)
-      .diff-index#Test> #{line}
+.row
+  .col-sm-6
+    - params = "node=#{@info[:node]}&group=#{@info[:group]}&oid=#{@info[:oid]}"
+    - params = "#{params}&date=#{@info[:date]}&num=#{@info[:num]}"
+    %form{action: "/node/version/diffs?#{params}", method: 'post', role: 'form'}
+      .form-group
+        %select.form-control#oid2{name: 'oid2'}
+          - diff2 = {}
+          - num = @oids_dates.count + 1
+          - next_id = false
+          - @oids_dates.each do |x|
+            %option{value: x[:oid]} Version #{num -= 1} (#{time_from_now x[:date]})
+            - if (x[:oid].to_s == @info[:oid2]) || (next_id)
+              - diff2 = {num: num, date: x[:date]}
+              - next_id = false
+            - elsif (x[:oid].to_s == @info[:oid]) && !(@info[:oid2])
+              - next_id = true
 
-    - elsif /^empty_line&nbsp;/.match(line)
-      - line.slice! "empty_line"
-      .diff-empty> #{line}
+      %button.btn.btn-default{type: 'submit'} Get Diffs!
 
-    - else
-      %div> #{line}
+.row
+  .col-sm-12
+    .old_version_title Version #{diff2[:num]} (#{time_from_now diff2[:date]})
+    .new_version_title Version #{@info[:num]} (#{time_from_now @info[:date]})
 
-.diffs_new
-  - @diff[:new_diff].each do |line|
-    - if /^\+.*/.match(line)
-      .added> #{line}
-    
-    - elsif /^\-.*/.match(line)
-      .deleted> #{line}
-    
-    - elsif /^@@\s.*@@.*$/.match(line)
-      .diff-index> #{line}
+.row
+  .col-sm-12
+    .diffs_old
+      - @diff[:old_diff].each do |line|
+        - if /^\+.*/.match(line)
+          .added> #{line}
 
-    - elsif /^empty_line&nbsp;/.match(line)
-      - line.slice! "empty_line"
-      .diff-empty> #{line}
+        - elsif /^\-.*/.match(line)
+          .deleted> #{line}
 
-    - else
-      %div> #{line}
+        - elsif /^@@\s.*@@.*$/.match(line)
+          .diff-index> #{line}
+
+        - elsif /^empty_line&nbsp;/.match(line)
+          - line.slice! "empty_line"
+          .diff-empty> #{line}
+
+        - else
+          %div> #{line}
+
+    .diffs_new
+      - @diff[:new_diff].each do |line|
+        - if /^\+.*/.match(line)
+          .added> #{line}
+
+        - elsif /^\-.*/.match(line)
+          .deleted> #{line}
+
+        - elsif /^@@\s.*@@.*$/.match(line)
+          .diff-index> #{line}
+
+        - elsif /^empty_line&nbsp;/.match(line)
+          - line.slice! "empty_line"
+          .diff-empty> #{line}
+
+        - else
+          %div> #{line}
 

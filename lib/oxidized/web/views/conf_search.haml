@@ -10,20 +10,21 @@
     %form
       %button.ColVis_Button{type: 'button', onclick: 'history.go();'}
         %span.glyphicon.glyphicon-repeat Refresh
-  %table.table.table-responsive.tablesorter#versionsTable
-    %thead
-      %tr
-        %th Name
-        %th Configuration
-
-    %tbody
-      - @nodes_match.each do |x|
+  .table-responsive
+    %table.table.table-condensed.table-striped.table-hover#versionsTable
+      %thead
         %tr
-          %td #{x[:node]}
-          %td
-            %a{title: 'configuration',
-               href: url_for("/node/fetch/#{x[:full_name]}")}
-              %span.glyphicon.glyphicon-cloud-download
+          %th Name
+          %th Configuration
+
+      %tbody
+        - @nodes_match.each do |x|
+          %tr
+            %td #{x[:node]}
+            %td
+              %a{title: 'configuration',
+                 href: url_for("/node/fetch/#{x[:full_name]}")}
+                %span.glyphicon.glyphicon-cloud-download
 
 :javascript
   $(function() {
