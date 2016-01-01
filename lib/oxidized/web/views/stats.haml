@@ -5,12 +5,13 @@
       \/ stats
 
 .row
-  %table.table.table-responsive.table-condensed.table-striped.table-hover.tablesorter#versionsTable
+  .pull-right
+    %button.ColVis_Button{type: 'button', onclick: 'history.go();'}
+      %span.glyphicon.glyphicon-repeat Refresh
+
+  %table.table.table-responsive.table-condensed.table-striped.table-hover.tablesorter#statsTable
     %caption
       %span Node Statistics
-      %button.btn.btn-default.pull-right{type: 'button', onclick: 'history.go();'}
-        %span.glyphicon.glyphicon-repeat
-        Refresh
 
     %thead
       %tr
@@ -78,4 +79,23 @@
             %div{title: status, class: status}
           %td.time= last_success
           %td.time= last_failure
+
+:javascript
+  $(function() {
+    $('#statsTable').dataTable({
+      dom: 'C<"clear">lfrtip',
+      "lengthMenu": [[50, 250, 500, -1], [50, 250, 500, "All"]],
+      columnDefs: [{
+        visible: false,
+        targets: 1
+      }, {
+        type: "string",
+        targets: 3
+      }],
+      colVis: {
+        exclude: [0, 5]
+      }
+    });
+  });
+
 
