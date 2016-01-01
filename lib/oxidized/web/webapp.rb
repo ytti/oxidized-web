@@ -9,7 +9,7 @@ module Oxidized
   module API
     class WebApp < Sinatra::Base
       helpers Sinatra::UrlForHelper
-      set :public_folder, Proc.new { File.join(root, "public") }
+      set :public_folder, Proc.new { File.join(root, 'public') }
 
       get '/' do
         redirect url_for('/nodes')
@@ -131,13 +131,13 @@ module Oxidized
 
         i = 1
         while i <= number do
-          router_db_files.push({file: (params["file"+i.to_s][:tempfile]), group: params["group"+i.to_s]})
+          router_db_files.push({file: (params["file#{i.to_s}"][:tempfile]), group: params["group#{i.to_s}"]})
           i = i+1
         end
 
         migration = Mig.new(router_db_files, cloginrc_file, path_new_file)
         migration.go_rancid_migration
-        redirect url_for("//nodes")
+        redirect url_for('//nodes')
 
       end
 
@@ -151,7 +151,7 @@ module Oxidized
         @group = nil
         @node = nil
         node_full = params[:node_full]
-        if node_full.include? "/"
+        if node_full.include? '/'
           node_full = node_full.split('/')
           @group = node_full[0]
           @node = node_full[1]
@@ -197,12 +197,12 @@ module Oxidized
         else
           @data = nodes.get_diff node, @info[:group], @info[:oid], nil
         end
-        @stat = ["null","null"]
+        @stat = ['null', 'null']
         if @data != 'no diffs' && @data != nil
           @stat = @data[:stat]
           @data = @data[:patch]
         else
-          @data = "no available"
+          @data = 'no available'
         end
         @diff = diff_view @data
         out :diffs
@@ -252,8 +252,8 @@ module Oxidized
       def time_from_now date
         if date
           #if the + is missing
-          unless date.include? "+"
-            date.insert(21, "+")
+          unless date.include? '+'
+            date.insert(21, '+')
           end
           date = DateTime.parse date
           now = DateTime.now
