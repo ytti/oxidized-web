@@ -53,7 +53,7 @@ module Oxidized
           node, @json = route_parse n[:name]
           config = nodes.fetch node, n[:group]
           if config[@to_research]
-            @nodes_match.push({ node: n[:name], full_name: n[:full_name] })
+            @nodes_match.push(node: n[:name], full_name: n[:full_name])
           end
         end
         out :conf_search
@@ -127,17 +127,17 @@ module Oxidized
         cloginrc_file = params['cloginrc'][:tempfile]
         path_new_file = params['path_new_file']
 
-        router_db_files = Array.new
+        router_db_files = []
 
         i = 1
-        while i <= number do
-          router_db_files.push({ file: params["file#{i}"][:tempfile], group: params["group#{i}"] })
-          i = i + 1
+        while i <= number
+          router_db_files.push(file: params["file#{i}"][:tempfile], group: params["group#{i}"])
+          i += 1
         end
 
         migration = Mig.new(router_db_files, cloginrc_file, path_new_file)
         migration.go_rancid_migration
-        redirect url_for('//nodes')
+        redirect url_for('/nodes')
       end
 
       get '/css/*.css' do
@@ -181,11 +181,16 @@ module Oxidized
       get '/node/version/diffs' do
         node, @json = route_parse :node
         @data = nil
-        @info = {node: node, group: params[:group], oid: params[:oid], date: params[:date], num: params[:num], num2: (params[:num].to_i - 1)}
+        @info = {
+          node: node,
+          group: params[:group],
+          oid: params[:oid],
+          date: params[:date],
+          num: params[:num],
+          num2: (params[:num].to_i - 1)
+        }
         group = nil
-        if @info[:group] != ''
-          group = @info[:group]
-        end
+        group = @info[:group] if @info[:group] != ''
         @oids_dates = nodes.version node, group
         if params[:oid2]
           @info[:oid2] = params[:oid2]
@@ -203,8 +208,8 @@ module Oxidized
         else
           @data = nodes.get_diff node, @info[:group], @info[:oid], nil
         end
-        @stat = ['null', 'null']
-        if @data != 'no diffs' && @data != nil
+        @stat = %w(null null)
+        unless @data == 'no diffs' && @data.nil?
           @stat = @data[:stat]
           @data = @data[:patch]
         else
@@ -221,14 +226,14 @@ module Oxidized
 
       private
 
-      def out template = :default
-        if @json or params[:format] == 'json'
+      def out(template=:default)
+        if @json || params[:format] == 'json'
           if @data.is_a?(String)
             json @data.lines
           else
             json @data
           end
-        elsif template == :text or params[:format] == 'text'
+        elsif template == :text || params[:format] == 'text'
           content_type :text
           @data
         else
@@ -240,7 +245,7 @@ module Oxidized
         settings.nodes
       end
 
-      def route_parse param
+      def route_parse(param)
         json = false
         if param.respond_to?(:to_str)
           e = param.split '.'
@@ -255,12 +260,10 @@ module Oxidized
       end
 
       # give the time enlapsed between now and a date
-      def time_from_now date
+      def time_from_now(date)
         if date
           # if the + is missing
-          unless date.include? '+'
-            date.insert(21, '+')
-          end
+          date.insert(21, '+') unless date.include? '+'
           date = DateTime.parse date
           now = DateTime.now
           t = ((now - date) * 24 * 60 * 60).to_i
@@ -279,7 +282,7 @@ module Oxidized
       end
 
       # method the give diffs in separate view (the old and the new) as in github
-      def diff_view diff
+      def diff_view(diff)
         old_diff = []
         new_diff = []
 
@@ -297,9 +300,7 @@ module Oxidized
         length_o = old_diff.count
         length_n = new_diff.count
         for i in 0..[length_o, length_n].max
-          if i > [length_o, length_n].min
-            break
-          end
+          break if i > [length_o, length_n].min
           if (/^\-.*/.match(old_diff[i])) && !(/^\+.*/.match(new_diff[i]))
             # tag removed latter to add color syntax
             insert = 'empty_line'

@@ -6,15 +6,15 @@ module Oxidized
       require 'rack/handler'
       attr_reader :thread
       Rack::Handler::WEBrick = Rack::Handler.get(:puma)
-      def initialize nodes, listen
+      def initialize(nodes, listen)
         require 'oxidized/web/webapp'
         listen, uri = listen.split '/'
         addr, port = listen.split ':'
-        port, addr = addr, nil if not port
-        uri = '/' + uri.to_s
+        port, addr = addr, nil unless port
+        uri = "/#{uri}"
         @opts = {
           Host: addr,
-          Port: port,
+          Port: port
         }
         WebApp.set :nodes, nodes
         @app = Rack::Builder.new do
