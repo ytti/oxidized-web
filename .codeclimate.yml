@@ -1,0 +1,8 @@
+---
+
+exclude_paths:
+  - 'lib/oxidized/web/public/css/*'
+  - 'lib/oxidized/web/public/script/bootstrap.min.js'
+  - 'lib/oxidized/web/public/script/dataTables*'
+  - 'lib/oxidized/web/public/script/jquery*'
+
