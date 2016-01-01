@@ -25,7 +25,7 @@ ratings:
 
 exclude_paths:
   - 'lib/oxidized/web/public/css/*'
-  - 'lib/oxidized/web/public/script/bootstrap.min.js'
-  - 'lib/oxidized/web/public/script/dataTables*'
-  - 'lib/oxidized/web/public/script/jquery*'
+  - 'lib/oxidized/web/public/scripts/bootstrap.min.js'
+  - 'lib/oxidized/web/public/scripts/dataTables**'
+  - 'lib/oxidized/web/public/scripts/jquery**'
 
