@@ -5,12 +5,13 @@
       \/ stats
 
 .row
+  .pull-right
+    %button.ColVis_Button{type: 'button', onclick: 'history.go();'}
+      %span.glyphicon.glyphicon-repeat Refresh
+
   %table.table.table-responsive.table-condensed.table-striped.table-hover.tablesorter#statsTable
     %caption
       %span Node Statistics
-      %button.btn.btn-default.pull-right{type: 'button', onclick: 'history.go();'}
-        %span.glyphicon.glyphicon-repeat
-        Refresh
 
     %thead
       %tr
