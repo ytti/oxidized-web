@@ -7,7 +7,8 @@ module Oxidized
         @path_new_router = path_new_router
       end
 
-      # read cloginrc and return a hash with node name, which a hash value which contains user, password, eventually enable
+      # read cloginrc and return a hash with node name, which a hash value which contains user,
+      # password, eventually enable
       def cloginrc clogin_file
         close_file = clogin_file
         file = close_file.read
