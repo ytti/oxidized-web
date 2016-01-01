@@ -87,12 +87,12 @@ module Oxidized
         router_db = File.new(@path_new_router, 'w')
         hash.each do |key, value|
           line = key.to_s
-          line += ":#{value[:model].to_s}"
-          line += ":#{value[:user].to_s}"
-          line += ":#{value[:password].to_s}"
-          line += ":#{value[:group].to_s}"
+          line += ":#{value[:model]}"
+          line += ":#{value[:user]}"
+          line += ":#{value[:password]}"
+          line += ":#{value[:group]}"
           if value[:enable]
-            line += ":#{value[:enable].to_s}"
+            line += ":#{value[:enable]}"
           end
           router_db.puts(line)
         end

@@ -131,7 +131,7 @@ module Oxidized
 
         i = 1
         while i <= number do
-          router_db_files.push({file: (params["file#{i.to_s}"][:tempfile]), group: params["group#{i.to_s}"]})
+          router_db_files.push({file: (params["file#{i}"][:tempfile]), group: params["group#{i}"]})
           i = i+1
         end
 
