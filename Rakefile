@@ -31,7 +31,7 @@ task :build do
 end
 
 desc 'Install gem'
-task :install => :build do
+task install: :build do
   system "sudo -Es sh -c \'umask 022; gem install gems/#{file}\'"
 end
 
@@ -46,6 +46,6 @@ task :tag do
 end
 
 desc 'Push to rubygems'
-task :push => :tag do
+task push: :tag do
   system "gem push gems/#{file}"
 end

@@ -13,8 +13,8 @@ module Oxidized
         port, addr = addr, nil if not port
         uri = '/' + uri.to_s
         @opts = {
-          :Host => addr,
-          :Port => port,
+          Host: addr,
+          Port: port,
         }
         WebApp.set :nodes, nodes
         @app = Rack::Builder.new do

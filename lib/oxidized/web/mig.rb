@@ -23,7 +23,7 @@ module Oxidized
             if line[i] == "user"
               #add the equipment and user if not exist
               unless hash[line[i + 1]]
-                hash[line[i + 1]] = {:user=>line[i + 2]}
+                hash[line[i + 1]] = {user: line[i + 2]}
               end
             #if the equipment exist, add password and enable password
             elsif line[i] == "password"
