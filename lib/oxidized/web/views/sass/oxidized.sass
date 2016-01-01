@@ -1,4 +1,4 @@
-body table
+body
     font-size: 14px
 
 .ox-nav
@@ -17,33 +17,9 @@ body table
 .table a, .table a:visited
     color: #000
 
-.tbl-header
-    margin: 20px -20px
-
-
-.tablesorter-headerAsc .tablesorter-header-inner
-    display: inline-block
-    border-bottom: 1px dotted #333
-
-.tablesorter-headerDesc .tablesorter-header-inner
-    display: inline-block
-    border-bottom: 1px solid #333
-
 tr.ox-status-no_connection
     background-color: #fcf8e3
 
-input#search
-    border-color: 0 !important
-    border: none !important
-    box-shadow: 0 !important
-    border-bottom: 1px dotted #000 !important
-    -webkit-box-shadow: none !important
-    border-radius: 0 !important
-    width: 150px
-
-input#search .focused
-    border-bottom: 1px dotted #FFA600 !important
-    
 .added
     background-color: #DBFFDB
 
@@ -52,10 +28,10 @@ input#search .focused
 
 .diff-index
     background-color: #FFFF99
-    
+
 .diff-empty
-    background-color: #F0F0F0 
-    
+    background-color: #F0F0F0
+
 .diffs
     background-color: FAFAFA
     border: 2px solid #ccc
@@ -63,7 +39,7 @@ input#search .focused
     padding: 3px
     font-family: Consolas, "Lucida Console", monospace
     white-space: pre
-    
+
 .diffs_old
     @extend .diffs
     float: left
@@ -90,8 +66,6 @@ input#search .focused
 
 .refresh-div
     float: right
-    padding-left: 5px
-
 
 .status
     float: right
@@ -101,10 +75,11 @@ input#search .focused
     margin-right: 70%
     margin-bottom: 0px
     border-radius: 2px
+
 .success
     @extend .status
     background-color: #64FE2E
- 
+
 .no_connection
     @extend .status
     background-color: #FF0000
@@ -113,28 +88,8 @@ input#search .focused
     background-color: #58ACFA
 
 a:hover
-    text-decoration: none 
+    text-decoration: none
 
-#migration_span
-    font-size: 20px
-    font-weight: bold
-    
-table#files
-    width: 70%
-    border: 1px solid
-    
-th#file
-    width: 50%
-    height: 30px
-    text-align: center
-
-td#file
-    @extend th#file
-    padding: 15px
-
-div#to_search_in_config
-    padding-top: 5px
-    
 .btn-file
     position: relative
     overflow: hidden
@@ -153,4 +108,8 @@ div#to_search_in_config
     background: white
     cursor: inherit
     display: block
+
+@-moz-document url-prefix()
+    fieldset
+        display: table-cell
 
