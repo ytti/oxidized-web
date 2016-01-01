@@ -9,76 +9,77 @@
     %button.ColVis_Button{type: 'button', onclick: 'history.go();'}
       %span.glyphicon.glyphicon-repeat Refresh
 
-  %table.table.table-responsive.table-condensed.table-striped.table-hover.tablesorter#statsTable
-    %caption
-      %span Node Statistics
+  .table-responsive
+    %table.table.table-condensed.table-striped.table-hover#statsTable
+      %caption
+        %span Node Statistics
 
-    %thead
-      %tr
-        %th Name
-        %th Total Runs
-        %th Total Failures
-        %th Failure Rate
-        %th Average Run Time
-        %th Last Status
-        %th Last Update
-        %th Last Failure
+      %thead
+        %tr
+          %th Name
+          %th Total Runs
+          %th Total Failures
+          %th Failure Rate
+          %th Average Run Time
+          %th Last Status
+          %th Last Update
+          %th Last Failure
 
-    %tbody
-      - @data.map do |node, stats|
-        - status = 'no_connection'
-        - successes = 0
-        - failures = 0
-        - avg_success_time = 0
-        - avg_failure_time = 0
-        - avg_time = 0
-        - row_class = ''
+      %tbody
+        - @data.map do |node, stats|
+          - status = 'no_connection'
+          - successes = 0
+          - failures = 0
+          - avg_success_time = 0
+          - avg_failure_time = 0
+          - avg_time = 0
+          - row_class = ''
 
-        - if stats[:success]
-          - last_success = stats[:success].last[:end]
-          - successes = stats[:success].length
-          - avg_success_time = stats[:success].collect {|x| x[:time]}
-          - avg_success_time = avg_success_time.inject {|sum, x| sum + x}
-          - avg_success_time /= successes
+          - if stats[:success]
+            - last_success = stats[:success].last[:end]
+            - successes = stats[:success].length
+            - avg_success_time = stats[:success].collect {|x| x[:time]}
+            - avg_success_time = avg_success_time.inject {|sum, x| sum + x}
+            - avg_success_time /= successes
 
-        - if stats[:no_connection]
-          - last_failure = stats[:no_connection].last[:end]
-          - failures = stats[:no_connection].length
-          - avg_failure_time = stats[:no_connection].collect {|x| x[:time]}
-          - avg_failure_time = avg_failure_time.inject {|sum, x| sum + x}
-          - avg_failure_time /= failures
+          - if stats[:no_connection]
+            - last_failure = stats[:no_connection].last[:end]
+            - failures = stats[:no_connection].length
+            - avg_failure_time = stats[:no_connection].collect {|x| x[:time]}
+            - avg_failure_time = avg_failure_time.inject {|sum, x| sum + x}
+            - avg_failure_time /= failures
 
-        - if avg_success_time > 0 && avg_failure_time > 0
-          - avg_time = (avg_success_time + avg_failure_time) / 2
-        - elsif avg_success_time > 0
-          - avg_time = avg_success_time
-        - elsif avg_failure_time > 0
-          - avg_time = avg_failure_time
-        - avg_time = "#{'%.2f' % avg_time}" unless avg_time == 'Unknown'
+          - if avg_success_time > 0 && avg_failure_time > 0
+            - avg_time = (avg_success_time + avg_failure_time) / 2
+          - elsif avg_success_time > 0
+            - avg_time = avg_success_time
+          - elsif avg_failure_time > 0
+            - avg_time = avg_failure_time
+          - avg_time = "#{'%.2f' % avg_time}" unless avg_time == 'Unknown'
 
-        - if last_success && last_failure
-          - status = last_success > last_failure ? 'success' : 'no_connection'
-        - elsif last_success
-          - status = 'success'
-          - last_failure = 'Never'
-        - else
-          - last_success = 'Never'
+          - if last_success && last_failure
+            - status = last_success > last_failure ? 'success' : 'no_connection'
+          - elsif last_success
+            - status = 'success'
+            - last_failure = 'Never'
+          - else
+            - last_success = 'Never'
 
-        - total_runs = successes + failures
-        - failure_rate = (failures / total_runs.to_f) * 100
-        - row_class = 'warning' if failure_rate >= 50
-        - row_class = 'danger' if failure_rate >= 75
+          - total_runs = successes + failures
+          - failure_rate = (failures / total_runs.to_f) * 100
+          - row_class = 'warning' if failure_rate >= 50
+          - row_class = 'danger' if failure_rate >= 75
 
-        %tr{class: row_class}
-          %td= node
-          %td= total_runs
-          %td= failures
-          %td #{'%.2f' % failure_rate}%
-          %td #{'%.2f' % avg_time}s
-          %td
-            %div{title: status, class: status}
-          %td.time= last_success
-          %td.time= last_failure
+          %tr{class: row_class}
+            %td= node
+            %td= total_runs
+            %td= failures
+            %td #{'%.2f' % failure_rate}%
+            %td #{'%.2f' % avg_time}s
+            %td
+              %div{title: status, class: status}
+            %td.time= last_success
+            %td.time= last_failure
 
 :javascript
   $(function() {
