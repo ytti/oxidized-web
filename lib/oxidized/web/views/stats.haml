@@ -61,9 +61,9 @@
             - status = last_success > last_failure ? 'success' : 'no_connection'
           - elsif last_success
             - status = 'success'
-            - last_failure = 'Never'
+            - last_failure = 'never'
           - else
-            - last_success = 'Never'
+            - last_success = 'never'
 
           - total_runs = successes + failures
           - failure_rate = (failures / total_runs.to_f) * 100
