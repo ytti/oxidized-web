@@ -3,8 +3,8 @@ Gem::Specification.new do |s|
   s.version           = '0.5.2'
   s.licenses          = %w( Apache-2.0 )
   s.platform          = Gem::Platform::RUBY
-  s.authors           = [ 'Saku Ytti', 'Samer Abdel-Hafez' ]
-  s.email             = %w( saku@ytti.fi sam@arahant.net )
+  s.authors           = ['Saku Ytti', 'Samer Abdel-Hafez']
+  s.email             = %w(saku@ytti.fi sam@arahant.net)
   s.homepage          = 'http://github.com/ytti/oxidized-web'
   s.summary           = 'sinatra API + webUI for oxidized'
   s.description       = 'puma+sinatra+haml webUI + REST API for oxidized'

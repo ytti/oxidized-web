@@ -6,26 +6,25 @@ module Oxidized
         @cloginrc = cloginrc
         @path_new_router = path_new_router
       end
-      
-      #read cloginrc and return a hash with node name, which a hash value which contains user, password, eventually enable
+
+      # read cloginrc and return a hash with node name, which a hash value which contains user,
+      # password, eventually enable
       def cloginrc clogin_file
         close_file = clogin_file
         file = close_file.read
         file = file.gsub('add', '')
-        
+
         hash = {}
         file.each_line do |line|
-          
-          
-          #stock all device name, and password and enable if there is one
+          # stock all device name, and password and enable if there is one
           line = line.split(' ')
           for i in 0..line.length
             if line[i] == 'user'
-              #add the equipment and user if not exist
+              # add the equipment and user if not exist
               unless hash[line[i + 1]]
-                hash[line[i + 1]] = {user: line[i + 2]}
+                hash[line[i + 1]] = { user: line[i + 2] }
               end
-            #if the equipment exist, add password and enable password
+            # if the equipment exist, add password and enable password
             elsif line[i] == 'password'
               if hash[line[i + 1]]
                 if line.length > i + 2
@@ -47,16 +46,17 @@ module Oxidized
         close_file.close
         hash
       end
+
       def model_dico model
-        dico = {'cisco' => 'ios', 'foundry' => 'ironware'}
+        dico = { 'cisco' => 'ios', 'foundry' => 'ironware' }
         model = model.gsub("\n", '')
         if dico[model]
           model = dico[model]
         end
         model
       end
-      
-      #add node and group for an equipment (take a list of router.db)
+
+      # add node and group for an equipment (take a list of router.db)
       def rancid_group router_db_list
         model = {}
         hash = cloginrc @cloginrc
@@ -66,7 +66,7 @@ module Oxidized
           file = file_close.read
           file = file.gsub(':up', '')
           file.gsub(' ', '')
-          
+
           file.each_line do |line|
             line = line.split(':')
             node = line[0]
@@ -82,7 +82,7 @@ module Oxidized
         hash
       end
       
-      #write a router.db conf, need the hash and the path of the file we whish create
+      # write a router.db conf, need the hash and the path of the file we whish create
       def write_router_db hash
         router_db = File.new(@path_new_router, 'w')
         hash.each do |key, value|
@@ -98,7 +98,7 @@ module Oxidized
         end
         router_db.close
       end
-      
+
       def edit_conf_file path_conf, router_db_path
         file_close = File.open(path_conf, 'r')
         file = file_close
@@ -131,14 +131,14 @@ module Oxidized
           end
         end
         file_close.close
-        
+
         new_conf = File.new(path_conf, "w")
         new_file.each do |line|
           new_conf.puts(line)
         end
         new_conf.close
       end
-      
+
       def go_rancid_migration
         hash = rancid_group @hash_router_db
         write_router_db hash
