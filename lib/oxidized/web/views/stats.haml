@@ -36,18 +36,16 @@
         - if stats[:success]
           - last_success = stats[:success].last[:end]
           - successes = stats[:success].length
-          - avg_success_time = stats[:success].inject do |sum, el|
-            - sum = sum.is_a?(Hash) ? sum[:time] : sum
-            - sum + el[:time]
-            - end / successes
+          - avg_success_time = stats[:success].collect {|x| x[:time]}
+          - avg_success_time = avg_success_time.inject {|sum, x| sum + x}
+          - avg_success_time /= successes
 
         - if stats[:no_connection]
           - last_failure = stats[:no_connection].last[:end]
           - failures = stats[:no_connection].length
-          - avg_failure_time = stats[:no_connection].inject do |sum, el|
-            - sum = sum.is_a?(Hash) ? sum[:time] : sum
-            - sum + el[:time]
-            - end / failures
+          - avg_failure_time = stats[:no_connection].collect {|x| x[:time]}
+          - avg_failure_time = avg_failure_time.inject {|sum, x| sum + x}
+          - avg_failure_time /= failures
 
         - if avg_success_time > 0 && avg_failure_time > 0
           - avg_time = (avg_success_time + avg_failure_time) / 2
