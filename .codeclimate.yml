@@ -1,5 +1,28 @@
 ---
 
+engines:
+  duplication:
+    enabled: true
+    config:
+      languages:
+        - ruby
+        - javascript
+  fixme:
+    enabled: true
+  eslint:
+    enabled: true
+  rubocop:
+    enabled: true
+  scss-lint:
+    enabled: true
+
+ratings:
+  paths:
+    - "**.rb"
+    - "**.js"
+    - "**.css"
+    - "**.sass"
+
 exclude_paths:
   - 'lib/oxidized/web/public/css/*'
   - 'lib/oxidized/web/public/script/bootstrap.min.js'
