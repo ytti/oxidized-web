@@ -2,7 +2,6 @@
   "type": "object",
   "$schema": "http://json-schema.org/draft-04/schema#",
   "id": "http://oxidized.example.com/schemas/node.json",
-  "type": "object",
   "properties": {
     "name": {
       "type": "string",
@@ -46,20 +45,26 @@
       "type": "object"
     },
     "last": {
-      "oneOf": [{
-        "type": "string",
-        "format": "date-time"
-      }, {
-        "type": "null"
-      }]
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["pending", "success", "no_connection"]
+        },
+        "time": {
+          "type": "number",
+          "minimum": 0
+        }
+      }
     },
     "time": {
-      "oneOf": [{
+      "anyOf": [{
         "type": "number",
         "minimum": 0
       }, {
         "type": "null"
       }]
-    },
-    "required": ["name", "full_name", "ip", "group", "status", "model", "vars", "last", "time"]
-  }
+    }
+  },
+  "required": ["name", "full_name", "ip", "group", "status", "model", "vars", "last", "time"]
+}

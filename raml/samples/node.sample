@@ -1,5 +1,8 @@
 {
-  "last": "2015-12-01T13:14:23Z",
+  "last": {
+    "status": "no_connection",
+    "time": 1.23
+  },
   "status": "no_connection",
   "time": 1.23,
   "ip": "192.168.33.31",
