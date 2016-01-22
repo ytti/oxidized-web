@@ -221,7 +221,7 @@ module Oxidized
 
       private
 
-      def out template = :default
+      def out template = :text
         if @json or params[:format] == 'json'
           if @data.is_a?(String)
             json @data.lines
