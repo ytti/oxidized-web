@@ -2,9 +2,13 @@
   .col-xs-12.col-md-2
     %h4 nodes /
 
+.hidden.alert#flashMessage
+
 .row
   .pull-right
     %form
+      %button.ColVis_Button#reload{type: 'button'}
+        %span.glyphicon.glyphicon-refresh Reload
       %button.ColVis_Button{type: 'button', onclick: 'history.go();'}
         %span.glyphicon.glyphicon-repeat Refresh
 
