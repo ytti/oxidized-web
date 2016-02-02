@@ -75,7 +75,7 @@
             %td= total_runs
             %td= failures
             %td #{'%.2f' % failure_rate}%
-            %td #{'%.2f' % avg_time}s
+            %td #{'%.2f' % avg_time}
             %td
               %div{title: status, class: status}
             %td.time= last_success
@@ -90,13 +90,13 @@
         visible: false,
         targets: 1
       }, {
-        type: "string",
-        targets: 3
+        render: function ( data, type, row) {
+            return type === 'display' ? data + 's' : data
+        },
+        targets: 4
       }],
       colVis: {
         exclude: [0, 5]
       }
     });
   });
-
-
