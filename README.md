@@ -4,6 +4,8 @@ Web userinterface and RESTful API for Oxidized.
 
 This is not useful independently, see https://github.com/ytti/oxidized for install instructions
 
+Live demo: http://oxidized.arahant.net
+
 # License and Copyright
 
 Copyright 2013-2015 Saku Ytti <saku@ytti.fi>
