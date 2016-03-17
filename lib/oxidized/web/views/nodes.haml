@@ -32,8 +32,10 @@
             %td
               %a{href: url_for("/node/show/#{node[:name]}")} #{node[:name]}
             %td= node[:ip]
-            %td= node[:model]
-            %td= node[:group]
+            %td
+              %a{href: url_for("/nodes/model/#{node[:model]}")} #{node[:model]}
+            %td
+              %a{href: url_for("/nodes/group/#{node[:group]}")} #{node[:group]}
             %td
               %div{title: node[:status], class: node[:status]}
                 %span{style: 'visibility: hidden'}#{node[:status]}
