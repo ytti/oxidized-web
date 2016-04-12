@@ -25,6 +25,7 @@ module Oxidized
               node[:status] = node[:last][:status]
               node[:time]   = node[:last][:end]
             end
+            hide_enable? node
             node
           end
         end
@@ -40,6 +41,7 @@ module Oxidized
             node[:status] = node[:last][:status]
             node[:time]   = node[:last][:end]
           end
+          hide_enable? node
           node
         end
         out :nodes
@@ -113,6 +115,7 @@ module Oxidized
       get '/node/show/:node' do
         node, @json = route_parse :node
         @data = nodes.show node
+        hide_enable? @data
         out :node
       end
 
@@ -220,6 +223,14 @@ module Oxidized
       end
 
       private
+
+      def hide_enable? node
+        if settings.hide_enable
+          if (node.has_key? :vars) and (node[:vars].has_key? :enable)
+            node[:vars][:enable] = 'HIDDEN'
+          end
+        end
+      end
 
       def out template = :text
         if @json or params[:format] == 'json'

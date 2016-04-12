@@ -6,7 +6,9 @@ module Oxidized
       require 'rack/handler'
       attr_reader :thread
       Rack::Handler::WEBrick = Rack::Handler.get(:puma)
-      def initialize nodes, listen
+      # in order to don't crash existing setup,
+      # we set hide_enable at false by default
+      def initialize nodes, listen, hide_enable=false
         require 'oxidized/web/webapp'
         listen, uri = listen.split '/'
         addr, port = listen.split ':'
@@ -17,6 +19,7 @@ module Oxidized
           Port: port,
         }
         WebApp.set :nodes, nodes
+        WebApp.set :hide_enable, hide_enable
         @app = Rack::Builder.new do
           map uri do
             run WebApp
