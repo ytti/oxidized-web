@@ -1,0 +1,19 @@
+//Overriding bootstrap classes.
+
+.navbar-brand {
+    float: left;
+    font-size: 18px;
+    height: 50px;
+    line-height: 20px;
+    padding: 6px;
+}
+
+.navbar-form {
+    border: 0 none;
+    box-shadow: none;
+    margin-left: 0;
+    margin-right: 0;
+    padding-bottom: 0;
+    padding-top: 2px;
+    width: auto;
+}
