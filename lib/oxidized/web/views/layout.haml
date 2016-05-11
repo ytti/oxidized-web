@@ -25,7 +25,7 @@
               %a.navbar-link{href: url_for('/migration')} Migration
 
           %form.navbar-form.navbar-right{role: 'search',
-                                         action: '/nodes/conf_search',
+                                         action: url_for('/nodes/conf_search'),
                                          method: 'post'}
             .form-group#to_search_in_config{name: 'to_search_in_config'}
               %input.form-control.input-sm{type: 'text',
