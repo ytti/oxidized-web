@@ -262,7 +262,7 @@ module Oxidized
             date.insert(21, '+')
           end
           date = DateTime.parse date
-          now = DateTime.now
+          now = DateTime.now.new_offset(0)
           t = ((now - date) * 24 * 60 * 60).to_i
           mm, ss = t.divmod(60)
           hh, mm = mm.divmod(60)
