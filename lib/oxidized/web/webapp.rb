@@ -56,6 +56,7 @@ module Oxidized
             @nodes_match.push({ node: n[:name], full_name: n[:full_name] })
           end
         end
+        @data = @nodes_match
         out :conf_search
       end
 
