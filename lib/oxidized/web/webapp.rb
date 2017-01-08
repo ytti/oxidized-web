@@ -45,7 +45,7 @@ module Oxidized
         out :nodes
       end
 
-      post '/nodes/conf_search' do
+      post '/nodes/conf_search.?:format?' do
         @to_research = Regexp.new params[:search_in_conf_textbox]
         nodes_list = nodes.list.map
         @nodes_match = []
@@ -56,6 +56,7 @@ module Oxidized
             @nodes_match.push({ node: n[:name], full_name: n[:full_name] })
           end
         end
+        @data = @nodes_match
         out :conf_search
       end
 
