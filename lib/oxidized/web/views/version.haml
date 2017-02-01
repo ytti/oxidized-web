@@ -18,5 +18,6 @@
   .col-sm-12
     .diffs
       - @data.each_line do |line|
-        %div> #{line}
-
+        %div>
+          :escaped
+            #{line}
