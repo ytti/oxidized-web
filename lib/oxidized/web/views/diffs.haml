@@ -23,7 +23,7 @@
   .col-sm-6
     - params = "node=#{@info[:node]}&group=#{@info[:group]}&oid=#{@info[:oid]}"
     - params = "#{params}&date=#{@info[:date]}&num=#{@info[:num]}"
-    %form{action: "/node/version/diffs?#{params}", method: 'post', role: 'form'}
+    %form{action: url_for("/node/version/diffs?#{params}"), method: 'post', role: 'form'}
       .form-group
         %select.form-control#oid2{name: 'oid2'}
           - diff2 = {}
@@ -101,4 +101,3 @@
           %div>
             :escaped
               #{line}
-
