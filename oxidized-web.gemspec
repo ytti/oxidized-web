@@ -15,7 +15,7 @@ Gem::Specification.new do |s|
 
   s.required_ruby_version =                       '>= 1.9.3'
   s.add_runtime_dependency 'oxidized',            '~> 0.19'
-  s.add_runtime_dependency 'puma',                '~> 2.8'
+  s.add_runtime_dependency 'puma',                '~> 3'
   s.add_runtime_dependency 'sinatra',             '~> 1.4', '>= 1.4.6'
   s.add_runtime_dependency 'sinatra-contrib',     '~> 1.4', '>= 1.4.6'
   s.add_runtime_dependency 'haml',                '~> 4.0'
