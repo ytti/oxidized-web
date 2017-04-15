@@ -9,7 +9,7 @@ module Oxidized
       def initialize nodes, listen
         require 'oxidized/web/webapp'
         listen, uri = listen.split '/'
-        addr, port = listen.split ':'
+        addr, _, port = listen.rpartition ':'
         port, addr = addr, nil if not port
         uri = '/' + uri.to_s
         @opts = {
