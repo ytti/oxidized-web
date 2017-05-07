@@ -5,6 +5,7 @@ require 'tilt/haml'
 require 'sass'
 require 'pp'
 require 'oxidized/web/mig'
+require 'htmlentities'
 module Oxidized
   module API
     class WebApp < Sinatra::Base
@@ -174,7 +175,7 @@ module Oxidized
           num: params[:num]
         }
 
-        @data = nodes.get_version node, @info[:group], @info[:oid]
+        @data = HTMLEntities.new.encode(nodes.get_version node, @info[:group], @info[:oid])
         out :version
       end
 
@@ -284,7 +285,7 @@ module Oxidized
         old_diff = []
         new_diff = []
 
-        diff.each_line do |line|
+        HTMLEntities.new.encode(diff).each_line do |line|
           if /^\+/.match(line)
             new_diff.push(line)
           elsif /^\-/.match(line)
