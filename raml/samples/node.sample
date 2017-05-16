@@ -1,0 +1,18 @@
+{
+  "last": {
+    "status": "no_connection",
+    "time": 1.23
+  },
+  "status": "no_connection",
+  "time": 1.23,
+  "ip": "192.168.33.31",
+  "model": "Junos",
+  "vars": {
+    "enable": "s3cr3t",
+    "username": "admin",
+    "password": "passw0rd"
+  },
+  "name": "rtr1.sfo.example.com",
+  "full_name": "cows/rtr1.sfo.example.com",
+  "group": "cows/default"
+}

@@ -1,0 +1,70 @@
+{
+  "type": "object",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "id": "http://oxidized.example.com/schemas/node.json",
+  "properties": {
+    "name": {
+      "type": "string",
+      "anyOf": [
+        { "format": "hostname" },
+        { "format": "ipv4" },
+        { "format": "ipv6" }
+      ]
+    },
+    "full_name": {
+      "type": "string",
+      "anyOf": [{
+	      "pattern": "^.*\/.*$"
+      }, {
+        "anyOf": [
+          { "format": "hostname" },
+          { "format": "ipv4" },
+          { "format": "ipv6" }
+        ]
+      }]
+    },
+    "ip": {
+      "type": "string",
+      "anyOf": [
+        { "format": "ipv4" },
+        { "format": "ipv6" }
+      ]
+    },
+    "group": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["pending", "success", "no_connection"]
+    },
+    "model": {
+      "type": "string",
+      "pattern": "^[a-zA-Z]*$"
+    },
+    "vars": {
+      "type": "object"
+    },
+    "last": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["pending", "success", "no_connection"]
+        },
+        "time": {
+          "type": "number",
+          "minimum": 0
+        }
+      }
+    },
+    "time": {
+      "anyOf": [{
+        "type": "number",
+        "minimum": 0
+      }, {
+        "type": "null"
+      }]
+    }
+  },
+  "required": ["name", "full_name", "ip", "group", "status", "model", "vars", "last", "time"]
+}
