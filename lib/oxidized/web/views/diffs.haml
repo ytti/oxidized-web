@@ -49,55 +49,55 @@
     .diffs_old
       - @diff[:old_diff].each do |line|
         - if /^\+.*/.match(line)
-          .added>
+          .added><
             :escaped
               #{line}
 
         - elsif /^\-.*/.match(line)
-          .deleted>
+          .deleted><
             :escaped
               #{line}
 
         - elsif /^@@\s.*@@.*$/.match(line)
-          .diff-index>
+          .diff-index><
             :escaped
               #{line}
 
         - elsif /^empty_line&nbsp;/.match(line)
           - line.slice! "empty_line"
-          .diff-empty>
+          .diff-empty><
             :escaped
               #{line}
 
         - else
-          %div>
+          %div><
             :escaped
               #{line}
 
     .diffs_new
       - @diff[:new_diff].each do |line|
         - if /^\+.*/.match(line)
-          .added>
+          .added><
             :escaped
               #{line}
 
         - elsif /^\-.*/.match(line)
-          .deleted>
+          .deleted><
             :escaped
               #{line}
 
         - elsif /^@@\s.*@@.*$/.match(line)
-          .diff-index>
+          .diff-index><
             :escaped
               #{line}
 
         - elsif /^empty_line&nbsp;/.match(line)
           - line.slice! "empty_line"
-          .diff-empty>
+          .diff-empty><
             :escaped
               #{line}
 
         - else
-          %div>
+          %div><
             :escaped
               #{line}
