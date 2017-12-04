@@ -6,6 +6,7 @@ require 'sass'
 require 'pp'
 require 'oxidized/web/mig'
 require 'htmlentities'
+require 'charlock_holmes'
 module Oxidized
   module API
     class WebApp < Sinatra::Base
@@ -175,7 +176,10 @@ module Oxidized
           num: params[:num]
         }
 
-        @data = HTMLEntities.new.encode(nodes.get_version node, @info[:group], @info[:oid])
+        the_data = nodes.get_version node, @info[:group], @info[:oid]
+        detection = ::CharlockHolmes::EncodingDetector.detect(the_data)
+        utf8_encoded_content = ::CharlockHolmes::Converter.convert the_data, detection[:encoding], 'UTF-8'
+        @data = HTMLEntities.new.encode(utf8_encoded_content)
         out :version
       end
 

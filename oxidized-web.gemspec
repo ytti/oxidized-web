@@ -22,4 +22,5 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency 'sass',                '~> 3.3'
   s.add_runtime_dependency 'emk-sinatra-url-for', '~> 0.2'
   s.add_runtime_dependency 'htmlentities',        '~> 4.3'
+  s.add_runtime_dependency 'charlock_holmes',     '~> 0.7.5'
 end
