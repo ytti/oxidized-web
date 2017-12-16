@@ -50,54 +50,44 @@
       - @diff[:old_diff].each do |line|
         - if /^\+.*/.match(line)
           .added><
-            :escaped
-              #{line}
+            != escape_once("#{line}")
 
         - elsif /^\-.*/.match(line)
           .deleted><
-            :escaped
-              #{line}
+            != escape_once("#{line}")
 
         - elsif /^@@\s.*@@.*$/.match(line)
           .diff-index><
-            :escaped
-              #{line}
+            != escape_once("#{line}")
 
         - elsif /^empty_line&nbsp;/.match(line)
           - line.slice! "empty_line"
           .diff-empty><
-            :escaped
-              #{line}
+            != escape_once("#{line}")
 
         - else
           %div><
-            :escaped
-              #{line}
+            != escape_once("#{line}")
 
     .diffs_new
       - @diff[:new_diff].each do |line|
         - if /^\+.*/.match(line)
           .added><
-            :escaped
-              #{line}
+            != escape_once("#{line}")
 
         - elsif /^\-.*/.match(line)
           .deleted><
-            :escaped
-              #{line}
+            != escape_once("#{line}")
 
         - elsif /^@@\s.*@@.*$/.match(line)
           .diff-index><
-            :escaped
-              #{line}
+            != escape_once("#{line}")
 
         - elsif /^empty_line&nbsp;/.match(line)
           - line.slice! "empty_line"
           .diff-empty><
-            :escaped
-              #{line}
+            != escape_once("#{line}")
 
         - else
           %div><
-            :escaped
-              #{line}
+            != escape_once("#{line}")
