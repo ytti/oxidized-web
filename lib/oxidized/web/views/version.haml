@@ -19,5 +19,4 @@
     .diffs
       - @data.each_line do |line|
         %div><
-          :escaped
-            #{line}
+          != escape_once("#{line}")
