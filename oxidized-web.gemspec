@@ -23,4 +23,7 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency 'emk-sinatra-url-for', '~> 0.2'
   s.add_runtime_dependency 'htmlentities',        '~> 4.3'
   s.add_runtime_dependency 'charlock_holmes',     '~> 0.7.5'
+
+  s.add_development_dependency 'rubocop',              '~> 0.54'
+  s.add_development_dependency 'rails_best_practices', '~> 1.19'
 end
