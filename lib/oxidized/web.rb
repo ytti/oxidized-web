@@ -25,7 +25,10 @@ module Oxidized
       end
 
       def run
-        @thread = Thread.new { Rack::Handler::Puma.run @app, @opts }
+        @thread = Thread.new do
+          Rack::Handler::Puma.run @app, @opts
+          exit!
+        end
       end
     end
   end
