@@ -36,6 +36,7 @@
 
     .container-fluid
       =yield
+    !=haml :footer
     %script{src: url_for('/scripts/bootstrap.min.js')}
     %script{src: url_for('/scripts/jquery.dataTables.min.js')}
     %script{src: url_for('/scripts/dataTables.bootstrap.js')}

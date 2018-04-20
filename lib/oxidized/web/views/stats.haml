@@ -28,8 +28,8 @@
       %tbody
         - @data.map do |node, stats|
           - status = 'no_connection'
-          - successes = 0
-          - failures = 0
+          - successes = stats[:success_count]
+          - failures = stats[:failure_count]
           - avg_success_time = 0
           - avg_failure_time = 0
           - avg_time = 0
@@ -37,14 +37,12 @@
 
           - if stats[:success]
             - last_success = stats[:success].last[:end]
-            - successes = stats[:success].length
             - avg_success_time = stats[:success].collect {|x| x[:time]}
             - avg_success_time = avg_success_time.inject {|sum, x| sum + x}
             - avg_success_time /= successes
 
           - if stats[:no_connection]
             - last_failure = stats[:no_connection].last[:end]
-            - failures = stats[:no_connection].length
             - avg_failure_time = stats[:no_connection].collect {|x| x[:time]}
             - avg_failure_time = avg_failure_time.inject {|sum, x| sum + x}
             - avg_failure_time /= failures
@@ -86,6 +84,7 @@
     $('#statsTable').dataTable({
       dom: 'C<"clear">lfrtip',
       "lengthMenu": [[50, 250, 500, -1], [50, 250, 500, "All"]],
+      bAutoWidth: false,
       columnDefs: [{
         visible: false,
         targets: 1

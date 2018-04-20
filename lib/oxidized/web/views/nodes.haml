@@ -22,6 +22,7 @@
           %th Group
           %th Last Status
           %th Last Update
+          %th Last Changed
           %th Actions
 
       %tbody
@@ -40,6 +41,7 @@
               %div{title: node[:status], class: node[:status]}
                 %span{style: 'visibility: hidden'}#{node[:status]}
             %td.time= node[:time]
+            %td.time= node[:mtime]
             %td
               %a{title: 'configuration',
                  href: url_for("/node/fetch/#{node[:full_name]}")}
@@ -56,6 +58,7 @@
   $(function() {
     $('#nodesTable').dataTable({
       dom: 'C<"clear">lfrtip',
+      bAutoWidth: false,
       "lengthMenu": [[50, 250, 500, -1], [50, 250, 500, "All"]],
       columnDefs: [{
         visible: false,
@@ -65,7 +68,7 @@
         targets: 3
       }],
       colVis: {
-        exclude: [0, 5]
+        exclude: [0, 7]
       }
     });
   });
