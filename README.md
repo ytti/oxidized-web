@@ -1,4 +1,4 @@
-# Oxidized Web
+# Oxidized Web [![Build Status](https://travis-ci.org/ytti/oxidized-web.svg)](https://travis-ci.org/ytti/oxidized-web) [![Gem Version](https://badge.fury.io/rb/oxidized-web.svg)](http://badge.fury.io/rb/oxidized-web)
 
 Web userinterface and RESTful API for Oxidized.
 

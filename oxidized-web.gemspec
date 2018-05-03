@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
   s.summary           = 'sinatra API + webUI for oxidized'
   s.description       = 'puma+sinatra+haml webUI + REST API for oxidized'
   s.rubyforge_project = s.name
-  s.files             = `git ls-files`.split("\n")
+  s.files             = %x(git ls-files).split("\n")
   s.executables       = %w( )
   s.require_path      = 'lib'
 
@@ -23,4 +23,8 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency 'emk-sinatra-url-for', '~> 0.2'
   s.add_runtime_dependency 'htmlentities',        '~> 4.3'
   s.add_runtime_dependency 'charlock_holmes',     '~> 0.7.5'
+  s.add_development_dependency 'rake',            '~> 10.0'
+
+  s.add_development_dependency 'rubocop',              '~> 0.55.0'
+  s.add_development_dependency 'rails_best_practices', '~> 1.19'
 end
