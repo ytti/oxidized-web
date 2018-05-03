@@ -23,7 +23,7 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency 'sass',                '~> 3.3'
   s.add_runtime_dependency 'sinatra',             '~> 1.4', '>= 1.4.6'
   s.add_runtime_dependency 'sinatra-contrib',     '~> 1.4', '>= 1.4.6'
-  s.add_runtime_dependency 'rack-test',           '0.7.0'
+  s.add_runtime_dependency 'rack-test',           '~> 0.7.0'
 
   s.add_development_dependency 'rails_best_practices', '~> 1.19'
   s.add_development_dependency 'rake', '~> 10.0'
