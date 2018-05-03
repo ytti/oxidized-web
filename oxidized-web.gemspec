@@ -13,12 +13,12 @@ Gem::Specification.new do |s|
   s.executables       = %w( )
   s.require_path      = 'lib'
 
-  s.required_ruby_version =                       '>= 1.9.3'
+  s.required_ruby_version =                       '>= 2.0.0'
   s.add_runtime_dependency 'oxidized',            '~> 0.21.0'
   s.add_runtime_dependency 'puma',                '~> 3'
   s.add_runtime_dependency 'sinatra',             '~> 1.4', '>= 1.4.6'
   s.add_runtime_dependency 'sinatra-contrib',     '~> 1.4', '>= 1.4.6'
-  s.add_runtime_dependency 'haml',                '~> 4.0'
+  s.add_runtime_dependency 'haml',                '~> 5.0'
   s.add_runtime_dependency 'sass',                '~> 3.3'
   s.add_runtime_dependency 'emk-sinatra-url-for', '~> 0.2'
   s.add_runtime_dependency 'htmlentities',        '~> 4.3'
