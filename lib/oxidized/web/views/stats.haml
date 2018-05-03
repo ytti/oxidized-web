@@ -42,6 +42,13 @@
             - avg_success_time = avg_success_time.inject {|sum, x| sum + x}
             - avg_success_time /= successes
 
+          - if stats[:locked]
+            - last_locked = stats[:locked].last[:end]
+            - successes = stats[:locked].length
+            - avg_success_time = stats[:locked].collect {|x| x[:time]}
+            - avg_success_time = avg_success_time.inject {|sum, x| sum + x}
+            - avg_success_time /= successes
+
           - if stats[:no_connection]
             - last_failure = stats[:no_connection].last[:end]
             - failures = stats[:no_connection].length
@@ -59,6 +66,8 @@
 
           - if last_success && last_failure
             - status = last_success > last_failure ? 'success' : 'no_connection'
+          - elsif last_locked
+            - status = 'locked'
           - elsif last_success
             - status = 'success'
             - last_failure = 'never'
