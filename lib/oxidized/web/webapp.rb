@@ -20,12 +20,17 @@ module Oxidized
       get '/nodes/:filter/:value.?:format?' do
         @data = nodes.list.select do |node|
           if node[params[:filter].to_sym] == params[:value]
+            versions = nodes.version node[:name], node[:group]
             node[:status]    = 'never'
             node[:time]      = 'never'
+            node[:mtime]      = 'unknown'
             node[:group]     = 'default' unless node[:group]
             if node[:last]
               node[:status] = node[:last][:status]
               node[:time]   = node[:last][:end]
+            end
+            if versions.is_a? Array
+              node[:mtime] = versions.first[:date]
             end
             node
           end
@@ -35,12 +40,17 @@ module Oxidized
 
       get '/nodes.?:format?' do
         @data = nodes.list.map do |node|
+          versions = nodes.version node[:name], node[:group]
           node[:status]    = 'never'
           node[:time]      = 'never'
+          node[:mtime]      = 'unknown'
           node[:group]     = 'default' unless node[:group]
           if node[:last]
             node[:status] = node[:last][:status]
             node[:time]   = node[:last][:end]
+          end
+          if versions.is_a? Array and ( not versions.empty? )
+            node[:mtime] = versions.first[:date]
           end
           node
         end
