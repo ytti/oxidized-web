@@ -28,8 +28,8 @@
       %tbody
         - @data.map do |node, stats|
           - status = 'no_connection'
-          - successes = stats[:success_count]
-          - failures = stats[:failure_count]
+          - successes = stats.successes
+          - failures = stats.failures
           - avg_success_time = 0
           - avg_failure_time = 0
           - avg_time = 0
