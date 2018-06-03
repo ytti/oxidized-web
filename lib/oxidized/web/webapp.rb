@@ -75,7 +75,7 @@ module Oxidized
       get '/nodes/stats.?:format?' do
         @data = {}
         nodes.each do |node|
-          @data[node.name] = node.stats.get
+          @data[node.name] = node.stats
         end
         out :stats
       end
