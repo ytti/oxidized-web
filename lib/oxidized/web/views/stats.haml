@@ -26,24 +26,22 @@
           %th Last Failure
 
       %tbody
-        - @data.map do |node, stats|
+        - @data.map do |node, stats, successes, failures|
           - status = 'no_connection'
-          - successes = stats.successes
-          - failures = stats.failures
           - avg_success_time = 0
           - avg_failure_time = 0
           - avg_time = 0
           - row_class = ''
 
-          - if success = stats.get(:success)
-            - last_success = success.last[:end]
-            - avg_success_time = success.collect {|x| x[:time]}
+          - if stats[:success]
+            - last_success = stats[:success].last[:end]
+            - avg_success_time = stats[:success].collect {|x| x[:time]}
             - avg_success_time = avg_success_time.inject {|sum, x| sum + x}
             - avg_success_time /= successes
 
-          - if no_connection = stats.get(:no_connection)
-            - last_failure = no_connection.last[:end]
-            - avg_failure_time = no_connection.collect {|x| x[:time]}
+          - if stats[:no_connection]
+            - last_failure = stats[:no_connection].last[:end]
+            - avg_failure_time = stats[:no_connection].collect {|x| x[:time]}
             - avg_failure_time = avg_failure_time.inject {|sum, x| sum + x}
             - avg_failure_time /= failures
 
