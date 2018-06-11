@@ -35,7 +35,6 @@ module Oxidized
 
       get '/nodes.?:format?' do
         @data = nodes.list.map do |node|
-          versions = nodes.version node[:name], node[:group]
           node[:status] = 'never'
           node[:time]   = 'never'
           node[:group]  = 'default' unless node[:group]
