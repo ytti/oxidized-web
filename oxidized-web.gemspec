@@ -14,10 +14,8 @@ Gem::Specification.new do |s|
   s.require_path      = 'lib'
 
   s.required_ruby_version =                       '>= 2.0.0'
-  s.add_runtime_dependency 'charlock_holmes',     '~> 0.7.5'
   s.add_runtime_dependency 'emk-sinatra-url-for', '~> 0.2'
   s.add_runtime_dependency 'haml',                '~> 5.0'
-  s.add_runtime_dependency 'htmlentities',        '~> 4.3'
   s.add_runtime_dependency 'oxidized',            '~> 0.22'
   s.add_runtime_dependency 'puma',                '~> 3'
   s.add_runtime_dependency 'sass',                '~> 3.3'

@@ -3,10 +3,8 @@ require 'sinatra/json'
 require 'sinatra/url_for'
 require 'tilt/haml'
 require 'sass'
-require 'pp'
 require 'oxidized/web/mig'
-require 'htmlentities'
-require 'charlock_holmes'
+
 module Oxidized
   module API
     class WebApp < Sinatra::Base
@@ -176,10 +174,8 @@ module Oxidized
           num: params[:num]
         }
 
-        the_data = nodes.get_version node, @info[:group], @info[:oid]
-        detection = ::CharlockHolmes::EncodingDetector.detect(the_data)
-        utf8_encoded_content = ::CharlockHolmes::Converter.convert the_data, detection[:encoding], 'UTF-8'
-        @data = HTMLEntities.new.encode(utf8_encoded_content)
+        the_data = nodes.get_version(node, @info[:group], @info[:oid]).encode("UTF-8", invalid: :replace)
+        @data = CGI.escape_html(the_data)
         out :version
       end
 
