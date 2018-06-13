@@ -1,3 +1,4 @@
+require 'pp'
 require 'sinatra/base'
 require 'sinatra/json'
 require 'sinatra/url_for'
