@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name              = 'oxidized-web'
-  s.version           = '0.12.0'
+  s.version           = '0.12.1'
   s.licenses          = %w[Apache-2.0]
   s.platform          = Gem::Platform::RUBY
   s.authors           = ['Saku Ytti', 'Samer Abdel-Hafez']
@@ -18,7 +18,7 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency 'emk-sinatra-url-for', '~> 0.2'
   s.add_runtime_dependency 'haml',                '~> 5.0'
   s.add_runtime_dependency 'htmlentities',        '~> 4.3'
-  s.add_runtime_dependency 'oxidized',            '~> 0.25'
+  s.add_runtime_dependency 'oxidized',            '~> 0.25.1'
   s.add_runtime_dependency 'puma',                '~> 3.11.4'
   s.add_runtime_dependency 'sass',                '~> 3.3'
   s.add_runtime_dependency 'sinatra',             '~> 1.4', '>= 1.4.6'
