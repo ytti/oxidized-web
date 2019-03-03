@@ -26,7 +26,7 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency 'json',                '>= 1.7.0'
   s.add_runtime_dependency 'rack-test',           '~> 0.7.0'
 
-  s.add_development_dependency 'bundler',              '~> 1.10'
+  s.add_development_dependency 'bundler',              '~> 2.0'
   s.add_development_dependency 'rails_best_practices', '~> 1.19'
   s.add_development_dependency 'rake',                 '~> 10.0'
   s.add_development_dependency 'rubocop',              '~> 0.65.0'
