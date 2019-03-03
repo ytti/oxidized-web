@@ -273,9 +273,9 @@ module Oxidized
           mm, ss = t.divmod(60)
           hh, mm = mm.divmod(60)
           dd, hh = hh.divmod(24)
-          if dd > 0
+          if dd.positive?
             date = "#{dd} days #{hh} hours ago"
-          elsif hh > 0
+          elsif hh.positive?
             date = "#{hh} hours #{mm} min ago"
           else
             date = "#{mm} min #{ss} sec ago"
@@ -308,6 +308,7 @@ module Oxidized
           if i > [length_o, length_n].min
             break
           end
+
           if (/^\-.*/.match(old_diff[i])) && !(/^\+.*/.match(new_diff[i]))
             # tag removed latter to add color syntax
             insert = 'empty_line'

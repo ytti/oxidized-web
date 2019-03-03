@@ -13,7 +13,7 @@ Gem::Specification.new do |s|
   s.executables       = %w[]
   s.require_path      = 'lib'
 
-  s.required_ruby_version =                       '>= 2.0.0'
+  s.required_ruby_version =                       '>= 2.3'
   s.add_runtime_dependency 'charlock_holmes',     '~> 0.7.5'
   s.add_runtime_dependency 'emk-sinatra-url-for', '~> 0.2'
   s.add_runtime_dependency 'haml',                '~> 5.0'
@@ -26,7 +26,8 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency 'json',                '>= 1.7.0'
   s.add_runtime_dependency 'rack-test',           '~> 0.7.0'
 
+  s.add_development_dependency 'bundler',              '~> 1.10'
   s.add_development_dependency 'rails_best_practices', '~> 1.19'
-  s.add_development_dependency 'rake', '~> 10.0'
-  s.add_development_dependency 'rubocop', '~> 0.57.1'
+  s.add_development_dependency 'rake',                 '~> 10.0'
+  s.add_development_dependency 'rubocop',              '~> 0.65.0'
 end
