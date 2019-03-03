@@ -110,6 +110,7 @@ module Oxidized
             unless /^\w/.match(line)
               next
             end
+
             source_reached = false
           end
           new_file.push(line)
