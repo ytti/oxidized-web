@@ -2,7 +2,7 @@ require 'bundler/gem_tasks'
 require 'rake/testtask'
 
 gemspec = eval(File.read(Dir['*.gemspec'].first))
-file    = [gemspec.name, gemspec.version].join('-') + '.gem'
+gemfile = [gemspec.name, gemspec.version].join('-') + '.gem'
 
 # Integrate Rubocop if available
 begin
@@ -31,6 +31,7 @@ task :test do
   end
 end
 
+task build: :chmod
 ## desc 'Install gem'
 ## task :install => :build do
 ##   system "sudo -Es sh -c \'umask 022; gem install gems/#{file}\'"
@@ -48,7 +49,19 @@ end
 
 desc 'Push to rubygems'
 task :push => :tag do
-  system "gem push pkg/#{file}"
+  system "gem push pkg/#{gemfile}"
+end
+
+desc 'Normalise file permissions'
+task :chmod do
+  xbit = %w[
+  ]
+  dirs = []
+  %x(git ls-files -z).split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }.each do |file|
+    dirs.push(File.dirname(file))
+    xbit.include?(file) ? File.chmod(0o0755, file) : File.chmod(0o0644, file)
+  end
+  dirs.sort.uniq.each { |dir| File.chmod(0o0755, dir) }
 end
 
 task default: :test
