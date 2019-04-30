@@ -1,10 +1,15 @@
 inherit_from: .rubocop_todo.yml
 
+# Do not attempt to police vendored code, and exclude special cases
 AllCops:
-  Include:
-    - Rakefile
+  TargetRubyVersion: 2.3
+  Exclude:
+    - 'vendor/**/*'
 
 StringLiterals:
+  Enabled: false
+
+Style/FrozenStringLiteralComment:
   Enabled: false
 
 LineLength:
@@ -30,7 +35,3 @@ Style/FormatStringToken:
 Style/RescueModifier:
   Enabled: false
 
-# Do not attempt to police vendored code, and exclude special cases
-AllCops:
-  Exclude:
-    - 'vendor/**/*'
