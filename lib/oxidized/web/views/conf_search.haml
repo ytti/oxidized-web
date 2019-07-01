@@ -3,7 +3,8 @@
     %h4
       %a{href: url_for('/nodes')} nodes
       \/ Nodes that contain 
-      %span "#{@to_research}"
+      %span
+        &= "#{@to_research}"
   
 .row
   .pull-right
