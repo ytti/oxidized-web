@@ -1,4 +1,6 @@
 inherit_from: .rubocop_todo.yml
+require:
+  - rubocop-rails
 
 # Do not attempt to police vendored code, and exclude special cases
 AllCops:
