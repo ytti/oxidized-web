@@ -6,6 +6,9 @@ AllCops:
   Exclude:
     - 'vendor/**/*'
 
+Metrics/ClassLength:
+  Max: 300
+
 StringLiterals:
   Enabled: false
 
