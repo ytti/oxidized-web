@@ -30,5 +30,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'rails_best_practices', '~> 1.19'
   s.add_development_dependency 'rake',                 '~> 10.0'
   s.add_development_dependency 'rubocop',              '~> 0.80.0'
-  s.add_development_dependency 'rubocop-rails',        '~> 2.2.1'
+  s.add_development_dependency 'rubocop-rails',        '~> 2.4.2'
 end
