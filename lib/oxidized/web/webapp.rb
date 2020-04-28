@@ -71,8 +71,9 @@ module Oxidized
       end
 
       get '/reload.?:format?' do
-        nodes.load
-        @data = 'reloaded list of nodes'
+        node = params[:node]
+        node ? (nodes.load node) : nodes.load
+        @data = node ? "reloaded #{node}" : 'reloaded list of nodes'
         out
       end
 
