@@ -8,7 +8,7 @@ module Oxidized
       Rack::Handler::WEBrick = Rack::Handler.get(:puma)
       def initialize nodes, listen
         require 'oxidized/web/webapp'
-        listen, uri = listen.split '/'
+        listen, uri = listen.split('/')[0], listen.split('/')[1..listen.length].join('/')
         addr, _, port = listen.rpartition ':'
         port, addr = addr, nil if not port
         uri = '/' + uri.to_s
