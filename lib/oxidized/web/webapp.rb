@@ -27,7 +27,7 @@ module Oxidized
               node[:status] = node[:last][:status]
               node[:time]   = node[:last][:end]
             end
-            node
+            hide_enable? node
           end
         end
         out :nodes
@@ -42,7 +42,7 @@ module Oxidized
             node[:status] = node[:last][:status]
             node[:time]   = node[:last][:end]
           end
-          node
+          hide_enable? node
         end
         out :nodes
       end
@@ -116,7 +116,7 @@ module Oxidized
 
       get '/node/show/:node' do
         node, @json = route_parse :node
-        @data = nodes.show node
+        @data = hide_enable?(nodes.show(node))
         out :node
       end
 
@@ -227,6 +227,25 @@ module Oxidized
       end
 
       private
+
+      def hide_enable? node
+        if settings.hide_enable
+          # We need to dup/clone twice not to break in memory node.
+          if (node.has_key? :vars) and (node[:vars].has_key? :enable)
+            n = node.clone
+            node.each_key do |k|
+              if node[k].is_a?(Symbol)
+                n[k] = node[k]
+              else
+                n[k] = node[k].dup unless node[k].nil?
+              end
+            end
+            n[:vars][:enable] = 'HIDDEN'
+            return n
+          end
+        end
+        return node
+      end
 
       def out template = :text
         if @json or params[:format] == 'json'
