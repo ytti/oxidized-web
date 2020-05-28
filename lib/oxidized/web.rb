@@ -1,4 +1,5 @@
 require 'json'
+require 'uri'
 
 module Oxidized
   module API
@@ -8,10 +9,14 @@ module Oxidized
       Rack::Handler::WEBrick = Rack::Handler.get(:puma)
       def initialize nodes, listen
         require 'oxidized/web/webapp'
-        listen, uri = listen.split '/'
-        addr, _, port = listen.rpartition ':'
-        port, addr = addr, nil if not port
-        uri = '/' + uri.to_s
+
+        listen.prepend("http://") if not listen.start_with?("http://")
+        url = URI(listen)
+        addr = url.host
+        port = url.port
+        uri = url.path
+        uri.prepend("/") if not url.path.start_with?("/")
+
         @opts = {
           Host: addr,
           Port: port,
