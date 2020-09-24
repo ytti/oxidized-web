@@ -89,16 +89,29 @@ module Oxidized
       end
 
       post '/node/run-command/:node' do
-        begin
-          node_name, @json = route_parse :node
-          node = nodes.select do |node|
-            node.name == node_name
-          end.first
-          
-          node.model.cmd request.body.read
-        rescue NodeNotFound => error
-          @data = error.message
+        command = request.body.read
+        node_name, @json = route_parse :node
+        binding.pry
+        node = nodes.select do |node|
+          node.name == node_name
+        end.first
+
+        node.input.each do |input|
+          input = input.new
+          input.connect node
+          input.connect_cli
+          node.model.input = input
+          begin
+            @data = node.model.cmd command
+            input.disconnect_cli if input
+            node.model.input = nil
+            break
+          rescue Exception => e
+            input.disconnect_cli if input
+            node.model.input = nil
+          end
         end
+
         out :text
       end
 
