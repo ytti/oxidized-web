@@ -91,10 +91,8 @@ module Oxidized
       post '/node/run-command/:node' do
         command = request.body.read
         node_name, @json = route_parse :node
-        binding.pry
-        node = nodes.select do |node|
-          node.name == node_name
-        end.first
+        source = Oxidized.mgr.source[Oxidized.config.source.default].new
+        node = Node.new source.load(node_name).first
 
         node.input.each do |input|
           input = input.new
