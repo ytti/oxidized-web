@@ -1,3 +1,4 @@
+require 'pry'
 require 'sinatra/base'
 require 'sinatra/json'
 require 'sinatra/url_for'
@@ -81,6 +82,20 @@ module Oxidized
         begin
           node, @json = route_parse :node
           @data = nodes.fetch node, nil
+        rescue NodeNotFound => error
+          @data = error.message
+        end
+        out :text
+      end
+
+      post '/node/run-command/:node' do
+        begin
+          node_name, @json = route_parse :node
+          node = nodes.select do |node|
+            node.name == node_name
+          end.first
+          
+          node.model.cmd request.body.read
         rescue NodeNotFound => error
           @data = error.message
         end
