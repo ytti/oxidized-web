@@ -9,7 +9,7 @@ require 'htmlentities'
 require 'charlock_holmes'
 module Oxidized
   module API
-    class WebApp < Sinatra::Base
+    class WebApp < Sinatra::Base # rubocop:disable Metrics/ClassLength
       helpers Sinatra::UrlForHelper
       set :public_folder, Proc.new { File.join(root, 'public') }
 
@@ -95,7 +95,7 @@ module Oxidized
 
         return not_found unless original_node
 
-        node = Node.new({
+        node_opts = {
           name: original_node.name,
           model: Oxidized.mgr.model.invert[original_node.model.class],
           group: original_node.group,
@@ -103,7 +103,9 @@ module Oxidized
           password: original_node.auth[:password],
           ip: original_node.ip,
           vars: original_node.vars
-        })
+        }
+
+        node = Node.new node_opts
 
         return not_found unless node
 
@@ -114,11 +116,11 @@ module Oxidized
           node.model.input = input
           begin
             @data = node.model.cmd command
-            input.disconnect_cli if input
+            input&.disconnect_cli
             node.model.input = nil
             break
           rescue StandardError => e
-            input.disconnect_cli if input
+            input&.disconnect_cli
             Oxidized.logger.error "%s raised %s with %s" % [node.ip, e.class, e.message]
             node.model.input = nil
           end
