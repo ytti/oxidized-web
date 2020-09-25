@@ -90,9 +90,19 @@ module Oxidized
 
       post '/node/run-command/:node' do
         command = request.body.read
-        node_name, @json = route_parse :node
-        source = Oxidized.mgr.source[Oxidized.config.source.default].new
-        node = Node.new source.load(node_name).first
+        original_node = nodes.select do |node|
+          node.name == params["node"]
+        end.first
+
+        node = Node.new({
+          name: original_node.name,
+          model: Oxidized.mgr.model.invert[original_node.model.class],
+          group: original_node.group,
+          username: original_node.auth[:username],
+          password: original_node.auth[:password],
+          ip: original_node.ip,
+          vars: original_node.vars
+        })
 
         node.input.each do |input|
           input = input.new
