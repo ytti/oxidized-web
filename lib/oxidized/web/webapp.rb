@@ -93,6 +93,8 @@ module Oxidized
           node.name == params["node"]
         end.first
 
+        return not_found unless original_node
+
         node = Node.new({
           name: original_node.name,
           model: Oxidized.mgr.model.invert[original_node.model.class],
@@ -102,6 +104,8 @@ module Oxidized
           ip: original_node.ip,
           vars: original_node.vars
         })
+
+        return not_found unless node
 
         node.input.each do |input|
           input = input.new
@@ -115,6 +119,7 @@ module Oxidized
             break
           rescue Exception => e
             input.disconnect_cli if input
+            Oxidized.logger.error "%s raised %s with %s" % [node.ip, e.class, e.message]
             node.model.input = nil
           end
         end
@@ -318,6 +323,10 @@ module Oxidized
           end
         end
         date
+      end
+
+      def not_found
+        status 404
       end
 
       # method the give diffs in separate view (the old and the new) as in github
