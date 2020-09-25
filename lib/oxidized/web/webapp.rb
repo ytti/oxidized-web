@@ -117,7 +117,7 @@ module Oxidized
             input.disconnect_cli if input
             node.model.input = nil
             break
-          rescue Exception => e
+          rescue StandardError => e
             input.disconnect_cli if input
             Oxidized.logger.error "%s raised %s with %s" % [node.ip, e.class, e.message]
             node.model.input = nil
