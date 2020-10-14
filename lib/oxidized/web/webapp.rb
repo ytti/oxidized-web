@@ -88,6 +88,8 @@ module Oxidized
       end
 
       post '/node/run-command/:node' do
+        return not_found unless Oxidized.config.run_command_endpoint
+
         command = request.body.read
         original_node = nodes.select do |node|
           node.name == params["node"]
