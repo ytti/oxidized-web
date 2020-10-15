@@ -87,7 +87,7 @@ module Oxidized
         out :text
       end
 
-      post '/node/run-command/:node' do
+      post '/node/run-command/:node' do # rubocop:disable Metrics/BlockLength
         return not_found unless Oxidized.config.run_command_endpoint
 
         command = request.body.read
