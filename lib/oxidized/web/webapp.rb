@@ -1,4 +1,3 @@
-require 'pry'
 require 'sinatra/base'
 require 'sinatra/json'
 require 'sinatra/url_for'
@@ -10,7 +9,7 @@ require 'htmlentities'
 require 'charlock_holmes'
 module Oxidized
   module API
-    class WebApp < Sinatra::Base
+    class WebApp < Sinatra::Base # rubocop:disable Metrics/ClassLength
       helpers Sinatra::UrlForHelper
       set :public_folder, Proc.new { File.join(root, 'public') }
 
@@ -81,6 +80,7 @@ module Oxidized
       get '/node/fetch/:node' do
         begin
           node, @json = route_parse :node
+          Oxidized.logger.error "Here: %s" % [node]
           @data = nodes.fetch node, nil
         rescue NodeNotFound => error
           @data = error.message
@@ -89,16 +89,54 @@ module Oxidized
       end
 
       post '/node/run-command/:node' do
-        begin
-          node_name, @json = route_parse :node
-          node = nodes.select do |node|
-            node.name == node_name
-          end.first
-          
-          node.model.cmd request.body.read
-        rescue NodeNotFound => error
-          @data = error.message
+        command = request.body.read
+        original_node = nodes.select do |node|
+          node.name == params["node"]
+        end.first
+
+        return not_found unless original_node
+
+        node_opts = {
+          name: original_node.name,
+          model: Oxidized.mgr.model.invert[original_node.model.class],
+          group: original_node.group,
+          username: original_node.auth[:username],
+          password: original_node.auth[:password],
+          ip: original_node.ip,
+          vars: original_node.vars
+        }
+
+        node = Node.new node_opts
+
+        return not_found unless node
+
+        node.input.each do |input|
+          begin
+            input = input.new
+            input.connect node
+            input.connect_cli
+            node.model.input = input
+            begin
+              command_out = ""
+              command.each_line do |line|
+                command_out += node.model.cmd command
+                command_out += "\n"
+              end
+              input&.disconnect_cli
+              node.model.input = nil
+              @data = command_out
+              break
+            rescue StandardError => e
+              input&.disconnect_cli
+              Oxidized.logger.error "%s raised %s with %s" % [node.ip, e.class, e.message]
+              node.model.input = nil
+            end
+          rescue StandardError => e
+            Oxidized.logger.error "%s raised " % [e]
+            Oxidized.logger.error "Trying again with new input method"
+          end
         end
+
         out :text
       end
 
@@ -298,6 +336,10 @@ module Oxidized
           end
         end
         date
+      end
+
+      def not_found
+        status 404
       end
 
       # method the give diffs in separate view (the old and the new) as in github
