@@ -80,7 +80,6 @@ module Oxidized
       get '/node/fetch/:node' do
         begin
           node, @json = route_parse :node
-          Oxidized.logger.error "Here: %s" % [node]
           @data = nodes.fetch node, nil
         rescue NodeNotFound => error
           @data = error.message
@@ -133,7 +132,6 @@ module Oxidized
             end
           rescue StandardError => e
             Oxidized.logger.error "%s raised " % [e]
-            Oxidized.logger.error "Trying again with new input method"
           end
         end
 
