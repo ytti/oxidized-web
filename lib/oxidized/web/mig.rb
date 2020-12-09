@@ -62,6 +62,7 @@ module Oxidized
         hash = cloginrc @cloginrc
         router_db_list.each do |router_db|
           group = router_db[:group]
+          category = router_db[:category]
           file_close = router_db[:file]
           file = file_close.read
           file = file.gsub(':up', '')
@@ -75,6 +76,8 @@ module Oxidized
               model = model_dico line[1].to_s
               h[:model] = model
               h[:group] = group
+              h[:category] = category
+
             end
           end
           file_close.close
@@ -91,6 +94,7 @@ module Oxidized
           line += ":#{value[:user]}"
           line += ":#{value[:password]}"
           line += ":#{value[:group]}"
+          line += ":#{value[:category]}"
           if value[:enable]
             line += ":#{value[:enable]}"
           end
@@ -126,8 +130,9 @@ module Oxidized
             new_file.push("      username: 2\n")
             new_file.push("      password: 3\n")
             new_file.push("      group: 4\n")
+            new_file.push("      category: 5\n")
             new_file.push("    vars_map:\n")
-            new_file.push("      enable: 5\n")
+            new_file.push("      enable: 6\n")
             next
           end
         end
