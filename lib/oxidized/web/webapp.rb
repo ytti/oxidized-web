@@ -13,6 +13,12 @@ module Oxidized
       helpers Sinatra::UrlForHelper
       set :public_folder, Proc.new { File.join(root, 'public') }
 
+      if ENV["BASIC_AUTH_USERNAME"] && ENV["BASIC_AUTH_PASSWORD"]
+        use Rack::Auth::Basic, "Restricted Area" do |username, password|
+          username == ENV["BASIC_AUTH_USERNAME"] and password == ENV["BASIC_AUTH_PASSWORD"]
+        end
+      end
+
       get '/' do
         redirect url_for('/nodes')
       end
