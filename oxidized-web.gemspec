@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name              = 'oxidized-web'
-  s.version           = '0.13.1'
+  s.version           = '0.13.2'
   s.licenses          = %w[Apache-2.0]
   s.platform          = Gem::Platform::RUBY
   s.authors           = ['Saku Ytti', 'Samer Abdel-Hafez']
@@ -13,22 +13,22 @@ Gem::Specification.new do |s|
   s.executables       = %w[]
   s.require_path      = 'lib'
 
-  s.required_ruby_version =                       '>= 2.3'
-  s.add_runtime_dependency 'charlock_holmes',     '~> 0.7.5'
+  s.required_ruby_version =                       '>= 3.1'
+  s.add_runtime_dependency 'charlock_holmes',     '~> 0.7.7'
   s.add_runtime_dependency 'emk-sinatra-url-for', '~> 0.2'
-  s.add_runtime_dependency 'haml',                '~> 5.0'
+  s.add_runtime_dependency 'haml',                '~> 6.0'
   s.add_runtime_dependency 'htmlentities',        '~> 4.3'
-  s.add_runtime_dependency 'oxidized',            '~> 0.26'
-  s.add_runtime_dependency 'puma',                '~> 3.11.4'
-  s.add_runtime_dependency 'sass',                '~> 3.3'
-  s.add_runtime_dependency 'sinatra',             '~> 1.4', '>= 1.4.6'
-  s.add_runtime_dependency 'sinatra-contrib',     '~> 1.4', '>= 1.4.6'
-  s.add_runtime_dependency 'json',                '>= 1.7.0'
-  s.add_runtime_dependency 'rack-test',           '~> 0.7.0'
+  s.add_runtime_dependency 'oxidized',            '~> 0.28'
+  s.add_runtime_dependency 'puma',                '~> 6.0'
+  s.add_runtime_dependency 'sass',                '~> 3.7.4'
+  s.add_runtime_dependency 'sinatra',             '~> 3.0.4'
+  s.add_runtime_dependency 'sinatra-contrib',     '~> 3.0.4'
+  s.add_runtime_dependency 'json',                '>= 2.6.0'
+  s.add_runtime_dependency 'rack-test',           '~> 2.0.2'
 
-  s.add_development_dependency 'bundler',              '~> 2.0'
-  s.add_development_dependency 'rails_best_practices', '~> 1.19'
-  s.add_development_dependency 'rake',                 '~> 10.0'
-  s.add_development_dependency 'rubocop',              '~> 0.81.0'
-  s.add_development_dependency 'rubocop-rails',        '~> 2.5.2'
+  s.add_development_dependency 'bundler',              '~> 2.3.26'
+  s.add_development_dependency 'rails_best_practices', '~> 1.23'
+  s.add_development_dependency 'rake',                 '~> 13'
+  s.add_development_dependency 'rubocop',              '~> 1'
+  s.add_development_dependency 'rubocop-rails',        '~> 2.17'
 end
