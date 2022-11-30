@@ -2,7 +2,6 @@ require 'sinatra/base'
 require 'sinatra/json'
 require 'sinatra/url_for'
 require 'tilt/haml'
-# require 'sass'
 require 'pp'
 require 'oxidized/web/mig'
 require 'htmlentities'
@@ -143,10 +142,6 @@ module Oxidized
         migration.go_rancid_migration
         redirect url_for('//nodes')
       end
-
-      # get '/css/*.css' do
-      #   sass "sass/#{params[:splat].first}".to_sym
-      # end
 
       # show the lists of versions for a node
       get '/node/version.?:format?' do

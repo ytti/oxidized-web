@@ -20,7 +20,6 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency 'htmlentities',        '~> 4.3'
   s.add_runtime_dependency 'oxidized',            '= 0.28.0.pre.74'
   s.add_runtime_dependency 'puma',                '~> 6.0'
-  # s.add_runtime_dependency 'sass',                '~> 3.3'
   s.add_runtime_dependency 'sinatra',             '~> 3.0.4'
   s.add_runtime_dependency 'sinatra-contrib',     '~> 3.0.4'
   s.add_runtime_dependency 'json',                '>= 2.6.0'
