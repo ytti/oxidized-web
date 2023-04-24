@@ -1,23 +1,25 @@
 inherit_from: .rubocop_todo.yml
 require:
   - rubocop-rails
+  - rubocop-rake
 
 # Do not attempt to police vendored code, and exclude special cases
 AllCops:
-  TargetRubyVersion: 2.3
+  NewCops: enable
+  TargetRubyVersion: 2.7
   Exclude:
     - 'vendor/**/*'
 
 Metrics/ClassLength:
   Max: 300
 
-StringLiterals:
+Style/StringLiterals:
   Enabled: false
 
 Style/FrozenStringLiteralComment:
   Enabled: false
 
-LineLength:
+Layout/LineLength:
   Enabled: false
 
 Lint/RaiseException:
