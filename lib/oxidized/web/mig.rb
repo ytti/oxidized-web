@@ -143,7 +143,7 @@ module Oxidized
       def go_rancid_migration
         hash = rancid_group @hash_router_db
         write_router_db hash
-        edit_conf_file "#{ENV['HOME']}/.config/oxidized/config", @path_new_router
+        edit_conf_file "#{ENV.fetch('HOME', nil)}/.config/oxidized/config", @path_new_router
       end
     end
   end

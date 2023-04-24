@@ -54,8 +54,7 @@ end
 
 desc 'Normalise file permissions'
 task :chmod do
-  xbit = %w[
-  ]
+  xbit = %w[]
   dirs = []
   %x(git ls-files -z).split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }.each do |file|
     dirs.push(File.dirname(file))

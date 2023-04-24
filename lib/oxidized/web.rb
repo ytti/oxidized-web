@@ -5,6 +5,7 @@ module Oxidized
     class Web
       require 'rack/handler'
       attr_reader :thread
+
       Rack::Handler::WEBrick = Rack::Handler.get(:puma)
       def initialize nodes, listen
         require 'oxidized/web/webapp'
