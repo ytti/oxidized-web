@@ -265,7 +265,7 @@ module Oxidized
       def time_from_now date
         if date
           # if the + is missing
-          unless date.include? '+'
+          unless date =~ /[-+/
             date.insert(21, '+')
           end
           date = DateTime.parse date
