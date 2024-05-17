@@ -14,3 +14,5 @@ jobs:
       - uses: actions/stale@v8
         with:
           operations-per-run: 500
+          days-before-issue-stale: 90
+          days-before-close: 30

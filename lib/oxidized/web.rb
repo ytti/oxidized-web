@@ -5,6 +5,7 @@ module Oxidized
     class Web
       require 'rack/handler/puma'
       attr_reader :thread
+
       def initialize nodes, listen
         require 'oxidized/web/webapp'
         listen, uri = listen.split '/'
