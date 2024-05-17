@@ -3,10 +3,8 @@ require 'json'
 module Oxidized
   module API
     class Web
-      require 'rack/handler'
+      require 'rack/handler/puma'
       attr_reader :thread
-
-      Rack::Handler::WEBrick = Rack::Handler.get(:puma)
       def initialize nodes, listen
         require 'oxidized/web/webapp'
         listen, uri = listen.split '/'
@@ -27,7 +25,7 @@ module Oxidized
 
       def run
         @thread = Thread.new do
-          Rack::Handler::Puma.run @app, @opts
+          Rack::Handler::Puma.run @app, **@opts
           exit!
         end
       end
