@@ -1,4 +1,7 @@
-# Oxidized Web [![Build Status](https://travis-ci.com/ytti/oxidized-web.svg)](https://travis-ci.com/ytti/oxidized-web) [![Gem Version](https://badge.fury.io/rb/oxidized-web.svg)](http://badge.fury.io/rb/oxidized-web)
+# Oxidized Web
+
+[![Build Status](https://github.com/ytti/oxidized-web/actions/workflows/ruby.yml/badge.svg)](https://github.com/ytti/oxidized-web/actions/workflows/ruby.yml)
+[![Gem Version](https://badge.fury.io/rb/oxidized-web.svg)](http://badge.fury.io/rb/oxidized-web)
 
 Web userinterface and RESTful API for Oxidized.
 
@@ -6,11 +9,10 @@ This is not useful independently, see https://github.com/ytti/oxidized for insta
 
 Live demo: http://oxidized.arahant.net
 
-# License and Copyright
+## License and Copyright
 
 Copyright 2013-2015 Saku Ytti <saku@ytti.fi>
           2013-2015 Samer Abdel-Hafez <sam@arahant.net>
-
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
