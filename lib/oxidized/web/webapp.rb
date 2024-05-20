@@ -10,7 +10,7 @@ module Oxidized
   module API
     class WebApp < Sinatra::Base
       helpers Sinatra::UrlForHelper
-      set :public_folder, Proc.new { File.join(root, 'public') }
+      set :public_folder, proc { File.join(root, 'public') }
 
       get '/' do
         redirect url_for('/nodes')
@@ -18,16 +18,16 @@ module Oxidized
 
       get '/nodes/:filter/:value.?:format?' do
         @data = nodes.list.select do |node|
-          if node[params[:filter].to_sym] == params[:value]
-            node[:status] = 'never'
-            node[:time]   = 'never'
-            node[:group]  = 'default' unless node[:group]
-            if node[:last]
-              node[:status] = node[:last][:status]
-              node[:time]   = node[:last][:end]
-            end
-            node
+          next unless node[params[:filter].to_sym] == params[:value]
+
+          node[:status] = 'never'
+          node[:time]   = 'never'
+          node[:group]  = 'default' unless node[:group]
+          if node[:last]
+            node[:status] = node[:last][:status]
+            node[:time]   = node[:last][:end]
           end
+          node
         end
         out :nodes
       end
@@ -53,9 +53,7 @@ module Oxidized
         nodes_list.each do |n|
           node, @json = route_parse n[:name]
           config = nodes.fetch node, n[:group]
-          if config[@to_research]
-            @nodes_match.push({ node: n[:name], full_name: n[:full_name] })
-          end
+          @nodes_match.push({ node: n[:name], full_name: n[:full_name] }) if config[@to_research]
         end
         @data = @nodes_match
         out :conf_search
@@ -80,8 +78,8 @@ module Oxidized
         begin
           node, @json = route_parse :node
           @data = nodes.fetch node, nil
-        rescue NodeNotFound => error
-          @data = error.message
+        rescue NodeNotFound => e
+          @data = e.message
         end
         out :text
       end
@@ -130,12 +128,12 @@ module Oxidized
         cloginrc_file = params['cloginrc'][:tempfile]
         path_new_file = params['path_new_file']
 
-        router_db_files = Array.new
+        router_db_files = []
 
         i = 1
-        while i <= number do
+        while i <= number
           router_db_files.push({ file: params["file#{i}"][:tempfile], group: params["group#{i}"] })
-          i = i + 1
+          i += 1
         end
 
         migration = Mig.new(router_db_files, cloginrc_file, path_new_file)
@@ -144,7 +142,7 @@ module Oxidized
       end
 
       get '/css/*.css' do
-        sass "sass/#{params[:splat].first}".to_sym
+        sass :"sass/#{params[:splat].first}"
       end
 
       # show the lists of versions for a node
@@ -187,11 +185,9 @@ module Oxidized
       get '/node/version/diffs' do
         node, @json = route_parse :node
         @data = nil
-        @info = {node: node, group: params[:group], oid: params[:oid], date: params[:date], num: params[:num], num2: (params[:num].to_i - 1)}
+        @info = { node: node, group: params[:group], oid: params[:oid], date: params[:date], num: params[:num], num2: (params[:num].to_i - 1) }
         group = nil
-        if @info[:group] != ''
-          group = @info[:group]
-        end
+        group = @info[:group] if @info[:group] != ''
         @oids_dates = nodes.version node, group
         if params[:oid2]
           @info[:oid2] = params[:oid2]
@@ -199,18 +195,18 @@ module Oxidized
           num = @oids_dates.count + 1
           @oids_dates.each do |x|
             num -= 1
-            if x[:oid].to_s == params[:oid2]
-              oid2 = x[:oid]
-              @info[:num2] = num
-              break
-            end
+            next unless x[:oid].to_s == params[:oid2]
+
+            oid2 = x[:oid]
+            @info[:num2] = num
+            break
           end
           @data = nodes.get_diff node, @info[:group], @info[:oid], oid2
         else
           @data = nodes.get_diff node, @info[:group], @info[:oid], nil
         end
-        @stat = ['null', 'null']
-        if @data != 'no diffs' && @data != nil
+        @stat = %w[null null]
+        if @data != 'no diffs' && !@data.nil?
           @stat = @data[:stat]
           @data = @data[:patch]
         else
@@ -227,7 +223,7 @@ module Oxidized
 
       private
 
-      def out template = :text
+      def out(template = :text)
         if @json or params[:format] == 'json'
           if @data.is_a?(String)
             json @data.lines
@@ -246,13 +242,13 @@ module Oxidized
         settings.nodes
       end
 
-      def route_parse param
+      def route_parse(param)
         json = false
-        if param.respond_to?(:to_str)
-          e = param.split '.'
-        else
-          e = params[param].split '.'
-        end
+        e = if param.respond_to?(:to_str)
+              param.split '.'
+            else
+              params[param].split '.'
+            end
         if e.last == 'json'
           e.pop
           json = true
@@ -261,31 +257,29 @@ module Oxidized
       end
 
       # give the time enlapsed between now and a date
-      def time_from_now date
+      def time_from_now(date)
         if date
           # if the + is missing
-          unless date.include? '+'
-            date.insert(21, '+')
-          end
+          date.insert(21, '+') unless date.include? '+'
           date = DateTime.parse date
           now = DateTime.now.new_offset(0)
           t = ((now - date) * 24 * 60 * 60).to_i
           mm, ss = t.divmod(60)
           hh, mm = mm.divmod(60)
           dd, hh = hh.divmod(24)
-          if dd.positive?
-            date = "#{dd} days #{hh} hours ago"
-          elsif hh.positive?
-            date = "#{hh} hours #{mm} min ago"
-          else
-            date = "#{mm} min #{ss} sec ago"
-          end
+          date = if dd.positive?
+                   "#{dd} days #{hh} hours ago"
+                 elsif hh.positive?
+                   "#{hh} hours #{mm} min ago"
+                 else
+                   "#{mm} min #{ss} sec ago"
+                 end
         end
         date
       end
 
       # method the give diffs in separate view (the old and the new) as in github
-      def diff_view diff
+      def diff_view(diff)
         old_diff = []
         new_diff = []
 
@@ -305,18 +299,16 @@ module Oxidized
         length_o = old_diff.count
         length_n = new_diff.count
         for i in 0..[length_o, length_n].max
-          if i > [length_o, length_n].min
-            break
-          end
+          break if i > [length_o, length_n].min
 
-          if (/^-.*/.match(old_diff[i])) && !(/^\+.*/.match(new_diff[i]))
+          if /^-.*/.match(old_diff[i]) && !/^\+.*/.match(new_diff[i])
             # tag removed latter to add color syntax
             insert = 'empty_line'
             # ugly way to avoid asymmetry if at display the line takes 2 line on the screen
             insert = "&nbsp;\n"
             new_diff.insert(i, insert)
             length_n += 1
-          elsif !(/^-.*/.match(old_diff[i])) && (/^\+.*/.match(new_diff[i]))
+          elsif !/^-.*/.match(old_diff[i]) && /^\+.*/.match(new_diff[i])
             insert = 'empty_line'
             insert = "&nbsp;\n"
             old_diff.insert(i, insert)
