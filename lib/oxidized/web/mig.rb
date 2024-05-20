@@ -30,7 +30,7 @@ module Oxidized
                   h[:password] = line[i + 2]
                   h[:enable] = line[i + 3] if /\s*/.match(line[i + 3])
                   hash[line[i + 1]] = h
-                elsif line.length = i + 2
+                elsif line.length == i + 2
                   h = hash[line[i + 1]]
                   h[:password] = line[i + 2]
                   hash[line[i + 1]] = h
