@@ -261,7 +261,7 @@ module Oxidized
       def time_from_now(date)
         if date
           # if the + or - is missing, insert +
-          date.insert(21, '+') unless date =~ /[-+/
+          date.insert(21, '+') unless date =~ /[-+]/
           date = DateTime.parse date
           now = DateTime.now.new_offset(0)
           t = ((now - date) * 24 * 60 * 60).to_i
