@@ -260,8 +260,8 @@ module Oxidized
       # give the time enlapsed between now and a date
       def time_from_now(date)
         if date
-          # if the + is missing
-          date.insert(21, '+') unless date.include? '+'
+          # if the + or - is missing, insert +
+          date.insert(21, '+') unless date =~ /[-+]/
           date = DateTime.parse date
           now = DateTime.now.new_offset(0)
           t = ((now - date) * 24 * 60 * 60).to_i
