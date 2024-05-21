@@ -25,7 +25,7 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency 'puma',                '~> 3.11.4'
   s.add_runtime_dependency 'rack-test',           '>= 0.7', '< 2.2'
   s.add_runtime_dependency 'sass',                '~> 3.3'
-  s.add_runtime_dependency 'sinatra',             '~> 1.4', '>= 1.4.6'
+  s.add_runtime_dependency 'sinatra',             '>= 1.4.6', '< 5.0'
   s.add_runtime_dependency 'sinatra-contrib',     '~> 1.4', '>= 1.4.6'
 
   s.add_development_dependency 'bundler',              '~> 2.2'
