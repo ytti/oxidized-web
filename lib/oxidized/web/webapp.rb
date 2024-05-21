@@ -94,7 +94,8 @@ module Oxidized
         node, @json = route_parse :node
         begin
           nodes.next node
-        rescue NodeNotFound
+        rescue NodeNotFound => e
+          @data = e.message
         end
         redirect url_for('/nodes') unless @json
         @data = 'ok'
@@ -224,13 +225,13 @@ module Oxidized
       private
 
       def out(template = :text)
-        if @json or params[:format] == 'json'
+        if @json || (params[:format] == 'json')
           if @data.is_a?(String)
             json @data.lines
           else
             json @data
           end
-        elsif template == :text or params[:format] == 'text'
+        elsif (template == :text) || (params[:format] == 'text')
           content_type :text
           @data
         else
@@ -298,18 +299,16 @@ module Oxidized
 
         length_o = old_diff.count
         length_n = new_diff.count
-        for i in 0..[length_o, length_n].max
+        (0..[length_o, length_n].max).each do |i|
           break if i > [length_o, length_n].min
 
           if /^-.*/.match(old_diff[i]) && !/^\+.*/.match(new_diff[i])
             # tag removed latter to add color syntax
-            insert = 'empty_line'
             # ugly way to avoid asymmetry if at display the line takes 2 line on the screen
             insert = "&nbsp;\n"
             new_diff.insert(i, insert)
             length_n += 1
           elsif !/^-.*/.match(old_diff[i]) && /^\+.*/.match(new_diff[i])
-            insert = 'empty_line'
             insert = "&nbsp;\n"
             old_diff.insert(i, insert)
             length_o += 1

@@ -14,7 +14,7 @@ module Oxidized
           port = addr
           addr = nil
         end
-        uri = '/' + uri.to_s
+        uri = "/#{uri}"
         @opts = {
           Host: addr,
           Port: port

@@ -2,7 +2,7 @@ require 'bundler/gem_tasks'
 require 'rake/testtask'
 
 gemspec = eval(File.read(Dir['*.gemspec'].first))
-gemfile = [gemspec.name, gemspec.version].join('-') + '.gem'
+gemfile = "#{[gemspec.name, gemspec.version].join('-')}.gem"
 
 # Integrate Rubocop if available
 begin

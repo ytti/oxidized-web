@@ -17,8 +17,8 @@ module Oxidized
         hash = {}
         file.each_line do |line|
           # stock all device name, and password and enable if there is one
-          line = line.split(' ')
-          for i in 0..line.length
+          line = line.split
+          (0..line.length).each do |i|
             if line[i] == 'user'
               # add the equipment and user if not exist
               hash[line[i + 1]] = { user: line[i + 2] } unless hash[line[i + 1]]
@@ -133,7 +133,7 @@ module Oxidized
       def go_rancid_migration
         hash = rancid_group @hash_router_db
         write_router_db hash
-        edit_conf_file "#{ENV.fetch('HOME', nil)}/.config/oxidized/config", @path_new_router
+        edit_conf_file "#{Dir.home}/.config/oxidized/config", @path_new_router
       end
     end
   end
