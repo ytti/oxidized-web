@@ -3,6 +3,10 @@ require 'sinatra/json'
 require 'sinatra/url_for'
 require 'tilt/haml'
 require 'sass'
+# We need PP in node.haml, but rubocop can't see this
+# rubocop:disable Lint/RedundantRequireStatement
+require 'pp'
+# rubocop:enable Lint/RedundantRequireStatement
 require 'oxidized/web/mig'
 require 'htmlentities'
 require 'charlock_holmes'
@@ -11,6 +15,7 @@ module Oxidized
     class WebApp < Sinatra::Base
       helpers Sinatra::UrlForHelper
       set :public_folder, proc { File.join(root, 'public') }
+      set :haml, { escape_html: false }
 
       get '/' do
         redirect url_for('/nodes')
