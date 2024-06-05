@@ -1,0 +1,21 @@
+{
+  "name": "oxidized-web",
+  "version": "1.0.0",
+  "description": "NPM Projekt to get dependent js and css libs",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "The oxidized project",
+  "license": "Apache 2.0",
+  "dependencies": {
+    "bootstrap": "^5.3.3",
+    "bootstrap-icons": "^1.11.3",
+    "datatables.net-bs5": "^2.0.7",
+    "datatables.net-buttons-bs5": "^3.0.2",
+    "jquery": "^3.7.1"
+  }
+}
