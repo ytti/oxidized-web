@@ -10,7 +10,8 @@
   .pull-right
     %form
       %button.ColVis_Button{type: 'button', onclick: 'history.go();'}
-        %span.glyphicon.glyphicon-repeat Refresh
+        %i.bi.bi-repeat
+        Refresh
   .table-responsive
     %table.table.table-condensed.table-striped.table-hover#versionsTable
       %thead
@@ -25,7 +26,7 @@
             %td
               %a{title: 'configuration',
                  href: url_for("/node/fetch/#{x[:full_name]}")}
-                %span.glyphicon.glyphicon-cloud-download
+                %i.bi.bi-cloud-download
 
 :javascript
   $(function() {

@@ -1,19 +1,20 @@
-.row.tbl-header
-  .col-xs-12.col-md-2
+.row
+  .col-4
     %h4 nodes /
+  .col-8
+    %form.float-end#oxButtons
+      %button.btn.btn-primary{type: 'button', onclick: 'history.go();'}
+        %i.bi.bi-repeat
+        Refresh
+      %button.btn.btn-primary#reload{type: 'button'}
+        %i.bi.bi-arrow-clockwise
+        Reload node list
 
 .hidden.alert#flashMessage
 
 .row
-  .pull-right
-    %form
-      %button.ColVis_Button#reload{type: 'button'}
-        %span.glyphicon.glyphicon-refresh Reload
-      %button.ColVis_Button{type: 'button', onclick: 'history.go();'}
-        %span.glyphicon.glyphicon-repeat Refresh
-
   .table-responsive
-    %table.table.table-striped.table-hover.table-condensed#nodesTable
+    %table.table.table-sm.table-striped.table-hover#nodesTable
       %thead
         %tr
           %th Name
@@ -26,10 +27,8 @@
           %th Actions
 
       %tbody
-        - trclass = %w(even odd)
         - @data.sort_by{|e|e[:name]}.each do |node|
-          - klass = trclass.rotate!.first
-          %tr{class: "#{klass} ox-status-#{node[:status]}"}
+          %tr
             %td
               %a{href: url_for("/node/show/#{node[:name]}")} #{node[:name]}
             %td= node[:ip]
@@ -43,34 +42,45 @@
             %td.time= node[:time]
             %td.time= node[:mtime]
             %td
-              %a{title: 'configuration',
-                 href: url_for("/node/fetch/#{node[:full_name]}")}
-                %span.glyphicon.glyphicon-cloud-download
+              %a.link-dark.link-underline-opacity-0{title: 'configuration',
+                  href: url_for("/node/fetch/#{node[:full_name]}")}
+                %i.bi.bi-cloud-download
               &nbsp;&nbsp;
-              %a{title: 'versions',
-                 href: url_for("/node/version?node_full=#{node[:full_name]}")}
-                %img{src: url_for('/images/versioning_18px.png')}
+              %a.link-dark.link-underline-opacity-0{title: 'versions',
+                href: url_for("/node/version?node_full=#{node[:full_name]}")}
+                %i.bi.bi-stack
               &nbsp;&nbsp;
-              %a{title: 'update', href: url_for("/node/next/#{node[:full_name]}")}
-                %span.glyphicon.glyphicon-repeat
+              %a.link-dark.link-underline-opacity-0{title: 'update',
+                href: url_for("/node/next/#{node[:full_name]}")}
+                %i.bi.bi-repeat
 
 :javascript
   $(function() {
-    $('#nodesTable').dataTable({
-      dom: 'C<"clear">lfrtip',
-      bAutoWidth: false,
-      "lengthMenu": [[50, 250, 500, -1], [50, 250, 500, "All"]],
-      columnDefs: [{
-        visible: false,
-        targets: 1
-      }, {
-        type: "string",
-        targets: 3
-      }],
-      colVis: {
-        exclude: [0, 7]
-      }
+    var table = $('#nodesTable').DataTable({
+      columnDefs: [
+        {
+          /* Hide IP address by default */
+          target: 1,
+          visible: false,
+        },
+        {
+          /* do not permit to hide Name and Actions */
+          targets: [0,7],
+          className: 'noVis'
+        },
+      ],
+      buttons:
+        [{
+          extend: 'colvis',
+          columns: ':not(.noVis)',
+          className: 'btn-primary',
+        }],
+      autoWidth: false,
+      lengthMenu: [20, 50, 250, 500, { label: 'All', value: -1 }]
     });
+
+    table.buttons(0,0).container().prependTo($('#oxButtons'));
+    table.buttons(0,0).nodes().removeClass('btn-secondary');
   });
 
 

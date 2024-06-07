@@ -1,18 +1,17 @@
-.row.tbl-header
-  .col-xs-12
+.row
+  .col-4
     %h4
       %a{href: url_for('/nodes')} nodes
       \/ stats
+  .col-8
+    %form.float-end#oxButtons
+      %button.btn.btn-primary{type: 'button', onclick: 'history.go();'}
+        %i.bi.bi-repeat
+        Refresh
 
 .row
-  .pull-right
-    %button.ColVis_Button{type: 'button', onclick: 'history.go();'}
-      %span.glyphicon.glyphicon-repeat Refresh
-
   .table-responsive
-    %table.table.table-condensed.table-striped.table-hover#statsTable
-      %caption
-        %span Node Statistics
+    %table.table.table-sm.table-striped.table-hover#statsTable
 
       %thead
         %tr
@@ -76,26 +75,35 @@
             %td #{'%.2f' % avg_time}
             %td
               %div{title: status, class: status}
+                %span{style: 'visibility: hidden'}#{status}
             %td.time= last_success
             %td.time= last_failure
 
 :javascript
   $(function() {
-    $('#statsTable').dataTable({
-      dom: 'C<"clear">lfrtip',
-      "lengthMenu": [[50, 250, 500, -1], [50, 250, 500, "All"]],
-      bAutoWidth: false,
-      columnDefs: [{
-        visible: false,
-        targets: 1
-      }, {
-        render: function ( data, type, row) {
-            return type === 'display' ? data + 's' : data
+    var table = $('#statsTable').DataTable({
+      columnDefs: [
+        {
+          /* Hide IP address by default */
+          target: 1,
+          visible: false,
         },
-        targets: 4
-      }],
-      colVis: {
-        exclude: [0, 5]
-      }
+        {
+          /* do not permit to hide Name and Last Status */
+          targets: [0,5],
+          className: 'noVis'
+        },
+      ],
+      buttons:
+        [{
+          extend: 'colvis',
+          columns: ':not(.noVis)',
+          className: 'btn-primary',
+        }],
+      autoWidth: false,
+      lengthMenu: [20, 50, 250, 500, { label: 'All', value: -1 }],
     });
+
+    table.buttons(0,0).container().prependTo($('#oxButtons'));
+    table.buttons(0,0).nodes().removeClass('btn-secondary');
   });

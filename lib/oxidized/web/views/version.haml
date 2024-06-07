@@ -6,7 +6,7 @@
       - else
         - params = "node_full=#{@info[:node]}"
       %a{href: url_for("/node/version?#{params}")} versions
-      \/ version #{@info[:num]} for Node
+      \/ version #{@info[:num]} for node
       %span.node_title #{@info[:node]}
 .row
   .col-sm-12
@@ -16,7 +16,6 @@
 
 .row
   .col-sm-12
-    .diffs
+    %pre.bg-body-tertiary.border.border-secondary-subtle.rounded
       - @data.each_line do |line|
-        %div><
-          != escape_once("#{line}")
+        != escape_once("#{line}")

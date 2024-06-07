@@ -2,7 +2,6 @@ require 'sinatra/base'
 require 'sinatra/json'
 require 'sinatra/url_for'
 require 'tilt/haml'
-require 'sass'
 # We need PP in node.haml, but rubocop can't see this
 # rubocop:disable Lint/RedundantRequireStatement
 require 'pp'
@@ -145,10 +144,6 @@ module Oxidized
         migration = Mig.new(router_db_files, cloginrc_file, path_new_file)
         migration.go_rancid_migration
         redirect url_for('//nodes')
-      end
-
-      get '/css/*.css' do
-        sass :"sass/#{params[:splat].first}"
       end
 
       # show the lists of versions for a node
@@ -320,6 +315,14 @@ module Oxidized
           end
         end
         { old_diff: old_diff, new_diff: new_diff }
+      end
+
+      # Taken von Haml 5.0, so it still works in 6.0
+      HTML_ESCAPE = {'&' => '&amp;', '<' => '&lt;', '>' => '&gt;', '"' => '&quot;', "'" => '&#39;'}.freeze
+      HTML_ESCAPE_ONCE_REGEX = /['"><]|&(?!(?:[a-zA-Z]+|#(?:\d+|[xX][0-9a-fA-F]+));)/
+      def escape_once(text)
+        text = text.to_s
+        text.gsub(HTML_ESCAPE_ONCE_REGEX, HTML_ESCAPE)
       end
     end
   end
