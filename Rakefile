@@ -69,15 +69,9 @@ task :weblibs do
   fonts = []
 
   # jQuery
-  #weblibs << 'node_modules/jquery/dist/jquery.min.js'
-  #weblibs << 'node_modules/jquery/dist/jquery.min.map'
   weblibs << 'node_modules/jquery/dist/jquery.js'
 
   # Bootstrap
-  #weblibs << 'node_modules/bootstrap/dist/js/bootstrap.min.js'
-  #weblibs << 'node_modules/bootstrap/dist/js/bootstrap.min.js.map'
-  #weblibs << 'node_modules/bootstrap/dist/css/bootstrap.min.css'
-  #weblibs << 'node_modules/bootstrap/dist/css/bootstrap.min.css.map'
   weblibs << 'node_modules/bootstrap/dist/js/bootstrap.js'
   weblibs << 'node_modules/bootstrap/dist/js/bootstrap.js.map'
   weblibs << 'node_modules/bootstrap/dist/css/bootstrap.css'
@@ -91,32 +85,26 @@ task :weblibs do
   fonts << 'node_modules/bootstrap-icons/font/fonts/bootstrap-icons.woff2'
 
   # Datatables
-  #weblibs << 'node_modules/datatables.net/js/dataTables.min.js'
   weblibs << 'node_modules/datatables.net/js/dataTables.js'
 
   # Datatables + Bootstrap
-  #weblibs << 'node_modules/datatables.net-bs5/js/dataTables.bootstrap5.min.js'
-  #weblibs << 'node_modules/datatables.net-bs5/css/dataTables.bootstrap5.min.css'
   weblibs << 'node_modules/datatables.net-bs5/js/dataTables.bootstrap5.js'
   weblibs << 'node_modules/datatables.net-bs5/css/dataTables.bootstrap5.css'
 
   # Datatables Buttons + Bootstrap
-  #weblibs << 'node_modules/datatables.net-buttons-bs5/js/buttons.bootstrap5.min.js'
-  #weblibs << 'node_modules/datatables.net-buttons-bs5/css/buttons.bootstrap5.min.css'
   weblibs << 'node_modules/datatables.net-buttons-bs5/js/buttons.bootstrap5.js'
   weblibs << 'node_modules/datatables.net-buttons-bs5/css/buttons.bootstrap5.css'
   # colVis
   weblibs << 'node_modules/datatables.net-buttons/js/dataTables.buttons.js'
   weblibs << 'node_modules/datatables.net-buttons/js/buttons.colVis.js'
 
-  weblibs.each() do |w|
+  weblibs.each do |w|
     cp(w, 'lib/oxidized/web/public/weblibs')
   end
 
-  fonts.each() do |f|
+  fonts.each do |f|
     cp(f, 'lib/oxidized/web/public/weblibs/fonts')
   end
-
 end
 
 task default: :test

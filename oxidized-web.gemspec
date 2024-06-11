@@ -14,7 +14,7 @@ Gem::Specification.new do |s|
 
   s.metadata['rubygems_mfa_required'] = 'true'
 
-  s.required_ruby_version =                       '>= 2.7'
+  s.required_ruby_version =                       '>= 3.1'
 
   s.add_runtime_dependency 'charlock_holmes',     '~> 0.7.5'
   s.add_runtime_dependency 'emk-sinatra-url-for', '~> 0.2'
@@ -23,11 +23,11 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency 'json',                '~> 2.3'
   s.add_runtime_dependency 'oxidized',            '~> 0.26'
   s.add_runtime_dependency 'puma',                '>= 3.11.4', '< 6.5.0'
-  s.add_runtime_dependency 'rack-test',           '>= 0.7', '< 2.2'
   s.add_runtime_dependency 'sinatra',             '>= 1.4.6', '< 5.0'
   s.add_runtime_dependency 'sinatra-contrib',     '>= 1.4.6', '< 5.0'
 
   s.add_development_dependency 'bundler',              '~> 2.2'
+  s.add_development_dependency 'rack-test',            '~> 2.1'
   s.add_development_dependency 'rails_best_practices', '~> 1.19'
   s.add_development_dependency 'rake',                 '~> 13.0'
   s.add_development_dependency 'rubocop',              '~> 1.63.5'
