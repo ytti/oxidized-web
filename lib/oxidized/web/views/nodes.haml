@@ -4,11 +4,11 @@
   .col-8
     %form.float-end#oxButtons
       %button.btn.btn-primary{type: 'button', onclick: 'history.go();'}
-        %i.bi.bi-repeat
+        %i.bi.bi-arrow-clockwise
         Refresh
       %button.btn.btn-primary#reload{type: 'button'}
-        %i.bi.bi-arrow-clockwise
-        Reload node list
+        %i.bi.bi-repeat
+        Update node list
 
 .hidden.alert#flashMessage
 
@@ -42,15 +42,15 @@
             %td.time= node[:time]
             %td.time= node[:mtime]
             %td
-              %a.link-dark.link-underline-opacity-0{title: 'configuration',
+              %a.link-dark.link-underline-opacity-0{title: 'Configuration',
                   href: url_for("/node/fetch/#{node[:full_name]}")}
                 %i.bi.bi-cloud-download
               &nbsp;&nbsp;
-              %a.link-dark.link-underline-opacity-0{title: 'versions',
+              %a.link-dark.link-underline-opacity-0{title: 'Versions',
                 href: url_for("/node/version?node_full=#{node[:full_name]}")}
                 %i.bi.bi-stack
               &nbsp;&nbsp;
-              %a.link-dark.link-underline-opacity-0{title: 'update',
+              %a.link-dark.link-underline-opacity-0{title: 'Update configuration',
                 href: url_for("/node/next/#{node[:full_name]}")}
                 %i.bi.bi-repeat
 

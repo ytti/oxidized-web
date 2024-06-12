@@ -13,6 +13,9 @@ bundle install
 bundle exec oxidized
 ```
 
+Changes to haml templates are reloaded on the fly. For changes to the ruby
+scripts, you have to stop an restart `bundle exec oxidized`.
+
 ## Paralell development between oxidized and oxidized-web
 You may need to make some changes in oxidized **and** oxidized-web. For this,
 git clone oxidized and oxidized-web in a common root directory, add the direct

@@ -20,6 +20,10 @@ module Oxidized
         redirect url_for('/nodes')
       end
 
+      get '/favicon.ico' do
+        redirect url_for('/images/favicon.ico')
+      end
+
       get '/nodes/:filter/:value.?:format?' do
         @data = nodes.list.select do |node|
           next unless node[params[:filter].to_sym] == params[:value]

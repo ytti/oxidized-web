@@ -6,8 +6,8 @@
       - else
         - node_full = "#{@info[:node]}"
       %a{href: url_for("/node/version?node_full=#{node_full}")} versions
-      \/ Diff version #{@info[:num]} - #{@info[:num2]} for Node
-      %span.node_title #{@info[:node]}
+      \/ Diff version #{@info[:num]} - #{@info[:num2]} for node
+      %b #{@info[:node]}
 .row
   .col-sm-12
     - date_version = Time.parse @info[:date]

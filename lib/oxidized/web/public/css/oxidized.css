@@ -31,8 +31,8 @@
 .diff-empty {
   background-color: #F0F0F0; }
 
-.diffs, .diffs_old, .diffs_new, .node_title {
-  background-color: FAFAFA;
+.diffs, .diffs_old, .diffs_new {
+  background-color: #FAFAFA;
   border: 2px solid #ccc;
   border-radius: 5px;
   padding: 3px;
@@ -48,9 +48,6 @@
   margin-left: 51%;
   width: 49%;
   overflow: auto; }
-
-.node_title {
-  border-radius: 0px; }
 
 .old_version_title {
   float: left;

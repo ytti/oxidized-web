@@ -7,7 +7,7 @@
         - params = "node_full=#{@info[:node]}"
       %a{href: url_for("/node/version?#{params}")} versions
       \/ version #{@info[:num]} for node
-      %span.node_title #{@info[:node]}
+      %b #{@info[:node]}
 .row
   .col-sm-12
     - date_version = Time.parse @info[:date]

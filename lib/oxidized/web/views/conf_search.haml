@@ -1,19 +1,19 @@
-.row.tbl-header
-  .col-xs-12
+.row
+  .col-8
     %h4
       %a{href: url_for('/nodes')} nodes
       \/ Nodes that contain 
-      %span
+      %b
         &= "#{@to_research}"
-  
-.row
-  .pull-right
-    %form
-      %button.ColVis_Button{type: 'button', onclick: 'history.go();'}
-        %i.bi.bi-repeat
+  .col-4
+    %form.float-end#oxButtons
+      %button.btn.btn-primary{type: 'button', onclick: 'history.go();'}
+        %i.bi.bi-arrow-clockwise
         Refresh
+
+.row
   .table-responsive
-    %table.table.table-condensed.table-striped.table-hover#versionsTable
+    %table.table.table-sm.table-striped.table-hover#versionsTable
       %thead
         %tr
           %th Name
@@ -31,9 +31,8 @@
 :javascript
   $(function() {
     $('#versionsTable').dataTable({
-      dom: 'C<"clear">lfrtip',
-      bAutoWidth: false,
-      "order": [[0, "desc"]]
+      autoWidth: false,
+      "order": [[0, "asc"]]
     });
   });
 
