@@ -39,3 +39,26 @@ find a better way to do this, better ideas are welcome :-)
 If your changes to oxidized **AND** oxidzed-web are dependent from another, make
 sure you document this in the respectives CHANGELOG.md, so that everyone is
 informed at the next release.
+
+# Update the weblibs
+The weblibs are beeing downloaded and maintained by `npm`.
+
+Run `npm install` to download the weblibs. They will be stored under
+`node_modules`.
+The file `package-lock.json` (wich is tracked in git) ensures that every
+developer gets the same versions.
+
+Run `npm outdated` to get a list of new releases:
+
+```shell
+oxidized-web$ npm outdated
+Package             Current  Wanted  Latest  Location                         Depended by
+datatables.net-bs5    2.0.7   2.0.8   2.0.8  node_modules/datatables.net-bs5  oxidized-web
+```
+
+Run `npm update` to get the latest releases. They still are not used
+oxidzed-web. Run `rake weblibs` to sync `node_modules` with
+`lib/oxidized/web/public/weblibs`.
+
+Test, and commit the changes to the weblibs **and** package-lock.json. Don't
+forget to document your changes in CHANGELOG.md.
