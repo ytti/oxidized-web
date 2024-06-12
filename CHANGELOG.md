@@ -14,6 +14,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - gem dependencies updated (@robertchreamy)
 - support for ruby 3.0 dropped (@robertchreamy)
 - #215: weblibs (jQuery, bootstrap, datatables.net) updated (@robertchreamy)
+- the web design folows where bootstrap without specific css (@robertchreamy)
 
 ### Fixed
 - #232: escape_once not supported in haml 6.0 (@robertchreamy)
