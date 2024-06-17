@@ -1,21 +1,28 @@
-require 'minitest/autorun'
-require 'rack/test'
-require 'oxidized/web/webapp'
+require_relative 'spec_helper'
+
+# Test helper methods in Oxidized::API::WebApp
 
 describe Oxidized::API::WebApp do
   include Rack::Test::Methods
 
-  def app
-    Oxidized::API::WebApp
+  before do
+    @webapp = Oxidized::API::WebApp.new
   end
 
-  describe 'Get /' do
-    it 'should redirect to /nodes' do
-      get '/'
+  describe 'convert_to_utf8' do
+    it 'cannot work with binary data' do
+      # private method => we must use send
+      result = @webapp.helpers.send(:convert_to_utf8, "\xff\x42 binary content\x00")
+      _(result).must_equal 'The text contains binary values - cannot display'
+    end
+  end
 
-      _(last_response.redirect?).must_equal true
-      follow_redirect!
-      _(last_request.path).must_equal '/nodes'
+  describe 'diff_view' do
+    it 'cannot work with binary data' do
+      # private method => we must use send
+      result = @webapp.helpers.send(:diff_view, "\xff\x42 binary content\x00")
+      _(result[:old_diff]).must_equal ['The text contains binary values - cannot display']
+      _(result[:new_diff]).must_equal ['The text contains binary values - cannot display']
     end
   end
 end

@@ -27,6 +27,8 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency 'sinatra-contrib',     '>= 1.4.6', '< 5.0'
 
   s.add_development_dependency 'bundler',              '~> 2.2'
+  s.add_development_dependency 'minitest',             '~> 5.18'
+  s.add_development_dependency 'mocha',                '~> 2.1'
   s.add_development_dependency 'rack-test',            '~> 2.1'
   s.add_development_dependency 'rails_best_practices', '~> 1.19'
   s.add_development_dependency 'rake',                 '~> 13.0'

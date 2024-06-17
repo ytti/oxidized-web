@@ -2,6 +2,7 @@ inherit_from: .rubocop_todo.yml
 require:
   - rubocop-rails
   - rubocop-rake
+  - rubocop-minitest
 
 # Do not attempt to police vendored code, and exclude special cases
 AllCops:
@@ -15,6 +16,9 @@ Gemspec/DevelopmentDependencies:
 
 Metrics/ClassLength:
   Max: 300
+
+Metrics/BlockLength:
+  Max: 150
 
 Style/Documentation:
   Enabled: false

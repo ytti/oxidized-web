@@ -180,8 +180,7 @@ module Oxidized
         }
 
         the_data = nodes.get_version node, @info[:group], @info[:oid]
-        detection = ::CharlockHolmes::EncodingDetector.detect(the_data)
-        utf8_encoded_content = ::CharlockHolmes::Converter.convert the_data, detection[:encoding], 'UTF-8'
+        utf8_encoded_content = convert_to_utf8(the_data)
         @data = HTMLEntities.new.encode(utf8_encoded_content)
         out :version
       end
@@ -288,8 +287,7 @@ module Oxidized
         old_diff = []
         new_diff = []
 
-        detection = ::CharlockHolmes::EncodingDetector.detect(diff)
-        utf8_encoded_content = ::CharlockHolmes::Converter.convert diff, detection[:encoding], 'UTF-8'
+        utf8_encoded_content = convert_to_utf8(diff)
         HTMLEntities.new.encode(utf8_encoded_content).each_line do |line|
           if /^\+/.match(line)
             new_diff.push(line)
@@ -327,6 +325,15 @@ module Oxidized
       def escape_once(text)
         text = text.to_s
         text.gsub(HTML_ESCAPE_ONCE_REGEX, HTML_ESCAPE)
+      end
+
+      def convert_to_utf8(text)
+        detection = ::CharlockHolmes::EncodingDetector.detect(text)
+        if detection[:type] == :text
+          ::CharlockHolmes::Converter.convert text, detection[:encoding], 'UTF-8'
+        else
+          'The text contains binary values - cannot display'
+        end
       end
     end
   end
