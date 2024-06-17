@@ -63,4 +63,48 @@ task :chmod do
   dirs.sort.uniq.each { |dir| File.chmod(0o0755, dir) }
 end
 
+desc 'Copy web packages from npm into public'
+task :weblibs do
+  weblibs = []
+  fonts = []
+
+  # jQuery
+  weblibs << 'node_modules/jquery/dist/jquery.js'
+
+  # Bootstrap
+  weblibs << 'node_modules/bootstrap/dist/js/bootstrap.js'
+  weblibs << 'node_modules/bootstrap/dist/js/bootstrap.js.map'
+  weblibs << 'node_modules/bootstrap/dist/css/bootstrap.css'
+  weblibs << 'node_modules/bootstrap/dist/css/bootstrap.css.map'
+  weblibs << 'node_modules/bootstrap/dist/js/bootstrap.bundle.js'
+  weblibs << 'node_modules/bootstrap/dist/js/bootstrap.bundle.js.map'
+
+  # Bootstrap-icons
+  weblibs << 'node_modules/bootstrap-icons/font/bootstrap-icons.css'
+  fonts << 'node_modules/bootstrap-icons/font/fonts/bootstrap-icons.woff'
+  fonts << 'node_modules/bootstrap-icons/font/fonts/bootstrap-icons.woff2'
+
+  # Datatables
+  weblibs << 'node_modules/datatables.net/js/dataTables.js'
+
+  # Datatables + Bootstrap
+  weblibs << 'node_modules/datatables.net-bs5/js/dataTables.bootstrap5.js'
+  weblibs << 'node_modules/datatables.net-bs5/css/dataTables.bootstrap5.css'
+
+  # Datatables Buttons + Bootstrap
+  weblibs << 'node_modules/datatables.net-buttons-bs5/js/buttons.bootstrap5.js'
+  weblibs << 'node_modules/datatables.net-buttons-bs5/css/buttons.bootstrap5.css'
+  # colVis
+  weblibs << 'node_modules/datatables.net-buttons/js/dataTables.buttons.js'
+  weblibs << 'node_modules/datatables.net-buttons/js/buttons.colVis.js'
+
+  weblibs.each do |w|
+    cp(w, 'lib/oxidized/web/public/weblibs')
+  end
+
+  fonts.each do |f|
+    cp(f, 'lib/oxidized/web/public/weblibs/fonts')
+  end
+end
+
 task default: :test

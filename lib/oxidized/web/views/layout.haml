@@ -2,44 +2,39 @@
 %html{lang: 'en'}
   !=haml :head
   %body
-    %nav.navbar.navbar-default.navbar-static-top{role: 'navigation'}
+    %nav.navbar.navbar-expand-lg.bg-body-tertiary.border-bottom.border-secondary-subtle.mb-4
       .container-fluid
-        .navbar-header
-          %button.navbar-toggle.collapsed{type: 'button',
-                                          :'data-toggle' => 'collapse',
-                                          :'data-target' => '#ox-nav',
-                                          :'aria-expanded' => 'false'}
-            %span.sr-only Toggle Navigation
-            %span.icon-bar
-            %span.icon-bar
-            %span.icon-bar
-          %a.navbar-brand{href: url_for('/')}
-            %img{src: url_for('/images/oxidizing_40px.png')} Oxidized
-
+        %a.navbar-brand{href: url_for('/')}
+          %img{src: url_for('/images/oxidizing_40px.png')}
+          Oxidized
+        %button.navbar-toggler{type: 'button',
+                                  :'data-bs-toggle' => 'collapse',
+                                  :'data-bs-target' => '#ox-nav',
+                                  :'aria-expanded'  => 'false',
+                                  :'aria-label'     => 'Toggle navigation',
+                                  :'aria-controls'  => '#ox-nav'}
+          %span.navbar-toggler-icon
         .collapse.navbar-collapse#ox-nav
-          %ul.nav.navbar-nav
-            %li{class: request.path_info == '/nodes/stats' ? 'active' : ''}
-              %a.navbar-link{href: url_for('/nodes/stats')} Stats
-
-            %li{class: request.path_info == '/migration' ? 'active' : ''}
-              %a.navbar-link{href: url_for('/migration')} Migration
-
-          %form.navbar-form.navbar-right{role: 'search',
-                                         action: url_for('/nodes/conf_search'),
-                                         method: 'post'}
-            .form-group#to_search_in_config{name: 'to_search_in_config'}
-              %input.form-control.input-sm{type: 'text',
-                                           name: 'search_in_conf_textbox',
-                                           placeholder: 'Search in Configs'}
-              %button.btn.btn-primary.btn-sm{type: 'submit'}
-                %span.glyphicon.glyphicon-search
+          %ul.navbar-nav.me-auto.mb-1
+            %li.nav-item
+              %a.nav-link{class: request.path_info == '/nodes/stats' ? 'active' : '',
+                            :'aria-current' => request.path_info == '/nodes/stats' ? 'page' : 'false',
+                            href: url_for('/nodes/stats')} Stats
+            %li.nav-item
+              %a.nav-link{class: request.path_info == '/migration' ? 'active' : '',
+                            :'aria-current' => request.path_info == '/migration' ? 'page' : 'false',
+                            href: url_for('/migration')} Migration
+          %form.d-flex{role: 'search',
+                      action: url_for('/nodes/conf_search'),
+                      method: 'post'}
+            %input.form-control.me-2{type: 'text',
+                                      name: 'search_in_conf_textbox',
+                                      placeholder: 'Search in Configs',
+                                      :'aria-label' => 'Search in Configs'}
+            %button.btn.btn-primary{type: 'submit'}
+              %i.bi.bi-search
 
     .container-fluid
       =yield
     !=haml :footer
-    %script{src: url_for('/scripts/bootstrap.min.js')}
-    %script{src: url_for('/scripts/jquery.dataTables.min.js')}
-    %script{src: url_for('/scripts/dataTables.bootstrap.js')}
-    %script{src: url_for('/scripts/dataTables.colVis.js')}
-    %script{src: url_for('/scripts/oxidized.js')}
 

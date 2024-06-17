@@ -5,7 +5,10 @@
 
 Web userinterface and RESTful API for Oxidized.
 
-This is not useful independently, see https://github.com/ytti/oxidized for install instructions
+This is not useful independently, see https://github.com/ytti/oxidized for install instructions.
+
+If you wonder how to run oxidized-web from git for development, have a look at
+[docs/development.md](docs/development.md).
 
 ## License and Copyright
 

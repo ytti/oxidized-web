@@ -6,8 +6,8 @@
       - else
         - params = "node_full=#{@info[:node]}"
       %a{href: url_for("/node/version?#{params}")} versions
-      \/ version #{@info[:num]} for Node
-      %span.node_title #{@info[:node]}
+      \/ version #{@info[:num]} for node
+      %b #{@info[:node]}
 .row
   .col-sm-12
     - date_version = Time.parse @info[:date]
@@ -16,7 +16,6 @@
 
 .row
   .col-sm-12
-    .diffs
+    %pre.bg-body-tertiary.border.border-secondary-subtle.rounded
       - @data.each_line do |line|
-        %div><
-          != escape_once("#{line}")
+        != escape_once("#{line}")

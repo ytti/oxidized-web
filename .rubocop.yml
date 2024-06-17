@@ -6,7 +6,7 @@ require:
 # Do not attempt to police vendored code, and exclude special cases
 AllCops:
   NewCops: enable
-  TargetRubyVersion: 2.7
+  TargetRubyVersion: 3.1
   Exclude:
     - 'vendor/**/*'
 
@@ -59,6 +59,9 @@ Style/HashTransformKeys:
 
 Style/HashTransformValues:
   Enabled: true
+
+Style/HashSyntax:
+  EnforcedShorthandSyntax: either
 
 Style/RescueModifier:
   Enabled: false

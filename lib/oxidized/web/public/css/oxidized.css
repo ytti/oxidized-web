@@ -1,0 +1,59 @@
+/* Display status of device in /nodes and /stats */
+.status, .success, .no_connection, .never {
+  float: right;
+  width: 15px;
+  height: 15px;
+  border: 1px solid;
+  margin-right: 70%;
+  margin-bottom: 0px;
+  border-radius: 2px; }
+
+.success {
+  background-color: #64FE2E; }
+
+.no_connection {
+  background-color: #FF0000; }
+
+.never {
+  background-color: #58ACFA; }
+
+/* node/version/diffs */
+.added {
+  background-color: #DBFFDB; }
+
+.deleted {
+  background-color: #FFDDDD; }
+
+
+.diff-index {
+  background-color: #FFFF99; }
+
+.diff-empty {
+  background-color: #F0F0F0; }
+
+.diffs, .diffs_old, .diffs_new {
+  background-color: #FAFAFA;
+  border: 2px solid #ccc;
+  border-radius: 5px;
+  padding: 3px;
+  font-family: Consolas, "Lucida Console", monospace;
+  white-space: pre; }
+
+.diffs_old {
+  float: left;
+  width: 49%;
+  overflow: auto; }
+
+.diffs_new {
+  margin-left: 51%;
+  width: 49%;
+  overflow: auto; }
+
+.old_version_title {
+  float: left;
+  width: 49%;
+  font-weight: bold; }
+
+.new_version_title {
+  margin-left: 51%;
+  font-weight: bold; }

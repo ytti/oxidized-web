@@ -4,12 +4,26 @@
   %meta{name: 'viewport', content: 'width=device-width, initial-scale=1'}
   %meta{name: 'google', content: 'notranslate'}
   %title oxidized
-  %link{rel: 'stylesheet', href: url_for('/css/bootstrap.min.css')}
-  %link{rel: 'stylesheet', href: url_for('/css/oxidized.css')}
-  %link{rel: 'stylesheet', href: url_for('/css/oxidized_custom.css')}
   %link{rel: 'shortcut icon', href: url_for('/images/favicon.ico')}
-  %link{rel: 'stylesheet', href: url_for('/css/dataTables.colVis.css')}
-  %link{rel: 'stylesheet', href: url_for('/css/dataTables.bootstrap.css')}
-  %link{rel: 'stylesheet', href: url_for('/css/buttons.bootstrap.min.css')}
-  %script{src: url_for('/scripts/jquery-2.1.1.min.js')}
 
+  -# Bootstrap
+  %link{rel: 'stylesheet', href: url_for('/weblibs/bootstrap.css')}
+  %link{rel: 'stylesheet', href: url_for('/weblibs/bootstrap-icons.css')}
+  -# Datatables
+  %link{rel: 'stylesheet', href: url_for('/weblibs/dataTables.bootstrap5.css')}
+  %link{rel: 'stylesheet', href: url_for('/weblibs/buttons.bootstrap5.css')}
+  -# Custom Oxidized css
+  %link{rel: 'stylesheet', href: url_for('/css/oxidized.css')}
+
+  -# JQuery
+  %script{src: url_for('/weblibs/jquery.js')}
+  -# Bootstrap 5
+  %script{src: url_for('/weblibs/bootstrap.bundle.js')}
+  -# dataTables with bootstrap and buttons (colomn visibility)
+  %script{src: url_for('/weblibs/dataTables.js')}
+  %script{src: url_for('/weblibs/dataTables.bootstrap5.js')}
+  %script{src: url_for('/weblibs/dataTables.buttons.js')}
+  %script{src: url_for('/weblibs/buttons.bootstrap5.js')}
+  %script{src: url_for('/weblibs/buttons.colVis.js')}
+  -# Oxidized customisation
+  %script{src: url_for('/scripts/oxidized.js')}

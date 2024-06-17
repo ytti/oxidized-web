@@ -1,13 +1,13 @@
 .row
-  .col-sm-12
+  .col-4
     %h4
       - if @info[:group] != ''
         - node_full = "#{@info[:group]}/#{@info[:node]}"
       - else
         - node_full = "#{@info[:node]}"
       %a{href: url_for("/node/version?node_full=#{node_full}")} versions
-      \/ Diff version #{@info[:num]} - #{@info[:num2]} for Node
-      %span.node_title #{@info[:node]}
+      \/ Diff version #{@info[:num]} - #{@info[:num2]} for node
+      %b #{@info[:node]}
 .row
   .col-sm-12
     - date_version = Time.parse @info[:date]
@@ -25,7 +25,7 @@
     - params = "#{params}&date=#{@info[:date]}&num=#{@info[:num]}"
     %form{action: url_for("/node/version/diffs?#{params}"), method: 'post', role: 'form'}
       .form-group
-        %select.form-control#oid2{name: 'oid2'}
+        %select.form-select#oid2{name: 'oid2'}
           - diff2 = {}
           - num = @oids_dates.count + 1
           - next_id = false
@@ -37,7 +37,7 @@
             - elsif (x[:oid].to_s == @info[:oid]) && !(@info[:oid2])
               - next_id = true
 
-      %button.btn.btn-default{type: 'submit'} Get Diffs!
+      %button.btn.btn-primary{type: 'submit'} Get Diffs!
 
 .row
   .col-sm-12

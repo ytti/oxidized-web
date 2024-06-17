@@ -1,17 +1,17 @@
-.row.tbl-header
-  .col-xs-12
+.row
+  .col-4
     %h4
       %a{href: url_for('/nodes')} nodes
-      \/ Versions for Node 
-      %span.node_title #{@node}
-
+      \/ Versions for node
+      %b #{@node}
+  .col-8
+    %form.float-end#oxButtons
+      %button.btn.btn-primary{type: 'button', onclick: 'history.go();'}
+        %i.bi.bi-arrow-clockwise
+        Refresh
 .row
-  .pull-right
-    %form
-      %button.ColVis_Button{type: 'button', onclick: 'history.go();'}
-        %span.glyphicon.glyphicon-repeat Refresh
   .table-responsive
-    %table.table.table-condensed.table-striped.table-hover#versionsTable
+    %table.table.table-sm.table-striped.table-hover#versionsTable
       %thead
         %tr
           %th Version
@@ -31,17 +31,16 @@
             %td
               - params = "node=#{@node}&group=#{@group}&oid=#{x[:oid]}"
               - params = "#{params}&date=#{x[:date]}&num=#{nb}"
-              %a{title: 'configuration',
+              %a.link-dark.link-underline-opacity-0{title: 'configuration',
                  href: url_for("/node/version/view?#{params}")}
-                %span.glyphicon.glyphicon-cloud-download
+                %i.bi.bi-cloud-download
               &nbsp;&nbsp;
-              %a{title: 'diff', href: url_for("/node/version/diffs?#{params}")}
-                %img{src: url_for('/images/diff_15x17.png')}
+              %a.link-dark.link-underline-opacity-0{title: 'diff', href: url_for("/node/version/diffs?#{params}")}
+                %i.bi.bi-file-earmark-diff
 
 :javascript
   $(function() {
     $('#versionsTable').dataTable({
-      dom: 'C<"clear">lfrtip',
       "order": [[0, "desc"]],
       bAutoWidth: false,
       columnDefs: [{
