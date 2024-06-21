@@ -1,5 +1,5 @@
 .row
-  .col-sm-12
+  .col-8
     %h4
       - if @info[:group] != ''
         - params = "node_full=#{@info[:group] + '/' + @info[:node]}"
@@ -8,6 +8,9 @@
       %a{href: url_for("/node/version?#{params}")} versions
       \/ version #{@info[:num]} for node
       %b #{@info[:node]}
+  .col-4
+    .float-end
+      %a.btn.btn-primary{:href => "#{request.path}?#{request.query_string}&format=text"} raw
 .row
   .col-sm-12
     - date_version = Time.parse @info[:date]

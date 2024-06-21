@@ -7,12 +7,12 @@ describe Oxidized::API::WebApp do
     Oxidized::API::WebApp
   end
 
-  describe '/node/fetch/' do
-    before do
-      @nodes = mock('Oxidized::Nodes')
-      app.set(:nodes, @nodes)
-    end
+  before do
+    @nodes = mock('Oxidized::Nodes')
+    app.set(:nodes, @nodes)
+  end
 
+  describe '/node/fetch/' do
     it 'gets the latest configuration of a node' do
       @nodes.expects(:fetch).with('sw42', nil).returns('Configuration of sw42')
 
@@ -47,11 +47,6 @@ describe Oxidized::API::WebApp do
   end
 
   describe '/node/next/' do
-    before do
-      @nodes = mock('Oxidized::Nodes')
-      app.set(:nodes, @nodes)
-    end
-
     it 'marks a node to be reloaded, then redirects to /nodes' do
       # Don't know why the method has been called Nodes#next...
       # This is for reloading the node configuration
@@ -104,9 +99,7 @@ describe Oxidized::API::WebApp do
 
   describe '/node/version/view.?:format?' do
     it 'fetches a previous version from git' do
-      nodes = mock('object')
-      nodes.expects(:get_version).with('sw5', '', 'c8aa93cab5').returns('Old configuration of sw42')
-      app.set(:nodes, nodes)
+      @nodes.expects(:get_version).with('sw5', '', 'c8aa93cab5').returns('Old configuration of sw42')
 
       get '/node/version/view?node=sw5&group=&oid=c8aa93cab5&date=2024-06-07 08:27:37 +0200&num=2'
       _(last_response.ok?).must_equal true
@@ -114,9 +107,7 @@ describe Oxidized::API::WebApp do
     end
 
     it 'does not display binary content' do
-      nodes = mock('object')
-      nodes.expects(:get_version).with('sw5', '', 'c8aa93cab5').returns("\xff\x42 binary content\x00")
-      app.set(:nodes, nodes)
+      @nodes.expects(:get_version).with('sw5', '', 'c8aa93cab5').returns("\xff\x42 binary content\x00")
 
       get '/node/version/view?node=sw5&group=&oid=c8aa93cab5&date=2024-06-07 08:27:37 +0200&num=2'
       _(last_response.ok?).must_equal true
@@ -124,13 +115,29 @@ describe Oxidized::API::WebApp do
     end
 
     it 'fetches a git-version when using a group containing /' do
-      nodes = mock('object')
-      nodes.expects(:get_version).with('sw5', 'my/group', 'c8aa93cab5').returns('Old configuration of sw42')
-      app.set(:nodes, nodes)
+      @nodes.expects(:get_version).with('sw5', 'my/group', 'c8aa93cab5').returns('Old configuration of sw42')
 
       get '/node/version/view?node=sw5&group=my/group&oid=c8aa93cab5&date=2024-06-07 08:27:37 +0200&num=2'
       _(last_response.ok?).must_equal true
       _(last_response.body.include?('Old configuration of sw42')).must_equal true
+    end
+
+    it 'does not encode html-chars in text-format' do
+      configuration = "text &/<> \n ascii;"
+      @nodes.expects(:get_version).with('sw5', '', 'c8aa93cab5').returns(configuration)
+      get '/node/version/view?node=sw5&group=&oid=c8aa93cab5&date=2024-06-07 08:27:37 +0200&num=2&format=text'
+
+      _(last_response.ok?).must_equal true
+      _(last_response.body).must_equal configuration
+    end
+
+    it 'does not encode html-chars in json-format' do
+      configuration = "text &/<> \n ascii;"
+      @nodes.expects(:get_version).with('sw5', '', 'c8aa93cab5').returns(configuration)
+      get '/node/version/view?node=sw5&group=&oid=c8aa93cab5&date=2024-06-07 08:27:37 +0200&num=2&format=json'
+
+      _(last_response.ok?).must_equal true
+      _(last_response.body).must_equal '["text &/<> \n"," ascii;"]'
     end
   end
 end
