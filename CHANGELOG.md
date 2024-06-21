@@ -24,3 +24,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - #253: deprecated sass dependency dropped (@robertchreamy)
 - rubocop warnings fixed (@robertchreamy)
 - #234: removed link to not working live demo (@robertchreamy)
+- group name containing a '/' producing a Sinatra error (@robertcheramy)

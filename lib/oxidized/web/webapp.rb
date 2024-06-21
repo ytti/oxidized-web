@@ -82,36 +82,36 @@ module Oxidized
         out
       end
 
-      get '/node/fetch/:node' do
+      # URL: /node/fetch/<group>/<node>.json
+      # Gets the configuration of a node
+      # <group> is optional. If no group is given, nil will be passed to oxidized
+      # .json is optional. If given, will return the output in json format
+      get '/node/fetch/?*?/:node' do
+        node, @json = route_parse :node
+        group = params['splat'].first
+        group = nil if group.empty?
         begin
-          node, @json = route_parse :node
-          @data = nodes.fetch node, nil
+          @data = nodes.fetch node, group
         rescue NodeNotFound => e
           @data = e.message
         end
         out :text
       end
 
-      get '/node/fetch/:group/:node' do
+      # URL: /node/fetch/<group>/<node>.json
+      # <group> is optional, and not used
+      # .json is optional. If given, will return 'ok'
+      # if not, it redirects to /nodes
+      get '/node/next/?*?/:node' do
         node, @json = route_parse :node
-        @data = nodes.fetch node, params[:group]
-        out :text
-      end
-
-      get '/node/next/?:group?/:node' do
-        node, @json = route_parse :node
-        begin
-          nodes.next node
-        rescue NodeNotFound => e
-          @data = e.message
-        end
+        nodes.next node
         redirect url_for('/nodes') unless @json
         @data = 'ok'
         out
       end
 
       # use this to attach author/email/message to commit
-      put '/node/next/?:group?/:node' do
+      put '/node/next/?*?/:node' do
         node, @json = route_parse :node
         opt = JSON.load request.body.read
         nodes.next node, opt
@@ -246,6 +246,9 @@ module Oxidized
         settings.nodes
       end
 
+      # checks if param ends with .json
+      # if so, returns param without ".json" and true
+      # if not, returns param and false
       def route_parse(param)
         json = false
         e = if param.respond_to?(:to_str)

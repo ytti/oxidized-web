@@ -12,8 +12,7 @@ describe Oxidized::API::WebApp do
       get '/'
 
       _(last_response.redirect?).must_equal true
-      follow_redirect!
-      _(last_request.path).must_equal '/nodes'
+      _(last_response.location).must_equal 'http://example.org/nodes'
     end
   end
 end
