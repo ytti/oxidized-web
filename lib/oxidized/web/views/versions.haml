@@ -15,9 +15,8 @@
       %thead
         %tr
           %th Version
-          %th Dates
-          %th Author
-          %th Message
+          %th Date
+          %th Elapsed time
           %th Actions
 
       %tbody
@@ -25,9 +24,8 @@
         - @data.each do |x|
           %tr
             %td #{nb -= 1}
+            %td #{x[:date]}
             %td #{time_from_now x[:date]}
-            %td #{x[:author][:name]}
-            %td #{x[:message]}
             %td
               - params = "node=#{@node}&group=#{@group}&oid=#{x[:oid]}"
               - params = "#{params}&date=#{x[:date]}&num=#{nb}"
@@ -43,9 +41,11 @@
     $('#versionsTable').dataTable({
       "order": [[0, "desc"]],
       bAutoWidth: false,
-      columnDefs: [{
-        visible: false,
-        targets: [2, 3]
-      }]
+      columnDefs: [
+        {
+          targets: _all,
+          className: 'text-start'
+        }
+      ]
     });
   });
