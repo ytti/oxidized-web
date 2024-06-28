@@ -44,7 +44,7 @@ end
 
 desc 'Tag the release'
 task :tag do
-  system "git tag #{gemspec.version}"
+  system "git tag #{gemspec.version} -m 'Release #{gemspec.version}'"
 end
 
 desc 'Push to rubygems'

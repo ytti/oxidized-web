@@ -100,6 +100,9 @@ and make sure `bundle exec rake` passes after it.
 
 If you change some code => Restart the release process at the beginning ;-)
 
+## Make sure the file permissions are correct
+Run `bundle exec rake chmod`
+
 ## Test, test test!
 Run `bundle exec rake` on the git repository to check the code against rubocop and rund the
 defined tests in `/spec`.
