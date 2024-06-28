@@ -71,8 +71,12 @@ forget to document your changes in CHANGELOG.md.
 # How to release a new version of Oxidized-web?
 
 ## Review changes
-Run `git diff 0.xx.yy..master` (where `0.xx.yy` is to be changed to the last release) and review
-all the changes that have been done. Have a specific look at changes you don't understand.
+Run `git diff 0.xx.yy..master` (where `0.xx.yy` is to be changed to the last
+release) and review all the changes that have been done. Have a specific look
+at changes you don't understand.
+
+It is nicer to read in a GUI, so you can use something like
+`git difftool --tool=kdiff3 -d 0.xx.yy..master` to see it in kdiff3.
 
 ## Update the gem dependencies to the latest versions
 ```
@@ -83,12 +87,18 @@ bundle outaded
 
 Retest after updating!
 
-## Update the webliebs to the latest versions
+## Update the weblibs to the latest versions
 ```
 npm outdated
 ```
 
 Retest after updating!
+
+## Update rubocup .rubocop_todo.yml
+Run `bundle exec rubocop --auto-gen-config`,
+and make sure `bundle exec rake` passes after it.
+
+If you change some code => Restart the release process at the beginning ;-)
 
 ## Test, test test!
 Run `bundle exec rake` on the git repository to check the code against rubocop and rund the
