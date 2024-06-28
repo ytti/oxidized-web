@@ -11,6 +11,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - First minitest: get / (@robertchreamy)
 - docs/development.md created (@robertchreamy)
 - weblibs are maintained with npm (@robertchreamy)
+- display Oxidized-web version in the footer (@robertcheramy)
 
 ### Changed
 - gem dependencies updated (@robertchreamy)

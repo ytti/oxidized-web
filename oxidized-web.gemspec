@@ -1,6 +1,10 @@
+lib = File.expand_path('lib', __dir__)
+$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
+require 'oxidized/web/version'
+
 Gem::Specification.new do |s|
   s.name              = 'oxidized-web'
-  s.version           = '0.13.1'
+  s.version           = Oxidized::API::WEB_VERSION
   s.licenses          = %w[Apache-2.0]
   s.platform          = Gem::Platform::RUBY
   s.authors           = ['Saku Ytti', 'Samer Abdel-Hafez']

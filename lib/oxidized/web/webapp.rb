@@ -11,6 +11,8 @@ require 'htmlentities'
 require 'charlock_holmes'
 module Oxidized
   module API
+    require 'oxidized/web/version'
+
     class WebApp < Sinatra::Base
       helpers Sinatra::UrlForHelper
       set :public_folder, proc { File.join(root, 'public') }
