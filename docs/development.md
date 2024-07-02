@@ -148,9 +148,6 @@ Push the gem with ‘rake push’
 
 You need an account at rubygems which is allowed to push oxidized
 
-## Release in docker.io
-The OCI-Containter is automatically build and pushed to docker.io by github
-
 ## Update CHANGELOG.md for next release
 Add
 ```
