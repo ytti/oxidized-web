@@ -66,9 +66,9 @@ describe Oxidized::API::WebApp do
     end
 
     # Don't know if this feature is used by anyone...
-    it 'attaches author/email/message to the commit when using put and json' do
+    it 'attaches user/email/message to the commit when using put and json' do
       data = {
-        'author' => 'me',
+        'user' => 'me',
         'email' => 'me@example.com',
         'message' => 'minitest, rack/test & mock simply rock',
         'from' => 'unused variable!'
@@ -83,7 +83,7 @@ describe Oxidized::API::WebApp do
 
     it 'attaches data to the commit when using a group and put, then redirects' do
       data = {
-        'author' => 'me',
+        'user' => 'me',
         'email' => 'me@example.com',
         'message' => 'minitest, rack/test & mock simply rock',
         'from' => 'unused variable!'
