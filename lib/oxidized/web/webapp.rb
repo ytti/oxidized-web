@@ -182,7 +182,7 @@ module Oxidized
         }
 
         the_data = nodes.get_version node, @info[:group], @info[:oid]
-        if params[:format] == 'json' || params[:format] == 'text'
+        if %w[json text].include?(params[:format])
           @data = the_data
         else
           utf8_encoded_content = convert_to_utf8(the_data)
