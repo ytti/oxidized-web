@@ -27,7 +27,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'json',                '~> 2.3'
   s.add_dependency 'ostruct',             '~> 0.6'
   s.add_dependency 'oxidized',            '~> 0.26'
-  s.add_dependency 'puma',                '>= 3.11.4', '< 6.5.0'
+  s.add_dependency 'puma',                '>= 3.11.4', '< 6.7.0'
   s.add_dependency 'sinatra',             '>= 1.4.6', '< 5.0'
   s.add_dependency 'sinatra-contrib',     '>= 1.4.6', '< 5.0'
 
