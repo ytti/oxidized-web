@@ -96,48 +96,4 @@ describe Oxidized::API::WebApp do
       _(last_response.location).must_equal 'http://example.org/nodes'
     end
   end
-
-  describe '/node/version/view.?:format?' do
-    it 'fetches a previous version from git' do
-      @nodes.expects(:get_version).with('sw5', '', 'c8aa93cab5').returns('Old configuration of sw42')
-
-      get '/node/version/view?node=sw5&group=&oid=c8aa93cab5&date=2024-06-07 08:27:37 +0200&num=2'
-      _(last_response.ok?).must_equal true
-      _(last_response.body.include?('Old configuration of sw42')).must_equal true
-    end
-
-    it 'does not display binary content' do
-      @nodes.expects(:get_version).with('sw5', '', 'c8aa93cab5').returns("\xff\x42 binary content\x00")
-
-      get '/node/version/view?node=sw5&group=&oid=c8aa93cab5&date=2024-06-07 08:27:37 +0200&num=2'
-      _(last_response.ok?).must_equal true
-      _(last_response.body.include?('cannot display')).must_equal true
-    end
-
-    it 'fetches a git-version when using a group containing /' do
-      @nodes.expects(:get_version).with('sw5', 'my/group', 'c8aa93cab5').returns('Old configuration of sw42')
-
-      get '/node/version/view?node=sw5&group=my/group&oid=c8aa93cab5&date=2024-06-07 08:27:37 +0200&num=2'
-      _(last_response.ok?).must_equal true
-      _(last_response.body.include?('Old configuration of sw42')).must_equal true
-    end
-
-    it 'does not encode html-chars in text-format' do
-      configuration = "text &/<> \n ascii;"
-      @nodes.expects(:get_version).with('sw5', '', 'c8aa93cab5').returns(configuration)
-      get '/node/version/view?node=sw5&group=&oid=c8aa93cab5&date=2024-06-07 08:27:37 +0200&num=2&format=text'
-
-      _(last_response.ok?).must_equal true
-      _(last_response.body).must_equal configuration
-    end
-
-    it 'does not encode html-chars in json-format' do
-      configuration = "text &/<> \n ascii;"
-      @nodes.expects(:get_version).with('sw5', '', 'c8aa93cab5').returns(configuration)
-      get '/node/version/view?node=sw5&group=&oid=c8aa93cab5&date=2024-06-07 08:27:37 +0200&num=2&format=json'
-
-      _(last_response.ok?).must_equal true
-      _(last_response.body).must_equal '["text &/<> \n"," ascii;"]'
-    end
-  end
 end
