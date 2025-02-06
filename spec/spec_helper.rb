@@ -1,6 +1,9 @@
 # Needed to get the error output on the console and not in last_response.body
 ENV['APP_ENV'] = 'test'
 
+require 'simplecov'
+SimpleCov.start
+
 require 'minitest/autorun'
 require 'rack/test'
 require 'oxidized'

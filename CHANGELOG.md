@@ -12,6 +12,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Update datatables.net to 2.2.1 and datatables.net-buttons to 3.2.1 (@robertcheramy)
 
 ### Fixed
+- #302: group name containing a '/' produced a Sinatra error (@robertcheramy)
 
 
 ## [0.14.0 - 2024-06-28]

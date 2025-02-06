@@ -26,9 +26,17 @@ module Oxidized
         redirect url_for('/images/favicon.ico')
       end
 
-      get '/nodes/:filter/:value.?:format?' do
+      # :filter can be "group" or "model"
+      # URL: /nodes/group/<GroupName>[.json]
+      # URL: /nodes/model/<ModelName>[.json]
+      # an optional .json extention returns the data as JSON
+      #
+      # as GroupName can include /, we use splat to match its value
+      # and extract the optional ".json" with route_parse
+      get '/nodes/:filter/*' do
+        value, @json = route_parse params[:splat].first
         @data = nodes.list.select do |node|
-          next unless node[params[:filter].to_sym] == params[:value]
+          next unless node[params[:filter].to_sym] == value
 
           node[:status] = 'never'
           node[:time]   = 'never'
@@ -100,7 +108,7 @@ module Oxidized
         out :text
       end
 
-      # URL: /node/fetch/<group>/<node>.json
+      # URL: /node/fetch/<group>/<node>[.json]
       # <group> is optional, and not used
       # .json is optional. If given, will return 'ok'
       # if not, it redirects to /nodes
@@ -152,16 +160,17 @@ module Oxidized
         redirect url_for('//nodes')
       end
 
-      # show the lists of versions for a node
+      # display the versions of a node
+      # URL: /node/version[.json]?node_full=<GroupName/NodeName>
       get '/node/version.?:format?' do
         @data = nil
         @group = nil
         @node = nil
         node_full = params[:node_full]
         if node_full.include? '/'
-          node_full = node_full.split('/')
+          node_full = node_full.rpartition("/")
           @group = node_full[0]
-          @node = node_full[1]
+          @node = node_full[2]
           @data = nodes.version @node, @group
         else
           @node = node_full
