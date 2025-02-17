@@ -9,7 +9,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ### Added
 
 ### Changed
-- Update datatables.net to 2.2.1 and datatables.net-buttons to 3.2.1 (@robertcheramy)
+- Update datatables.net to 2.2.2 and datatables.net-buttons to 3.2.2 (@robertcheramy)
+- remove the RANCID migration page (@robertchreamy)
+- dependency on oxidized 0.31  (@robertchreamy)
 
 ### Fixed
 - #302: group name containing a '/' produced a Sinatra error (@robertcheramy)
