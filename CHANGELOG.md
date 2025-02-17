@@ -4,15 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
-## [Unreleased]
+## [0.15.0 – 2025-02-17]
 This release fixes a security issue on the RANCID migration page.
 A non-authenticated user could gain control over the Linux user running
 oxidized-web. The RANCID migration page was already deprecated in version
 0.14.0, so it has been completely removed in this new version.
 Thank you to Jon O'Reilly and Jamie Riden from NetSPI for discovering and
 reporting this security issue!
-
-### Added
 
 ### Changed
 - Update datatables.net to 2.2.2 and datatables.net-buttons to 3.2.2 (@robertcheramy)

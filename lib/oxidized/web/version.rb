@@ -2,6 +2,6 @@
 
 module Oxidized
   module API
-    WEB_VERSION = '0.14.0'
+    WEB_VERSION = '0.15.0'
   end
 end
