@@ -23,7 +23,9 @@ scripts, you have to stop an restart `bundle exec oxidized`.
 
 ## Paralell development between oxidized and oxidized-web
 You may need to make some changes in oxidized **and** oxidized-web. For this,
-git clone oxidized and oxidized-web in a common root directory, add the direct
+git clone oxidized and oxidized-web in a common root directory.
+
+Then you can link your oxidized-web with the oxidized, add the direct
 dependency to ../oxidized-web in oxidized and run oxidized from the oxidized
 repo:
 
@@ -44,6 +46,19 @@ find a better way to do this, better ideas are welcome :-)
 If your changes to oxidized **AND** oxidzed-web are dependent from another, make
 sure you document this in the respectives CHANGELOG.md, so that everyone is
 informed at the next release.
+
+Note: you can also add the dependency to oxidized in oxidized-web, in the same
+fashion:
+```shell
+git clone git@github.com:ytti/oxidized-web.git
+git clone git@github.com:ytti/oxidized.git
+cd oxidized-web
+bundle config set --local path 'vendor/bundle'
+echo "gem 'oxidized', path: '../oxidized'" >> Gemfile
+bundle install
+bundle exec oxidized
+```
+
 
 # Update the weblibs
 The weblibs are beeing downloaded and maintained by `npm`.
