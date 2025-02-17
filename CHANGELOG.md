@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
+This release fixes a security issue on the RANCID migration page.
+A non-authenticated user could gain control over the Linux user running
+oxidized-web. The RANCID migration page was already deprecated in version
+0.14.0, so it has been completely removed in this new version.
+Thank you to Jon O'Reilly and Jamie Riden from NetSPI for discovering and
+reporting this security issue!
 
 ### Added
 
@@ -12,6 +18,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Update datatables.net to 2.2.2 and datatables.net-buttons to 3.2.2 (@robertcheramy)
 - remove the RANCID migration page (@robertchreamy)
 - dependency on oxidized 0.31  (@robertchreamy)
+- Update datatables.net to 2.2.1 and datatables.net-buttons to 3.2.1 (@robertcheramy)
 
 ### Fixed
 - #302: group name containing a '/' produced a Sinatra error (@robertcheramy)

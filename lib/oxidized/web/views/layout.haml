@@ -20,10 +20,6 @@
               %a.nav-link{class: request.path_info == '/nodes/stats' ? 'active' : '',
                             :'aria-current' => request.path_info == '/nodes/stats' ? 'page' : 'false',
                             href: url_for('/nodes/stats')} Stats
-            %li.nav-item
-              %a.nav-link{class: request.path_info == '/migration' ? 'active' : '',
-                            :'aria-current' => request.path_info == '/migration' ? 'page' : 'false',
-                            href: url_for('/migration')} Migration
           %form.d-flex{role: 'search',
                       action: url_for('/nodes/conf_search'),
                       method: 'post'}

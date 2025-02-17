@@ -6,7 +6,6 @@ require 'tilt/haml'
 # rubocop:disable Lint/RedundantRequireStatement
 require 'pp'
 # rubocop:enable Lint/RedundantRequireStatement
-require 'oxidized/web/mig'
 require 'htmlentities'
 require 'charlock_holmes'
 module Oxidized
@@ -134,30 +133,6 @@ module Oxidized
         node, @json = route_parse :node
         @data = nodes.show node
         out :node
-      end
-
-      # redirect to the web page for rancid - oxidized migration
-      get '/migration' do
-        out :migration
-      end
-
-      # get the files send
-      post '/migration' do
-        number = params[:number].to_i
-        cloginrc_file = params['cloginrc'][:tempfile]
-        path_new_file = params['path_new_file']
-
-        router_db_files = []
-
-        i = 1
-        while i <= number
-          router_db_files.push({ file: params["file#{i}"][:tempfile], group: params["group#{i}"] })
-          i += 1
-        end
-
-        migration = Mig.new(router_db_files, cloginrc_file, path_new_file)
-        migration.go_rancid_migration
-        redirect url_for('//nodes')
       end
 
       # display the versions of a node
