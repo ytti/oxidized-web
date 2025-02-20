@@ -128,6 +128,9 @@ Run Oxidized-web from git against the latest git of Oxidized (see above).
 
 Do not integrate late PRs into master if they do not fix issues for the release. The must wait for the next release.
 
+When testing the web application, open the javascript console in the browser to
+see any errors.
+
 ## Version numbering
 Oxidized-web versions are nummered like 0.major.minor
 - major is incremented when releasing new features. minor is then set to 0
