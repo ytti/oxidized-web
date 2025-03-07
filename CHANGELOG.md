@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
+## [Unreleased]
+
+### Added
+
+### Changed
+- the table preferences (pagelength, column visibility) are stored in the local browser cache (@robertcheramy)
+
+### Fixed
+
+
 ## [0.15.1 – 2025-02-20]
 This minor release fixes javascript errors.
 
