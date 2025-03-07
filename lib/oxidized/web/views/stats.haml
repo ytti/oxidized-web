@@ -8,6 +8,9 @@
       %button.btn.btn-primary{type: 'button', onclick: 'history.go();'}
         %i.bi.bi-arrow-clockwise
         Refresh
+      %button.btn.btn-primary#resetSearch{type: 'button'}
+        %i.bi.bi-eraser-fill
+        Reset search
 
 .row
   .table-responsive
@@ -102,8 +105,13 @@
         }],
       autoWidth: false,
       lengthMenu: [20, 50, 250, 500, { label: 'All', value: -1 }],
+      stateSave: true,
     });
 
     table.buttons(0,0).container().prependTo($('#oxButtons'));
     table.buttons(0,0).nodes().removeClass('btn-secondary');
+
+    $('#resetSearch').on('click', function() {
+        table.search('').draw();
+    });
   });
