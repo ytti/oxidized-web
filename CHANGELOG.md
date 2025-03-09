@@ -11,6 +11,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - the table preferences (pagelength, column visibility) are stored in the local browser cache (@robertcheramy)
 
 ### Fixed
+- Allow connection to any virtual hosts + prepare extended configuration to specify which vhosts to accept. Fixes #298 (@robertcheramy)
 
 
 ## [0.15.1 – 2025-02-20]
