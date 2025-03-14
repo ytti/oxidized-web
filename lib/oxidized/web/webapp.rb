@@ -2,10 +2,7 @@ require 'sinatra/base'
 require 'sinatra/json'
 require 'sinatra/url_for'
 require 'tilt/haml'
-# We need PP in node.haml, but rubocop can't see this
-# rubocop:disable Lint/RedundantRequireStatement
 require 'pp'
-# rubocop:enable Lint/RedundantRequireStatement
 require 'htmlentities'
 require 'charlock_holmes'
 module Oxidized
