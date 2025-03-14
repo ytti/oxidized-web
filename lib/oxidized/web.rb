@@ -9,7 +9,7 @@ module Oxidized
       def initialize(nodes, configuration)
         require 'oxidized/web/webapp'
         if configuration.instance_of? Asetus::ConfigStruct
-          # New configuration syle: extentions.oxidized-web
+          # New configuration syle: extensions.oxidized-web
           addr = configuration.listen? || '127.0.0.1'
           port = configuration.port? || 8888
           uri = configuration.url_prefix? || ''

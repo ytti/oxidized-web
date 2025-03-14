@@ -28,7 +28,7 @@ module Oxidized
       # :filter can be "group" or "model"
       # URL: /nodes/group/<GroupName>[.json]
       # URL: /nodes/model/<ModelName>[.json]
-      # an optional .json extention returns the data as JSON
+      # an optional .json extension returns the data as JSON
       #
       # as GroupName can include /, we use splat to match its value
       # and extract the optional ".json" with route_parse
