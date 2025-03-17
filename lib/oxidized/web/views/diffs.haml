@@ -10,9 +10,9 @@
       %b #{@info[:node]}
 .row
   .col-sm-12
-    - date_version = Time.parse @info[:date]
+    - date_version = Time.at @info[:epoch]
     Date of version:
-    %span.time #{date_version.strftime("%d-%m-%y at %r")}
+    %span.time{ epoch: @info[:epoch] }= date_version
 .row
   .col-sm-12
     Number of lines changed:
@@ -22,7 +22,7 @@
 .row
   .col-sm-6
     - params = "node=#{@info[:node]}&group=#{@info[:group]}&oid=#{@info[:oid]}"
-    - params = "#{params}&date=#{@info[:date]}&num=#{@info[:num]}"
+    - params = "#{params}&date=#{@info[:date]}&epoch=#{@info[:epoch]}&num=#{@info[:num]}"
     %form{action: url_for("/node/version/diffs?#{params}"), method: 'post', role: 'form'}
       .form-group
         %select.form-select#oid2{name: 'oid2'}

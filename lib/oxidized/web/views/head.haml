@@ -25,5 +25,9 @@
   %script{src: url_for('/weblibs/dataTables.buttons.js')}
   %script{src: url_for('/weblibs/buttons.bootstrap5.js')}
   %script{src: url_for('/weblibs/buttons.colVis.js')}
+  -# Day.js
+  %script{src: url_for('/weblibs/dayjs.min.js')}
+  %script{src: url_for('/weblibs/dayjs-plugin-utc.min.js')}
+  %script dayjs.extend(dayjsPluginUTC.default)
   -# Oxidized customisation
   %script{src: url_for('/scripts/oxidized.js')}

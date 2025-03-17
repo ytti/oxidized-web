@@ -42,8 +42,8 @@
             %td
               %div{title: node[:status], class: node[:status]}
                 %span{style: 'visibility: hidden'}#{node[:status]}
-            %td.time= node[:time]
-            %td.time= node[:mtime]
+            %td.time{ epoch: node[:time].to_i }= node[:time]
+            %td.time{ epoch: node[:mtime].to_i }= node[:mtime]
             %td
               %a.link-dark.link-underline-opacity-0{title: 'Configuration',
                   href: url_for("/node/fetch/#{node[:full_name]}")}

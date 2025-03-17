@@ -13,9 +13,9 @@
       %a.btn.btn-primary{:href => "#{request.path}?#{request.query_string}&format=text"} raw
 .row
   .col-sm-12
-    - date_version = Time.parse @info[:date]
+    - date_version = Time.at @info[:epoch]
     Date of version:
-    %span.time #{date_version.strftime('%Y-%m-%d %H:%M:%S %Z')}
+    %span.time{ epoch: @info[:epoch] }= date_version
 
 .row
   .col-sm-12

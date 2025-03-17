@@ -159,6 +159,7 @@ module Oxidized
           group: params[:group],
           oid: params[:oid],
           date: params[:date],
+          epoch: params[:epoch].to_i,
           num: params[:num]
         }
 
@@ -176,7 +177,13 @@ module Oxidized
       get '/node/version/diffs' do
         node, @json = route_parse :node
         @data = nil
-        @info = { node: node, group: params[:group], oid: params[:oid], date: params[:date], num: params[:num], num2: (params[:num].to_i - 1) }
+        @info = { node: node,
+                  group: params[:group],
+                  oid: params[:oid],
+                  date: params[:date],
+                  epoch: params[:epoch].to_i,
+                  num: params[:num],
+                  num2: (params[:num].to_i - 1) }
         group = nil
         group = @info[:group] if @info[:group] != ''
         @oids_dates = nodes.version node, group
@@ -209,7 +216,7 @@ module Oxidized
 
       # used for diff between 2 distant commit
       post '/node/version/diffs' do
-        redirect url_for("/node/version/diffs?node=#{params[:node]}&group=#{params[:group]}&oid=#{params[:oid]}&date=#{params[:date]}&num=#{params[:num]}&oid2=#{params[:oid2]}")
+        redirect url_for("/node/version/diffs?node=#{params[:node]}&group=#{params[:group]}&oid=#{params[:oid]}&date=#{params[:date]}&epoch=#{params[:epoch]}&num=#{params[:num]}&oid2=#{params[:oid2]}")
       end
 
       # Taken von Haml 5.0, so it still works in 6.0
