@@ -15,43 +15,55 @@ describe Oxidized::API::WebApp do
   describe '/node/version.?:format?' do
     it 'fetches all versions of a node without a group' do
       @nodes.expects(:version).with('sw5', nil).returns(
-        [{ oid: "C006", date: "2025-02-05 19:49:00 +0100" },
-         { oid: "C003", date: "2025-02-05 19:03:00 +0100" },
-         { oid: "C001", date: "2025-02-05 19:01:00 +0100" }]
+        [{ oid: "C006", date: "2025-02-05 19:49:00 +0100",
+           time: Time.parse("2025-02-05 19:49:00 +0100") },
+         { oid: "C003", date: "2025-02-05 19:03:00 +0100",
+           time: Time.parse("2025-02-05 19:03:00 +0100") },
+         { oid: "C001", date: "2025-02-05 19:01:00 +0100",
+           time: Time.parse("2025-02-05 19:01:00 +0100") }]
       )
 
       get '/node/version?node_full=sw5'
       _(last_response.ok?).must_equal true
       _(last_response.body.include?(
-          "<tr>\n<td>3</td>\n<td>2025-02-05 19:49:00 +0100</td>\n"
+          "<tr>\n<td>3</td>\n<td class='time' epoch='1738781340'>" \
+          "2025-02-05 19:49:00 +0100</td>\n"
         )).must_equal true
     end
 
     it 'fetches all versions of a node with a group' do
       @nodes.expects(:version).with('sw5', 'group1').returns(
-        [{ oid: "C006", date: "2025-02-05 19:49:00 +0100" },
-         { oid: "C003", date: "2025-02-05 19:03:00 +0100" },
-         { oid: "C001", date: "2025-02-05 19:01:00 +0100" }]
+        [{ oid: "C006", date: "2025-02-05 19:49:00 +0100",
+           time: Time.parse("2025-02-05 19:49:00 +0100") },
+         { oid: "C003", date: "2025-02-05 19:03:00 +0100",
+           time: Time.parse("2025-02-05 19:03:00 +0100") },
+         { oid: "C001", date: "2025-02-05 19:01:00 +0100",
+           time: Time.parse("2025-02-05 19:01:00 +0100") }]
       )
 
       get '/node/version?node_full=group1/sw5'
       _(last_response.ok?).must_equal true
       _(last_response.body.include?(
-          "<tr>\n<td>3</td>\n<td>2025-02-05 19:49:00 +0100</td>\n"
+          "<tr>\n<td>3</td>\n<td class='time' epoch='1738781340'>" \
+          "2025-02-05 19:49:00 +0100</td>\n"
         )).must_equal true
     end
 
     it 'fetches all versions of a node with a group with /' do
       @nodes.expects(:version).with('sw5', 'gr/oup1').returns(
-        [{ oid: "C006", date: "2025-02-05 19:49:00 +0100" },
-         { oid: "C003", date: "2025-02-05 19:03:00 +0100" },
-         { oid: "C001", date: "2025-02-05 19:01:00 +0100" }]
+        [{ oid: "C006", date: "2025-02-05 19:49:00 +0100",
+           time: Time.parse("2025-02-05 19:49:00 +0100") },
+         { oid: "C003", date: "2025-02-05 19:03:00 +0100",
+           time: Time.parse("2025-02-05 19:03:00 +0100") },
+         { oid: "C001", date: "2025-02-05 19:01:00 +0100",
+           time: Time.parse("2025-02-05 19:01:00 +0100") }]
       )
 
       get '/node/version?node_full=gr/oup1/sw5'
       _(last_response.ok?).must_equal true
       _(last_response.body.include?(
-          "<tr>\n<td>3</td>\n<td>2025-02-05 19:49:00 +0100</td>\n"
+          "<tr>\n<td>3</td>\n<td class='time' epoch='1738781340'>" \
+          "2025-02-05 19:49:00 +0100</td>\n"
         )).must_equal true
     end
   end
