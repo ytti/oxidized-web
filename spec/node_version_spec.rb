@@ -76,7 +76,7 @@ describe Oxidized::API::WebApp do
       _(last_response.body.include?(
           "Date of version:\n" \
           "<span class='time' epoch='1738781340'>" \
-          "#{Time.parse('2025-02-05 19:49:00 +0100')}</span>"
+          "#{Time.at(1738781340)}</span>"
         )).must_equal true
     end
 
@@ -145,7 +145,7 @@ describe Oxidized::API::WebApp do
       _(last_response.body.include?(
           "Date of version:\n" \
           "<span class='time' epoch='1738781340'>" \
-          "#{Time.parse('2025-02-05 19:49:00 +0100')}</span>"
+          "#{Time.at(1738781340)}</span>"
         )).must_equal true
     end
   end
