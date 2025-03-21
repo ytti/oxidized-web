@@ -158,8 +158,7 @@ module Oxidized
           node: node,
           group: params[:group],
           oid: params[:oid],
-          date: params[:date],
-          epoch: params[:epoch].to_i,
+          time: Time.at(params[:epoch].to_i),
           num: params[:num]
         }
 
@@ -180,8 +179,7 @@ module Oxidized
         @info = { node: node,
                   group: params[:group],
                   oid: params[:oid],
-                  date: params[:date],
-                  epoch: params[:epoch].to_i,
+                  time: Time.at(params[:epoch].to_i),
                   num: params[:num],
                   num2: (params[:num].to_i - 1) }
         group = nil
@@ -216,7 +214,7 @@ module Oxidized
 
       # used for diff between 2 distant commit
       post '/node/version/diffs' do
-        redirect url_for("/node/version/diffs?node=#{params[:node]}&group=#{params[:group]}&oid=#{params[:oid]}&date=#{params[:date]}&epoch=#{params[:epoch]}&num=#{params[:num]}&oid2=#{params[:oid2]}")
+        redirect url_for("/node/version/diffs?node=#{params[:node]}&group=#{params[:group]}&oid=#{params[:oid]}&epoch=#{params[:epoch]}&num=#{params[:num]}&oid2=#{params[:oid2]}")
       end
 
       # Taken von Haml 5.0, so it still works in 6.0
@@ -261,26 +259,21 @@ module Oxidized
         [e.join('.'), json]
       end
 
-      # give the time enlapsed between now and a date
+      # give the time enlapsed between now and a date (Time object)
       def time_from_now(date)
-        if date
-          # if the + or - is missing, insert +
-          date.insert(21, '+') unless date =~ /[-+]/
-          date = DateTime.parse date
-          now = DateTime.now.new_offset(0)
-          t = ((now - date) * 24 * 60 * 60).to_i
-          mm, ss = t.divmod(60)
-          hh, mm = mm.divmod(60)
-          dd, hh = hh.divmod(24)
-          date = if dd.positive?
-                   "#{dd} days #{hh} hours ago"
-                 elsif hh.positive?
-                   "#{hh} hours #{mm} min ago"
-                 else
-                   "#{mm} min #{ss} sec ago"
-                 end
+        raise "time_from_now needs a Time object" unless date.instance_of? Time
+
+        t = (Time.now - date).to_i
+        mm, ss = t.divmod(60)
+        hh, mm = mm.divmod(60)
+        dd, hh = hh.divmod(24)
+        if dd.positive?
+          "#{dd} days #{hh} hours ago"
+        elsif hh.positive?
+          "#{hh} hours #{mm} min ago"
+        else
+          "#{mm} min #{ss} sec ago"
         end
-        date
       end
 
       # method the give diffs in separate view (the old and the new) as in github

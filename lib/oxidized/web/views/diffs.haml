@@ -10,9 +10,8 @@
       %b #{@info[:node]}
 .row
   .col-sm-12
-    - date_version = Time.at @info[:epoch]
     Date of version:
-    %span.time{ epoch: @info[:epoch] }= date_version
+    %span.time{ epoch: @info[:time].to_i }= @info[:time]
 .row
   .col-sm-12
     Number of lines changed:
@@ -22,7 +21,7 @@
 .row
   .col-sm-6
     - params = "node=#{@info[:node]}&group=#{@info[:group]}&oid=#{@info[:oid]}"
-    - params = "#{params}&date=#{@info[:date]}&epoch=#{@info[:epoch]}&num=#{@info[:num]}"
+    - params = "#{params}&epoch=#{@info[:time].to_i}&num=#{@info[:num]}"
     %form{action: url_for("/node/version/diffs?#{params}"), method: 'post', role: 'form'}
       .form-group
         %select.form-select#oid2{name: 'oid2'}
@@ -30,9 +29,9 @@
           - num = @oids_dates.count + 1
           - next_id = false
           - @oids_dates.each do |x|
-            %option{value: x[:oid]} Version #{num -= 1} (#{time_from_now x[:date]})
+            %option{value: x[:oid]} Version #{num -= 1} (#{time_from_now x[:time]})
             - if (x[:oid].to_s == @info[:oid2]) || (next_id)
-              - diff2 = {num: num, date: x[:date]}
+              - diff2 = {num: num, time: x[:time]}
               - next_id = false
             - elsif (x[:oid].to_s == @info[:oid]) && !(@info[:oid2])
               - next_id = true
@@ -41,8 +40,8 @@
 
 .row
   .col-sm-12
-    .old_version_title Version #{diff2[:num]} (#{time_from_now diff2[:date]})
-    .new_version_title Version #{@info[:num]} (#{time_from_now @info[:date]})
+    .old_version_title Version #{diff2[:num]} (#{time_from_now diff2[:time]})
+    .new_version_title Version #{@info[:num]} (#{time_from_now @info[:time]})
 
 .row
   .col-sm-12

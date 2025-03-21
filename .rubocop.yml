@@ -70,3 +70,6 @@ Style/HashSyntax:
 Style/RescueModifier:
   Enabled: false
 
+# Not using Rails, so no timezones
+Rails/TimeZone:
+  Enabled: false
