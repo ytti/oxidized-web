@@ -71,9 +71,12 @@ describe Oxidized::API::WebApp do
       get '/node/version/view?node=sw5&group=&oid=c8aa93cab5&epoch=1738781340&num=2'
       _(last_response.ok?).must_equal true
       _(last_response.body.include?('Old configuration of sw5')).must_equal true
+      # The test needs to pass in any timezone, so we use Time.parse to get the
+      # right string
       _(last_response.body.include?(
           "Date of version:\n" \
-          "<span class='time' epoch='1738781340'>2025-02-05 19:49:00 +0100</span>"
+          "<span class='time' epoch='1738781340'>" \
+          "#{Time.parse('2025-02-05 19:49:00 +0100')}</span>"
         )).must_equal true
     end
 
@@ -137,10 +140,12 @@ describe Oxidized::API::WebApp do
 
       get '/node/version/diffs?node=sw5&group=&oid=C006&epoch=1738781340&num=3'
       _(last_response.ok?).must_equal true
+      # The test needs to pass in any timezone, so we use Time.parse to get the
+      # right string
       _(last_response.body.include?(
           "Date of version:\n" \
-          "<span class='time' epoch='1738781340'>2025-02-05 19:49:00 +0100" \
-          "</span>\n"
+          "<span class='time' epoch='1738781340'>" \
+          "#{Time.parse('2025-02-05 19:49:00 +0100')}</span>"
         )).must_equal true
     end
   end
