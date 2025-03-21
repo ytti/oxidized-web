@@ -99,6 +99,10 @@ task :weblibs do
   weblibs << 'node_modules/datatables.net-buttons/js/dataTables.buttons.js'
   weblibs << 'node_modules/datatables.net-buttons/js/buttons.colVis.js'
 
+  # dayjs
+  weblibs << 'node_modules/dayjs/dayjs.min.js'
+  weblibs << 'node_modules/dayjs-plugin-utc/dist/dayjs-plugin-utc.min.js'
+
   weblibs.each do |w|
     cp(w, 'lib/oxidized/web/public/weblibs')
   end

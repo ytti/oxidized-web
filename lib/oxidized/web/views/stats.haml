@@ -79,8 +79,8 @@
             %td
               %div{title: status, class: status}
                 %span{style: 'visibility: hidden'}#{status}
-            %td.time= last_success
-            %td.time= last_failure
+            %td.time{ epoch: last_success.to_i }= last_success
+            %td.time{ epoch: last_failure.to_i }= last_failure
 
 :javascript
   $(function() {
