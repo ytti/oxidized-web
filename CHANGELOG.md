@@ -3,19 +3,20 @@
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
-## [Unreleased]
-
-### Added
+## [0.16.0 - 2025-03-25]
+This release introduces the possibility for an extended configuration of
+oxidized-web in the oxidized configuration file. Oxidized versions after 0.32.2
+will only work with oxidized-web version 0.16.0 or later.
 
 ### Changed
+- Allow connection to any virtual hosts + prepare extended configuration to specify which vhosts to accept. Fixes #298 (@robertcheramy)
 
 ### Fixed
-- Allow connection to any virtual hosts + prepare extended configuration to specify which vhosts to accept. Fixes #298 (@robertcheramy)
 - the table preferences (pagelength, column visibility, search) are stored in the local browser cache. Fixes #315 #314 #265 #211 (@robertcheramy)
 - Update "refresh" and "Upldate node list" to more meaningfull texts (@robertcheramy)
 
 ## [0.15.1 – 2025-02-20]
-This minor release fixes javascript errors.
+This patch release fixes javascript errors.
 
 ### Fixed
 - Fix javascript not working (@robertcheramy)
