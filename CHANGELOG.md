@@ -8,11 +8,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ### Added
 
 ### Changed
-- the table preferences (pagelength, column visibility) are stored in the local browser cache (@robertcheramy)
 
 ### Fixed
 - Allow connection to any virtual hosts + prepare extended configuration to specify which vhosts to accept. Fixes #298 (@robertcheramy)
-
+- the table preferences (pagelength, column visibility, search) are stored in the local browser cache. Fixes #315 #314 #265 #211 (@robertcheramy)
+- Update "refresh" and "Upldate node list" to more meaningfull texts (@robertcheramy)
 
 ## [0.15.1 – 2025-02-20]
 This minor release fixes javascript errors.
