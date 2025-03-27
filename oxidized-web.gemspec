@@ -37,7 +37,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'rack-test',            '~> 2.1'
   s.add_development_dependency 'rails_best_practices', '~> 1.19'
   s.add_development_dependency 'rake',                 '~> 13.0'
-  s.add_development_dependency 'rubocop',              '~> 1.74.0'
+  s.add_development_dependency 'rubocop',              '~> 1.75.1'
   s.add_development_dependency 'rubocop-minitest',     '~> 0.37.1'
   s.add_development_dependency 'rubocop-rails',        '~> 2.30.0'
   s.add_development_dependency 'rubocop-rake',         '~> 0.7.1'
