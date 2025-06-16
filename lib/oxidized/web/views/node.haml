@@ -3,18 +3,32 @@
     %h4
       %a{href: url_for('/nodes')} nodes
       %span /
-      =@data[:name]
+      = @data[:name]
       &nbsp;
-      %a.link-dark.link-underline-opacity-0{title: 'configuration',
-        href: url_for("/node/fetch/#{@data[:full_name]}")}
-        %i.bi.bi-cloud-download
-      %a.link-dark.link-underline-opacity-0{title: 'versions',
-        href: url_for("/node/version?node_full=#{@data[:full_name]}")}
-        %i.bi.bi-stack
-      %a.link-dark.link-underline-opacity-0{title: 'update',
-        href: url_for("/node/next/#{@data[:full_name]}")}
-        %i.bi.bi-repeat
-    - out = '';PP.pp(@data,out)
-    %pre.bg-body-tertiary.border.border-secondary-subtle.rounded
-      = preserve "#{out}"
+      %a{title: 'configuration', href: url_for("/node/fetch/#{@data[:full_name]}")}
+        %span.glyphicon.glyphicon-cloud-download{style: 'color: #000; font-size: 14px;'}
+      %a{title: 'versions', href: url_for("/node/version?node_full=#{@data[:full_name]}")}
+        %img{src: url_for('/images/versioning_18px.png')}
+      %a{title: 'update', href: url_for("/node/next/#{@data[:full_name]}")}
+        %span.glyphicon.glyphicon-repeat{style: 'color: #000; font-size: 14px;'}
 
+    - hide_sensitive = Oxidized.config.web&.hide_sensitive == true
+    - redacted_keys = Oxidized.config.web&.redact_vars || []
+    - redacted_data = @data.dup
+
+    - if hide_sensitive
+      - redacted_data = Marshal.load(Marshal.dump(redacted_data)) # deep copy
+      - if redacted_data[:username]
+        - redacted_data[:username] = '[REDACTED]'
+      - if redacted_data[:password]
+        - redacted_data[:password] = '[REDACTED]'
+      - if redacted_data[:vars].is_a?(Hash)
+        - redacted_data[:vars] = redacted_data[:vars].dup
+        - redacted_data[:vars].each do |key, value|
+          - if redacted_keys.any? { |pattern| key.to_s =~ /#{Regexp.escape(pattern)}/i }
+            - redacted_data[:vars][key] = '[REDACTED]'
+
+    - out = ''
+    - PP.pp(redacted_data, out)
+    %pre
+      = preserve out
