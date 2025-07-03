@@ -12,7 +12,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Update weblibs to the latest version
 
 ### Fixed
-
+- Run puma directly, so that it does not rename the oxidized process.
+  Fixes: 349 (@robertcheramy)
 
 ## [0.16.0 - 2025-03-25]
 This release introduces the possibility for an extended configuration of
