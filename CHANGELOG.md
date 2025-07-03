@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
+
+## [Unreleased]
+
+### Added
+
+### Changed
+- Update weblibs to the latest version
+
+### Fixed
+
+
 ## [0.16.0 - 2025-03-25]
 This release introduces the possibility for an extended configuration of
 oxidized-web in the oxidized configuration file. Oxidized versions after 0.32.2
