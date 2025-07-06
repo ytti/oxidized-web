@@ -7,5 +7,6 @@ SimpleCov.start
 require 'minitest/autorun'
 require 'rack/test'
 require 'oxidized'
+require 'oxidized/web'
 require 'oxidized/web/webapp'
 require 'mocha/minitest'

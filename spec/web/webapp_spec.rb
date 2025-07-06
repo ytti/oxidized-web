@@ -1,4 +1,4 @@
-require_relative 'spec_helper'
+require_relative '../spec_helper'
 
 # Test helper methods in Oxidized::API::WebApp
 
