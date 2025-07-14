@@ -42,6 +42,6 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'rubocop-rails',        '~> 2.31.0'
   s.add_development_dependency 'rubocop-rake',         '~> 0.7.1'
   s.add_development_dependency 'simplecov',            '~> 0.22.0'
-  s.add_development_dependency 'simplecov-cobertura',  '~> 2.1.0'
+  s.add_development_dependency 'simplecov-cobertura',  '~> 3.0.0'
   s.add_development_dependency 'simplecov-html',       '~> 0.13.1'
 end
