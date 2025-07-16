@@ -53,3 +53,4 @@ Gemfile.lock
 # npm files
 /node_modules/
 /.rake_tasks~
+.vscode/settings.json

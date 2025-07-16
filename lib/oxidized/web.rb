@@ -6,6 +6,8 @@ require 'puma'
 module Oxidized
   module API
     class Web
+      include SemanticLogger::Loggable
+
       attr_reader :thread
 
       DEFAULT_HOST = '127.0.0.1'
@@ -29,7 +31,7 @@ module Oxidized
         @thread = Thread.new do
           @server = Puma::Server.new @app
           @server.add_tcp_listener @addr, @port
-          Oxidized.logger.info "Oxidized-web server listening on #{@addr}:#{@port}"
+          logger.info "Oxidized-web server listening on #{@addr}:#{@port}"
           @server.run.join
         end
       end
