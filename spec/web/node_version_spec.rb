@@ -37,8 +37,18 @@ describe Oxidized::API::WebApp do
         )).must_equal true
       _(last_response.body.include?(
           "href='/node/version/diffs?node=sw5&amp;group=&amp;oid=C006&amp;" \
-          "epoch=1738781340&amp;num=3' title='diff'>"
+          "epoch=1738781340&amp;num=3' title='Compare with previous version'>"
         )).must_equal true
+      pp last_response.body
+      _(last_response.body.include?(
+          "href='/node/version/view?node=sw5&amp;group=&amp;oid=C001&amp;" \
+          "epoch=1738778460&amp;num=1' title='configuration'>"
+        )).must_equal true
+      # Compare to the version previous 1 is not possible, so don't display it
+      _(last_response.body.include?(
+          "href='/node/version/diffs?node=sw5&amp;group=&amp;oid=C001&amp;" \
+          "epoch=1738778460&amp;num=1' title='Compare with previous version'>"
+        )).must_equal false
     end
 
     it 'fetches all versions of a node with a group' do

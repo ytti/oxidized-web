@@ -206,7 +206,7 @@ module Oxidized
           @stat = @data[:stat]
           @data = @data[:patch]
         else
-          @data = 'no available'
+          @data = 'No diff available'
         end
         @diff = diff_view @data
         out :diffs
@@ -261,6 +261,8 @@ module Oxidized
 
       # give the time enlapsed between now and a date (Time object)
       def time_from_now(date)
+        return "no time specified" if date.nil?
+
         raise "time_from_now needs a Time object" unless date.instance_of? Time
 
         t = (Time.now - date).to_i

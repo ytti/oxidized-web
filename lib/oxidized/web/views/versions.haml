@@ -34,8 +34,9 @@
                  href: url_for("/node/version/view?#{params}")}
                 %i.bi.bi-cloud-download
               &nbsp;&nbsp;
-              %a.link-dark.link-underline-opacity-0{title: 'diff', href: url_for("/node/version/diffs?#{params}")}
-                %i.bi.bi-file-earmark-diff
+              - if nb > 1
+                %a.link-dark.link-underline-opacity-0{title: 'Compare with previous version', href: url_for("/node/version/diffs?#{params}")}
+                  %i.bi.bi-file-earmark-diff
 
 :javascript
   $(function() {
