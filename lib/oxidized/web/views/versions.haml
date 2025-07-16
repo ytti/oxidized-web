@@ -8,7 +8,8 @@
     %form.float-end#oxButtons
       %button.btn.btn-primary{type: 'button', onclick: 'history.go();'}
         %i.bi.bi-arrow-clockwise
-        Refresh
+        Refresh page
+
 .row
   .table-responsive
     %table.table.table-sm.table-striped.table-hover#versionsTable
@@ -46,6 +47,8 @@
           targets: '_all',
           className: 'text-start'
         }
-      ]
+      ],
+      stateSave: true,
+      searching: false
     });
   });

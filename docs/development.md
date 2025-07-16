@@ -132,9 +132,10 @@ When testing the web application, open the javascript console in the browser to
 see any errors.
 
 ## Version numbering
-Oxidized-web versions are nummered like 0.major.minor
-- major is incremented when releasing new features. minor is then set to 0
-- minor is incremented when releasing fixes only, just after a major version.
+Oxidized-web versions are nummered like major.minor.patch
+- currently, the major version is 0.
+- minor is incremented when releasing new features.
+- patch is incremented when releasing fixes only.
 
 ## Release
 1. Checkout the master branch of oxidized-web. Make sure you are up to date with origin.

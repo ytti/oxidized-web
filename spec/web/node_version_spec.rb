@@ -1,4 +1,4 @@
-require_relative 'spec_helper'
+require_relative '../spec_helper'
 
 describe Oxidized::API::WebApp do
   include Rack::Test::Methods
