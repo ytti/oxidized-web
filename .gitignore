@@ -10,6 +10,7 @@
 /test/version_tmp/
 /tmp/
 .idea/
+/.rake_tasks~
 
 # Used by dotenv library to load environment variables.
 # .env
@@ -52,5 +53,6 @@ Gemfile.lock
 
 # npm files
 /node_modules/
-/.rake_tasks~
-.vscode/settings.json
+
+# Editors
+.vscode

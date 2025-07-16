@@ -76,7 +76,7 @@ describe Oxidized::API::WebApp do
       _(last_response.body.include?(
           "Date of version:\n" \
           "<span class='time' epoch='1738781340'>" \
-          "#{Time.at(1738781340)}</span>"
+          "#{Time.at(1738781340)}</span>" # rubocop:disable Style/NumericLiterals
         )).must_equal true
     end
 
@@ -145,7 +145,7 @@ describe Oxidized::API::WebApp do
       _(last_response.body.include?(
           "Date of version:\n" \
           "<span class='time' epoch='1738781340'>" \
-          "#{Time.at(1738781340)}</span>"
+          "#{Time.at(1738781340)}</span>" # rubocop:disable Style/NumericLiterals
         )).must_equal true
     end
   end
