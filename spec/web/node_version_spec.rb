@@ -39,7 +39,6 @@ describe Oxidized::API::WebApp do
           "href='/node/version/diffs?node=sw5&amp;group=&amp;oid=C006&amp;" \
           "epoch=1738781340&amp;num=3' title='Compare with previous version'>"
         )).must_equal true
-      pp last_response.body
       _(last_response.body.include?(
           "href='/node/version/view?node=sw5&amp;group=&amp;oid=C001&amp;" \
           "epoch=1738778460&amp;num=1' title='configuration'>"
