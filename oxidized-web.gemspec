@@ -26,7 +26,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'htmlentities',        '~> 4.3'
   s.add_dependency 'json',                '~> 2.3'
   s.add_dependency 'ostruct',             '~> 0.6'
-  s.add_dependency 'oxidized',            '~> 0.31'
+  s.add_dependency 'oxidized',            '~> 0.34.0'
   s.add_dependency 'puma',                '>= 3.11.4'
   s.add_dependency 'sinatra',             '>= 1.4.6'
   s.add_dependency 'sinatra-contrib',     '>= 1.4.6'
