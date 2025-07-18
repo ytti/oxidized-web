@@ -21,7 +21,7 @@ bundle exec oxidized
 Changes to haml templates are reloaded on the fly. For changes to the ruby
 scripts, you have to stop an restart `bundle exec oxidized`.
 
-## Paralell development between oxidized and oxidized-web
+## Parallel development between oxidized and oxidized-web
 You may need to make some changes in oxidized **and** oxidized-web. For this,
 git clone oxidized and oxidized-web in a common root directory.
 
@@ -39,12 +39,12 @@ bundle install
 bundle exec bin/oxidized
 ```
 
-Be careful when commiting your work in oxidized *NOT* to include the changes to
+Be careful when committing your work in oxidized *NOT* to include the changes to
 Gemfile, as this is a local change for development. I (@robertcheramy) didn't
 find a better way to do this, better ideas are welcome :-)
 
 If your changes to oxidized **AND** oxidzed-web are dependent from another, make
-sure you document this in the respectives CHANGELOG.md, so that everyone is
+sure you document this in the respective CHANGELOG.md, so that everyone is
 informed at the next release.
 
 Note: you can also add the dependency to oxidized in oxidized-web, in the same
