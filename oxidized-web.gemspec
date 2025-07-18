@@ -20,16 +20,26 @@ Gem::Specification.new do |s|
 
   s.required_ruby_version = '>= 3.1'
 
-  s.add_dependency 'charlock_holmes',     '~> 0.7.5'
+  # Gemspec strategy
+  #
+  # For dependency and optional dependencies, we try to set the minimal
+  # dependency lower than the Ubuntu Noble or Debian Bookworm package version,
+  # so that native packages can be used.
+  # We limit the maximal version so that dependabot can warn about new versions
+  # and we can test them before activating them in Oxidized.
+  #
+  # development dependencies are set to the latest minor version of a library
+  # and updated after having tested them
+
+  s.add_dependency 'charlock_holmes',     '>= 0.7.5', '< 0.8.0'
   s.add_dependency 'emk-sinatra-url-for', '~> 0.2'
-  s.add_dependency 'haml',                '~> 6.0'
-  s.add_dependency 'htmlentities',        '~> 4.3'
-  s.add_dependency 'json',                '~> 2.3'
-  s.add_dependency 'ostruct',             '~> 0.6'
+  s.add_dependency 'haml',                '>= 6.0.0', '< 6.4.0'
+  s.add_dependency 'htmlentities',        '>= 4.3.0', '< 4.4.0'
+  s.add_dependency 'json',                '>= 2.3.0', '< 2.14.0'
   s.add_dependency 'oxidized',            '~> 0.34.0'
-  s.add_dependency 'puma',                '>= 3.11.4'
-  s.add_dependency 'sinatra',             '>= 1.4.6'
-  s.add_dependency 'sinatra-contrib',     '>= 1.4.6'
+  s.add_dependency 'puma',                '~> 6.6.0'
+  s.add_dependency 'sinatra',             '~> 4.1.1'
+  s.add_dependency 'sinatra-contrib',     '~> 4.1.1'
 
   s.add_development_dependency 'bundler',              '~> 2.2'
   s.add_development_dependency 'minitest',             '~> 5.18'
