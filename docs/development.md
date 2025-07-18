@@ -141,9 +141,9 @@ see any errors.
 
 ## Release
 1. Merge the Pull Request into master with the commit message
-   `chore(release): release version 0.3x.y`
+   `chore(release): release version 0.xx.y`
 2. `git pull` master
-3. Tag the commit with `git tag -a 0.xx.yy -m "Release 0.xx.yy"`
+3. Tag the commit with `git tag -a 0.xx.yy -m "Release 0.xx.yy"` or `rake tag`
 4. Build the gem with ‘rake build’
 5. Run `git diff` to check if there have been more changes (there shouldn't)
 6. Install an test the gem locally

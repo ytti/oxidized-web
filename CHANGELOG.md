@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
+## [Unreleased]
+
+### Added
+
+### Changed
+
+### Fixed
+
 
 ## [0.17.0 – 2025-07-18]
 
@@ -19,6 +27,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Display local time correctly and use epoch as timestamps in the URLs. Fixes: #258 and #356 (@robertcheramy)
 - Hide node vars when listed in the configuration entry hide_node_vars. Fixes: #344 (@robertcheramy)
 - /node/next/: Prefer JSON.parse over JSON.load (@robertcheramy)
+
 
 ## [0.16.0 - 2025-03-25]
 This release introduces the possibility for an extended configuration of
