@@ -7,13 +7,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ## [Unreleased]
 
 ### Added
+- Documentation of the configuration (@robertcheramy)
 
 ### Changed
-- Update weblibs to the latest version
+- Update weblibs to the latest version (@robertcheramy)
+- Depend on oxidized 0.34.0 (configuration of oxidized web as an extension) (@robertcheramy)
+- Use JSON to format the node metadata in /node/show (@robertcheramy)
 
 ### Fixed
 - Run puma directly, so that it does not rename the oxidized process. Fixes: 349 (@robertcheramy)
 - Display local time correctly and use epoch as timestamps in the URLs. Fixes: #258 and #356 (@robertcheramy)
+- Hide node vars when listed in the configuration entry hide_node_vars. Fixes: #344 (@robertcheramy)
 
 ## [0.16.0 - 2025-03-25]
 This release introduces the possibility for an extended configuration of
@@ -25,7 +29,7 @@ will only work with oxidized-web version 0.16.0 or later.
 
 ### Fixed
 - the table preferences (pagelength, column visibility, search) are stored in the local browser cache. Fixes #315 #314 #265 #211 (@robertcheramy)
-- Update "refresh" and "Upldate node list" to more meaningfull texts (@robertcheramy)
+- Update "refresh" and "Update node list" to more meaningful texts (@robertcheramy)
 
 ## [0.15.1 – 2025-02-20]
 This patch release fixes javascript errors.

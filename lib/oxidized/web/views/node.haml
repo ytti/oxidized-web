@@ -14,7 +14,8 @@
       %a.link-dark.link-underline-opacity-0{title: 'update',
         href: url_for("/node/next/#{@data[:full_name]}")}
         %i.bi.bi-repeat
-    - out = '';PP.pp(@data,out)
     %pre.bg-body-tertiary.border.border-secondary-subtle.rounded
-      = preserve "#{out}"
+      %code
+        =escape_once(JSON.pretty_generate(@data))
+
 

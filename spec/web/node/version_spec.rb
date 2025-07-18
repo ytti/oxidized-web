@@ -1,4 +1,4 @@
-require_relative '../spec_helper'
+require_relative '../../spec_helper'
 
 describe Oxidized::API::WebApp do
   include Rack::Test::Methods
@@ -12,7 +12,7 @@ describe Oxidized::API::WebApp do
     app.set(:nodes, @nodes)
   end
 
-  describe '/node/version.?:format?' do
+  describe 'get /node/version.?:format?' do
     before do
       @versions = [
         { oid: "C006", time: Time.parse("2025-02-05 19:49:00 +0100") },
@@ -73,7 +73,7 @@ describe Oxidized::API::WebApp do
     end
   end
 
-  describe '/node/version/view.?:format?' do
+  describe 'get /node/version/view.?:format?' do
     it 'fetches a previous version from git' do
       @nodes.expects(:get_version).with('sw5', '', 'c8aa93cab5').returns('Old configuration of sw5')
 
@@ -124,7 +124,7 @@ describe Oxidized::API::WebApp do
     end
   end
 
-  describe '/node/version/diffs' do
+  describe 'get /node/version/diffs' do
     it 'diffs a version with the latest configuration' do
       @versions = [
         { oid: "C006", time: Time.parse("2025-02-05 19:49:00 +0100") },
