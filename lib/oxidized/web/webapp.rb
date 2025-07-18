@@ -118,7 +118,7 @@ module Oxidized
       # use this to attach author/email/message to commit
       put '/node/next/?*?/:node' do
         node, @json = route_parse :node
-        opt = JSON.load request.body.read
+        opt = JSON.parse request.body.read
         nodes.next node, opt
         redirect url_for('/nodes') unless @json
         @data = 'ok'

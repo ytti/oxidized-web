@@ -1,7 +1,7 @@
 require 'bundler/gem_tasks'
 require 'rake/testtask'
 
-gemspec = eval(File.read(Dir['*.gemspec'].first))
+gemspec = Gem::Specification.load(Dir['*.gemspec'].first)
 gemfile = "#{[gemspec.name, gemspec.version].join('-')}.gem"
 
 # Integrate Rubocop if available
@@ -9,7 +9,6 @@ begin
   require 'rubocop/rake_task'
 
   RuboCop::RakeTask.new
-  task(:default).prerequisites << task(:rubocop)
 rescue LoadError
   task :rubocop do
     puts 'Install rubocop to run its rake tasks'
@@ -32,7 +31,9 @@ task :test do
   end
 end
 
+desc 'build the gem'
 task build: :chmod
+
 ## desc 'Install gem'
 ## task :install => :build do
 ##   system "sudo -Es sh -c \'umask 022; gem install gems/#{file}\'"
@@ -53,7 +54,7 @@ task push: :tag do
   system "gem push pkg/#{gemfile}"
 end
 
-desc 'Normalise file permissions'
+desc 'Normalize file permissions'
 task :chmod do
   xbit = %w[]
   dirs = []
@@ -112,4 +113,4 @@ task :weblibs do
   end
 end
 
-task default: :test
+task default: %i[rubocop test]

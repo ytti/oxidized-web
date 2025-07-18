@@ -1,4 +1,3 @@
-inherit_from: .rubocop_todo.yml
 plugins:
   - rubocop-rails
   - rubocop-rake
@@ -14,11 +13,30 @@ AllCops:
 Gemspec/DevelopmentDependencies:
   EnforcedStyle: gemspec
 
+Metrics/AbcSize:
+  Enabled: false
+
 Metrics/ClassLength:
-  Max: 300
+  Enabled: false
+
+Metrics/PerceivedComplexity:
+  Enabled: false
+
+Metrics/CyclomaticComplexity:
+  Enabled: false
+
+Metrics/MethodLength:
+  Enabled: false
 
 Metrics/BlockLength:
   Max: 150
+
+# Not using Rails, so no timezones
+Rails/TimeZone:
+  Enabled: false
+
+Rails/RakeEnvironment:
+  Enabled: false
 
 Style/Documentation:
   Enabled: false
@@ -70,11 +88,5 @@ Style/HashSyntax:
 Style/RescueModifier:
   Enabled: false
 
-# Not using Rails, so no timezones
-Rails/TimeZone:
-  Enabled: false
-
 Style/NumericLiterals:
-  Exclude:
-   - spec/node_version_spec.rb # epoch timestamps
-
+  Enabled: false
