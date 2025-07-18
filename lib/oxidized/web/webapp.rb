@@ -2,7 +2,6 @@ require 'sinatra/base'
 require 'sinatra/json'
 require 'sinatra/url_for'
 require 'tilt/haml'
-require 'pp'
 require 'htmlentities'
 require 'charlock_holmes'
 module Oxidized
@@ -128,7 +127,7 @@ module Oxidized
 
       get '/node/show/:node' do
         node, @json = route_parse :node
-        @data = nodes.show node
+        @data = filter_node_vars(nodes.show(node))
         out :node
       end
 
@@ -259,7 +258,7 @@ module Oxidized
         [e.join('.'), json]
       end
 
-      # give the time enlapsed between now and a date (Time object)
+      # give the time elapsed between now and a date (Time object)
       def time_from_now(date)
         return "no time specified" if date.nil?
 
@@ -327,6 +326,20 @@ module Oxidized
         else
           'The text contains binary values - cannot display'
         end
+      end
+
+      def filter_node_vars(serialized_node)
+        # Make a deep copy of the data, so we do not impact oxidized
+        data = Marshal.load(Marshal.dump(serialized_node))
+
+        hide_node_vars = settings.configuration[:hide_node_vars]
+        if data[:vars].is_a?(Hash) && hide_node_vars&.any?
+          hide_node_vars.each do |key|
+            data[:vars][key] = '<hidden>' if data[:vars].has_key?(key)
+          end
+        end
+
+        data
       end
     end
   end
