@@ -4,13 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
-## [Unreleased]
+## [0.17.0 – 2025-07-18]
 
 ### Added
 - Documentation of the configuration (@robertcheramy)
 
 ### Changed
-- Update weblibs to the latest version (@robertcheramy)
+- Update weblibs to the latest versions (@robertcheramy)
 - Depend on oxidized 0.34.0 (configuration of oxidized web as an extension) (@robertcheramy)
 - Use JSON to format the node metadata in /node/show (@robertcheramy)
 
@@ -18,6 +18,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Run puma directly, so that it does not rename the oxidized process. Fixes: 349 (@robertcheramy)
 - Display local time correctly and use epoch as timestamps in the URLs. Fixes: #258 and #356 (@robertcheramy)
 - Hide node vars when listed in the configuration entry hide_node_vars. Fixes: #344 (@robertcheramy)
+- /node/next/: Prefer JSON.parse over JSON.load (@robertcheramy)
 
 ## [0.16.0 - 2025-03-25]
 This release introduces the possibility for an extended configuration of
