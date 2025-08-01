@@ -121,6 +121,15 @@ Test again after updating!
 ## Make sure the file permissions are correct
 Run `bundle exec rake chmod`
 
+## Test!
+Run `bundle exec rake` on the git repository to check the code against rubocop
+and run the defined tests in `/spec`.
+
+Run Oxidized-web from git against the latest Oxidized version `bundle exec oxdized`
+
+When testing the web application, open the javascript console in the browser to
+see any errors.
+
 ## Bump the version
 Update CHANGELOG.md:
 - review it
@@ -130,15 +139,6 @@ Update CHANGELOG.md:
 Change the version in `lib/oxidized/web/version.rb`
 
 Upload the release branch to github, make a Pull Request for it.
-
-## Test!
-Run `bundle exec rake` on the git repository to check the code against rubocop
-and run the defined tests in `/spec`.
-
-Run Oxidized-web from git against the latest Oxidized version `bundle exec oxdized`
-
-When testing the web application, open the javascript console in the browser to
-see any errors.
 
 ## Release
 1. Merge the Pull Request into master with the commit message
