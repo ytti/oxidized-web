@@ -91,6 +91,9 @@ Oxidized-web versions are numbered like major.minor.patch
 - minor is incremented when releasing new features.
 - patch is incremented when releasing fixes only.
 
+## Create a release branch
+Name the release branch `release/0.xx.yy`
+
 ## Review changes
 Run `git diff 0.xx.yy` (where `0.xx.yy` is to be changed to the previous
 release) and review all the changes that have been done. Have a specific look
@@ -118,9 +121,7 @@ Test again after updating!
 ## Make sure the file permissions are correct
 Run `bundle exec rake chmod`
 
-## Create a release branch
-Name the release branch `release/0.xx.yy`
-
+## Bump the version
 Update CHANGELOG.md:
 - review it
 - add release notes
@@ -128,7 +129,7 @@ Update CHANGELOG.md:
 
 Change the version in `lib/oxidized/web/version.rb`
 
-Upload the branch to github, make a Pull Request for it.
+Upload the release branch to github, make a Pull Request for it.
 
 ## Test!
 Run `bundle exec rake` on the git repository to check the code against rubocop
