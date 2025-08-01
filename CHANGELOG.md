@@ -10,7 +10,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ### Changed
 
 ### Fixed
-
+- Hide node vars works with Oxidized > 0.34.1 (@robertcheramy)
 
 ## [0.17.0 – 2025-07-18]
 
