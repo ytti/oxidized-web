@@ -331,8 +331,10 @@ module Oxidized
       def filter_node_vars(serialized_node)
         # Make a deep copy of the data, so we do not impact oxidized
         data = Marshal.load(Marshal.dump(serialized_node))
+        # Make sure we work on strings (Oxidized <= 0.34.1 uses symbols)
+        data[:vars] = data[:vars].transform_keys(&:to_s)
 
-        hide_node_vars = settings.configuration[:hide_node_vars]
+        hide_node_vars = settings.configuration[:hide_node_vars].map(&:to_s)
         if data[:vars].is_a?(Hash) && hide_node_vars&.any?
           hide_node_vars.each do |key|
             data[:vars][key] = '<hidden>' if data[:vars].has_key?(key)

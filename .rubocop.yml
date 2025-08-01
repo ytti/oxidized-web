@@ -29,7 +29,7 @@ Metrics/MethodLength:
   Enabled: false
 
 Metrics/BlockLength:
-  Max: 150
+  Enabled: false
 
 # Not using Rails, so no timezones
 Rails/TimeZone:

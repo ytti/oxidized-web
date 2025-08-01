@@ -6,6 +6,28 @@ describe Oxidized::API::WebApp do
     Oxidized::API::WebApp
   end
 
+  def expected_json_body(hide_vars: false)
+    enable_val = hide_vars ? "&lt;hidden&gt;" : "secret_enable"
+    password_val = hide_vars ? "&lt;hidden&gt;" : "secret_password"
+
+    "<code>{\n  &quot;name&quot;: &quot;sw5&quot;," \
+      "\n  &quot;full_name&quot;: &quot;sw5.example.com&quot;," \
+      "\n  &quot;ip&quot;: &quot;10.42.12.42&quot;," \
+      "\n  &quot;group&quot;: null,\n  &quot;model&quot;: &quot;ios&quot;," \
+      "\n  &quot;last&quot;: {" \
+      "\n    &quot;start&quot;: &quot;2025-02-05 19:49:00 +0100&quot;," \
+      "\n    &quot;end&quot;: &quot;2025-02-05 19:49:10 +0100&quot;," \
+      "\n    &quot;status&quot;: &quot;no_connection&quot;," \
+      "\n    &quot;time&quot;: 10\n  }," \
+      "\n  &quot;vars&quot;: {" \
+      "\n    &quot;oxi&quot;: &quot;dized&quot;," \
+      "\n    &quot;enable&quot;: &quot;#{enable_val}&quot;," \
+      "\n    &quot;username&quot;: &quot;oxidized&quot;," \
+      "\n    &quot;password&quot;: &quot;#{password_val}&quot;" \
+      "\n  },\n  &quot;mtime&quot;: &quot;2025-02-05 19:49:11 +0100&quot;" \
+      "\n}</code>"
+  end
+
   before do
     @nodes = mock('Oxidized::Nodes')
     app.set(:nodes, @nodes)
@@ -33,68 +55,77 @@ describe Oxidized::API::WebApp do
   end
 
   describe "get /node/show/:node" do
-    it "shows the metadata of a node" do
-      app.set(:configuration, { hide_node_vars: [] })
-      @nodes.expects(:show).with("sw5").returns(@serialized_node)
+    describe "Oxidized <= 0.34.1" do
+      it "shows the metadata of a node" do
+        app.set(:configuration, { hide_node_vars: [] })
+        @nodes.expects(:show).with("sw5").returns(@serialized_node)
 
-      get '/node/show/sw5'
-      _(last_response.ok?).must_equal true
-      body = last_response.body
+        get '/node/show/sw5'
+        _(last_response.ok?).must_equal true
+        body = last_response.body
 
-      _(body).must_match(/secret_enable/)
-      _(body).must_match(/secret_password/)
-      _(body.include?(
-          "<code>{\n  &quot;name&quot;: &quot;sw5&quot;," \
-          "\n  &quot;full_name&quot;: &quot;sw5.example.com&quot;," \
-          "\n  &quot;ip&quot;: &quot;10.42.12.42&quot;," \
-          "\n  &quot;group&quot;: null,\n  &quot;model&quot;: &quot;ios&quot;," \
-          "\n  &quot;last&quot;: {" \
-          "\n    &quot;start&quot;: &quot;2025-02-05 19:49:00 +0100&quot;," \
-          "\n    &quot;end&quot;: &quot;2025-02-05 19:49:10 +0100&quot;," \
-          "\n    &quot;status&quot;: &quot;no_connection&quot;," \
-          "\n    &quot;time&quot;: 10\n  }," \
-          "\n  &quot;vars&quot;: {" \
-          "\n    &quot;oxi&quot;: &quot;dized&quot;," \
-          "\n    &quot;enable&quot;: &quot;secret_enable&quot;," \
-          "\n    &quot;username&quot;: &quot;oxidized&quot;," \
-          "\n    &quot;password&quot;: &quot;secret_password&quot;" \
-          "\n  },\n  &quot;mtime&quot;: &quot;2025-02-05 19:49:11 +0100&quot;" \
-          "\n}</code>"
-        )).must_equal true
+        _(body).must_match(/secret_enable/)
+        _(body).must_match(/secret_password/)
+        _(body.include?(expected_json_body(hide_vars: false))).must_equal true
+      end
+
+      it "hides vars in hide_node_vars" do
+        app.set(:configuration, { hide_node_vars: %i[enable password] })
+        @nodes.expects(:show).with("sw5").returns(@serialized_node)
+
+        get '/node/show/sw5'
+        _(last_response.ok?).must_equal true
+        body = last_response.body
+
+        _(body).wont_match(/secret_enable/)
+        _(body).wont_match(/secret_password/)
+        _(body).must_match(/&lt;hidden&gt;/)
+        _(body.include?(expected_json_body(hide_vars: true))).must_equal true
+
+        # The note data is not changed (deep copy with Marshal)
+        _(@serialized_node[:vars][:enable]).must_equal "secret_enable"
+      end
     end
 
-    it "hides vars in hide_node_vars" do
-      app.set(:configuration, { hide_node_vars: %i[enable password] })
-      @nodes.expects(:show).with("sw5").returns(@serialized_node)
+    describe "Oxidized > 0.34.1" do
+      before do
+        @serialized_node[:vars] = {
+          "oxi" => "dized",
+          "enable" => "secret_enable",
+          "username" => "oxidized",
+          "password" => "secret_password"
+        }
+      end
 
-      get '/node/show/sw5'
-      _(last_response.ok?).must_equal true
-      body = last_response.body
+      it "shows the metadata of a node" do
+        app.set(:configuration, { hide_node_vars: [] })
+        @nodes.expects(:show).with("sw5").returns(@serialized_node)
 
-      _(body).wont_match(/secret_enable/)
-      _(body).wont_match(/secret_password/)
-      _(body).must_match(/&lt;hidden&gt;/)
-      _(body.include?(
-          "<code>{\n  &quot;name&quot;: &quot;sw5&quot;," \
-          "\n  &quot;full_name&quot;: &quot;sw5.example.com&quot;," \
-          "\n  &quot;ip&quot;: &quot;10.42.12.42&quot;," \
-          "\n  &quot;group&quot;: null,\n  &quot;model&quot;: &quot;ios&quot;," \
-          "\n  &quot;last&quot;: {" \
-          "\n    &quot;start&quot;: &quot;2025-02-05 19:49:00 +0100&quot;," \
-          "\n    &quot;end&quot;: &quot;2025-02-05 19:49:10 +0100&quot;," \
-          "\n    &quot;status&quot;: &quot;no_connection&quot;," \
-          "\n    &quot;time&quot;: 10\n  }," \
-          "\n  &quot;vars&quot;: {" \
-          "\n    &quot;oxi&quot;: &quot;dized&quot;," \
-          "\n    &quot;enable&quot;: &quot;&lt;hidden&gt;&quot;," \
-          "\n    &quot;username&quot;: &quot;oxidized&quot;," \
-          "\n    &quot;password&quot;: &quot;&lt;hidden&gt;&quot;" \
-          "\n  },\n  &quot;mtime&quot;: &quot;2025-02-05 19:49:11 +0100&quot;" \
-          "\n}</code>"
-        )).must_equal true
+        get '/node/show/sw5'
+        _(last_response.ok?).must_equal true
+        body = last_response.body
 
-      # The note data is not changed (deep copy with Marshal)
-      _(@serialized_node[:vars][:enable]).must_equal "secret_enable"
+        _(body).must_match(/secret_enable/)
+        _(body).must_match(/secret_password/)
+        _(body.include?(expected_json_body(hide_vars: false))).must_equal true
+      end
+
+      it "hides vars in hide_node_vars" do
+        app.set(:configuration, { hide_node_vars: %w[enable password] })
+        @nodes.expects(:show).with("sw5").returns(@serialized_node)
+
+        get '/node/show/sw5'
+        _(last_response.ok?).must_equal true
+        body = last_response.body
+
+        _(body).wont_match(/secret_enable/)
+        _(body).wont_match(/secret_password/)
+        _(body).must_match(/&lt;hidden&gt;/)
+        _(body.include?(expected_json_body(hide_vars: true))).must_equal true
+
+        # The note data is not changed (deep copy with Marshal)
+        _(@serialized_node[:vars]["enable"]).must_equal "secret_enable"
+      end
     end
   end
 end
