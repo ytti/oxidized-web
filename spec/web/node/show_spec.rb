@@ -52,13 +52,14 @@ describe Oxidized::API::WebApp do
       },
       mtime: Time.parse("2025-02-05 19:49:11 +0100")
     }
+
+    @nodes.expects(:show).with("sw5").returns(@serialized_node)
   end
 
   describe "get /node/show/:node" do
     describe "Oxidized <= 0.34.1" do
       it "shows the metadata of a node" do
         app.set(:configuration, { hide_node_vars: [] })
-        @nodes.expects(:show).with("sw5").returns(@serialized_node)
 
         get '/node/show/sw5'
         _(last_response.ok?).must_equal true
@@ -71,7 +72,6 @@ describe Oxidized::API::WebApp do
 
       it "hides vars in hide_node_vars" do
         app.set(:configuration, { hide_node_vars: %i[enable password] })
-        @nodes.expects(:show).with("sw5").returns(@serialized_node)
 
         get '/node/show/sw5'
         _(last_response.ok?).must_equal true
@@ -99,7 +99,6 @@ describe Oxidized::API::WebApp do
 
       it "shows the metadata of a node" do
         app.set(:configuration, { hide_node_vars: [] })
-        @nodes.expects(:show).with("sw5").returns(@serialized_node)
 
         get '/node/show/sw5'
         _(last_response.ok?).must_equal true
@@ -112,7 +111,6 @@ describe Oxidized::API::WebApp do
 
       it "hides vars in hide_node_vars" do
         app.set(:configuration, { hide_node_vars: %w[enable password] })
-        @nodes.expects(:show).with("sw5").returns(@serialized_node)
 
         get '/node/show/sw5'
         _(last_response.ok?).must_equal true

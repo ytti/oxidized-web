@@ -3,17 +3,15 @@
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
-## [Unreleased]
-
-### Added
-
+## [0.17.1 – 2025-08-01]
 ### Changed
+- Dependency on Oxidized 0.34.1 (@robertcheramy)
 
 ### Fixed
 - Hide node vars works with Oxidized > 0.34.1 (@robertcheramy)
 
-## [0.17.0 – 2025-07-18]
 
+## [0.17.0 – 2025-07-18]
 ### Added
 - Documentation of the configuration (@robertcheramy)
 

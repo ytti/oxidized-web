@@ -91,13 +91,16 @@ Oxidized-web versions are numbered like major.minor.patch
 - minor is incremented when releasing new features.
 - patch is incremented when releasing fixes only.
 
+## Create a release branch
+Name the release branch `release/0.xx.yy`
+
 ## Review changes
-Run `git diff 0.xx.yy..master` (where `0.xx.yy` is to be changed to the last
+Run `git diff 0.xx.yy` (where `0.xx.yy` is to be changed to the previous
 release) and review all the changes that have been done. Have a specific look
 at changes you don't understand.
 
 It is nicer to read in a GUI, so you can use something like
-`git difftool --tool=kdiff3 -d 0.xx.yy..master` to see it in kdiff3.
+`git difftool --tool=kdiff3 -d 0.xx.yy` to see it in kdiff3.
 
 ## Update the gem dependencies to the latest versions
 ```
@@ -118,18 +121,6 @@ Test again after updating!
 ## Make sure the file permissions are correct
 Run `bundle exec rake chmod`
 
-## Create a release branch
-Name the release branch `release/0.xx.yy`
-
-Update CHANGELOG.md:
-- review it
-- add release notes
-- set the new version (replace `[Unreleased]` with `[0.xx.yy – 202Y-MM-DD]`)
-
-Change the version in `lib/oxidized/web/version.rb`
-
-Upload the branch to github, make a Pull Request for it.
-
 ## Test!
 Run `bundle exec rake` on the git repository to check the code against rubocop
 and run the defined tests in `/spec`.
@@ -138,6 +129,16 @@ Run Oxidized-web from git against the latest Oxidized version `bundle exec oxdiz
 
 When testing the web application, open the javascript console in the browser to
 see any errors.
+
+## Bump the version
+Update CHANGELOG.md:
+- review it
+- add release notes
+- set the new version (replace `[Unreleased]` with `[0.xx.yy – 202Y-MM-DD]`)
+
+Change the version in `lib/oxidized/web/version.rb`
+
+Upload the release branch to github, make a Pull Request for it.
 
 ## Release
 1. Merge the Pull Request into master with the commit message
@@ -162,6 +163,8 @@ Make a release from the tag in github.
 - Take the release notes frm CHANGELOG.md
 - List new contributors (generated automatically)
 - Keep the Full Changelog (generated automatically)
+
+Close the corresponding milestone in github.
 
 ## Release in rubygems
 Push the gem with ‘rake push’
