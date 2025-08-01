@@ -92,12 +92,12 @@ Oxidized-web versions are numbered like major.minor.patch
 - patch is incremented when releasing fixes only.
 
 ## Review changes
-Run `git diff 0.xx.yy..master` (where `0.xx.yy` is to be changed to the last
+Run `git diff 0.xx.yy` (where `0.xx.yy` is to be changed to the previous
 release) and review all the changes that have been done. Have a specific look
 at changes you don't understand.
 
 It is nicer to read in a GUI, so you can use something like
-`git difftool --tool=kdiff3 -d 0.xx.yy..master` to see it in kdiff3.
+`git difftool --tool=kdiff3 -d 0.xx.yy` to see it in kdiff3.
 
 ## Update the gem dependencies to the latest versions
 ```
@@ -162,6 +162,8 @@ Make a release from the tag in github.
 - Take the release notes frm CHANGELOG.md
 - List new contributors (generated automatically)
 - Keep the Full Changelog (generated automatically)
+
+Close the corresponding milestone in github.
 
 ## Release in rubygems
 Push the gem with ‘rake push’
