@@ -35,7 +35,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'emk-sinatra-url-for', '~> 0.2'
   s.add_dependency 'haml',                '>= 6.0.0', '< 6.4.0'
   s.add_dependency 'htmlentities',        '>= 4.3.0', '< 4.4.0'
-  s.add_dependency 'json',                '>= 2.3.0', '< 2.14.0'
+  s.add_dependency 'json',                '>= 2.3.0', '< 2.16.0'
   s.add_dependency 'oxidized',            '~> 0.34.1'
   s.add_dependency 'puma',                '~> 6.6.0'
   s.add_dependency 'sinatra',             '~> 4.1.1'
