@@ -1,5 +1,5 @@
 .row
-  .col-4
+  .col-12
     %h4
       - if @info[:group] != ''
         - node_full = "#{@info[:group]}/#{@info[:node]}"
@@ -15,8 +15,8 @@
 .row
   .col-sm-12
     Number of lines changed:
-    %span.added added #{@stat[0]}
-    %span.deleted removed #{@stat[1]}
+    %span.added{style: 'color: #000000'} added #{@stat[0]}
+    %span.deleted{style: 'color: #000000'} removed #{@stat[1]}
 
 .row
   .col-sm-6
@@ -45,7 +45,7 @@
 
 .row
   .col-sm-12
-    .diffs_old
+    .diff-old.diff-container
       - @diff[:old_diff].each do |line|
         - if /^\+.*/.match(line)
           .added><
@@ -68,7 +68,7 @@
           %div><
             != escape_once("#{line}")
 
-    .diffs_new
+    .diff-new.diff-container
       - @diff[:new_diff].each do |line|
         - if /^\+.*/.match(line)
           .added><
