@@ -1,23 +1,26 @@
-.row
-  .col-4
-    %h4 nodes /
-  .col-8
-    %form.float-end#oxButtons
-      %button.btn.btn-primary{type: 'button', onclick: 'history.go();'}
-        %i.bi.bi-arrow-clockwise
-        Refresh page
-      %button.btn.btn-primary#resetSearch{type: 'button'}
-        %i.bi.bi-eraser-fill
-        Reset search
-      %button.btn.btn-primary#reload{type: 'button'}
-        %i.bi.bi-repeat
-        Reload node list from source backend
+-# --- New "Controls" Card ---
+.card.mb-4
+  .row.align-items-center
+    .col-md-4
+      %h4.mb-md-0.mb-3 nodes /
+    .col-md-8
+      -# Original buttons, now wrapped
+      %form.d-flex.gap-2.justify-content-md-end#oxButtons
+        -# Datatables ColVis button will be prepended here by JS
+        %button.btn.btn-primary{type: 'button', onclick: 'history.go();'}
+          %i.bi.bi-arrow-clockwise
+          Refresh
+        %button.btn.btn-primary#resetSearch{type: 'button'}
+          %i.bi.bi-eraser-fill
+          Reset
+        %button.btn.btn-primary#reload{type: 'button'}
+          %i.bi.bi-repeat
+          Reload Nodes
 
-.hidden.alert#flashMessage
-
-.row
+-# --- New "Table" Card ---
+.card-table
   .table-responsive
-    %table.table.table-sm.table-striped.table-hover#nodesTable
+    %table.table.table-sm.table-hover#nodesTable
       %thead
         %tr
           %th Name
@@ -40,8 +43,8 @@
             %td
               %a{href: url_for("/nodes/group/#{node[:group]}")} #{node[:group]}
             %td
-              %div{title: node[:status], class: node[:status]}
-                %span{style: 'visibility: hidden'}#{node[:status]}
+              %div{title: node[:status], class: "status-pill status-pill-#{node[:status].to_s.downcase}"}
+                %span #{node[:status]}
             %td.time{ epoch: node[:time].to_i }= node[:time]
             %td.time{ epoch: node[:mtime].to_i }= node[:mtime]
             %td
@@ -57,6 +60,7 @@
                 href: url_for("/node/next/#{node[:full_name]}")}
                 %i.bi.bi-repeat
 
+-# Original Javascript
 :javascript
   $(function() {
     var table = $('#nodesTable').DataTable({
@@ -90,5 +94,3 @@
         table.search('').draw();
     });
   });
-
-
