@@ -6,8 +6,12 @@
 Web user interface and RESTful API for Oxidized.
 
 ## Interface Preview
-<img width="500" height="200" alt="image" src="https://github.com/user-attachments/assets/ce5333c8-a16f-4167-9ef7-e26ba33ee687" />
-<img width="500" height="200" alt="image" src="https://github.com/user-attachments/assets/95674e0e-4a76-4dda-972f-1314c3fcdd33" />
+<img width="400" height="250" alt="image" src="https://github.com/user-attachments/assets/ce5333c8-a16f-4167-9ef7-e26ba33ee687" />
+<img width="400" height="250" alt="image" src="https://github.com/user-attachments/assets/816b9e24-d404-4f75-a2f6-abbb89257e2c" />
+
+<img width="400" height="250" alt="image" src="https://github.com/user-attachments/assets/95674e0e-4a76-4dda-972f-1314c3fcdd33" />
+<img width="400" height="250" alt="image" src="https://github.com/user-attachments/assets/f21f4dba-b1a6-4fce-a8f4-820937236aec" />
+</br>
 *Custom logo and devices redacted*
 
 
