@@ -8,22 +8,24 @@
       %a{href: url_for("/node/version?node_full=#{node_full}")} versions
       \/ Diff version #{@info[:num]} - #{@info[:num2]} for node
       %b #{@info[:node]}
-.row
-  .col-sm-12
+
+.row.mb-3
+  .col-12
     Date of version:
     %span.time{ epoch: @info[:time].to_i }= @info[:time]
-.row
-  .col-sm-12
-    Number of lines changed:
-    %span.added{style: 'color: #000000'} added #{@stat[0]}
-    %span.deleted{style: 'color: #000000'} removed #{@stat[1]}
+    
+    .mt-1
+      Number of lines changed:
+      -# Use utility classes instead of inline styles
+      %span.badge.bg-success.text-light.me-2 added #{@stat[0]}
+      %span.badge.bg-danger.text-light removed #{@stat[1]}
 
-.row
+.row.mb-4
   .col-sm-6
     - params = "node=#{@info[:node]}&group=#{@info[:group]}&oid=#{@info[:oid]}"
     - params = "#{params}&epoch=#{@info[:time].to_i}&num=#{@info[:num]}"
     %form{action: url_for("/node/version/diffs?#{params}"), method: 'post', role: 'form'}
-      .form-group
+      .input-group
         %select.form-select#oid2{name: 'oid2'}
           - diff2 = {}
           - num = @oids_dates.count + 1
@@ -35,58 +37,53 @@
               - next_id = false
             - elsif (x[:oid].to_s == @info[:oid]) && !(@info[:oid2])
               - next_id = true
-
-      %button.btn.btn-primary{type: 'submit'} Get Diffs!
-
-.row
-  .col-sm-12
-    .old_version_title Version #{diff2[:num]} (#{time_from_now diff2[:time]})
-    .new_version_title Version #{@info[:num]} (#{time_from_now @info[:time]})
+        %button.btn.btn-primary{type: 'submit'} Get Diffs!
 
 .row
-  .col-sm-12
+  .col-md-6
+    .h6.mb-2
+      Version #{diff2[:num]}
+      %small.text-muted (#{time_from_now diff2[:time]})
+
     .diff-old.diff-container
       - @diff[:old_diff].each do |line|
         - if /^\+.*/.match(line)
           .added><
             != escape_once("#{line}")
-
         - elsif /^\-.*/.match(line)
           .deleted><
             != escape_once("#{line}")
-
         - elsif /^@@\s.*@@.*$/.match(line)
           .diff-index><
             != escape_once("#{line}")
-
         - elsif /^empty_line&nbsp;/.match(line)
           - line.slice! "empty_line"
           .diff-empty><
             != escape_once("#{line}")
-
         - else
           %div><
             != escape_once("#{line}")
+
+  .col-md-6
+    .h6.mb-2
+      Version #{@info[:num]}
+      %small.text-muted (#{time_from_now @info[:time]})
 
     .diff-new.diff-container
       - @diff[:new_diff].each do |line|
         - if /^\+.*/.match(line)
           .added><
             != escape_once("#{line}")
-
         - elsif /^\-.*/.match(line)
           .deleted><
             != escape_once("#{line}")
-
         - elsif /^@@\s.*@@.*$/.match(line)
           .diff-index><
             != escape_once("#{line}")
-
         - elsif /^empty_line&nbsp;/.match(line)
           - line.slice! "empty_line"
           .diff-empty><
             != escape_once("#{line}")
-
         - else
           %div><
             != escape_once("#{line}")
