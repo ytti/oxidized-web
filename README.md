@@ -5,6 +5,12 @@
 
 Web user interface and RESTful API for Oxidized.
 
+## Interface Preview
+<img width="500" height="200" alt="image" src="https://github.com/user-attachments/assets/ce5333c8-a16f-4167-9ef7-e26ba33ee687" />
+<img width="500" height="200" alt="image" src="https://github.com/user-attachments/assets/95674e0e-4a76-4dda-972f-1314c3fcdd33" />
+*Custom logo and devices redacted*
+
+
 ## Installation
 This is not useful independently, see https://github.com/ytti/oxidized for
 install instructions.
