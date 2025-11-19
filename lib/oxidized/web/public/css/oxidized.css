@@ -79,7 +79,7 @@ html.dark a {
   overflow: hidden;
 }
 
-/* --- 5. Diff Views (Renamed & Modernized) --- */
+/* --- 5. Diff Views --- */
 .versions .diff-view {
     background-color: var(--bg-secondary);
     border-radius: 0.75rem; 
@@ -94,28 +94,43 @@ html.dark a {
   border-radius: 0.5rem;
   font-family: monospace;
   overflow-x: auto;
-  background-color: var(--bg-secondary); /* Adapts to dark mode */
-  color: var(--text-primary);            /* Adapts to dark mode */
+  background-color: var(--bg-secondary); 
+  color: var(--text-primary);           
   border: 1px solid var(--border-color);
 }
 
-/* Specific text colors for diffs (Standardized naming) */
-.diff-old .added, 
-.diff-new .added { 
-  color: #166534; /* Green */ 
+/* --- LIGHT MODE DIFF COLORS --- */
+.diff-old .deleted { 
+  background-color: #fee2e2; /* Light Red Background */
+  color: #991b1b;            /* Dark Red Text */
+  display: block;            /* Ensures background fills width */
 }
-.diff-old .deleted, 
-.diff-new .deleted { 
-  color: #991b1b; /* Red */ 
+.diff-new .added { 
+  background-color: #dcfce7; /* Light Green Background */
+  color: #166534;            /* Dark Green Text */
+  display: block;
+}
+.diff-index {
+  color: var(--text-secondary);
+  background-color: var(--table-header-bg);
+  display: block;
+  font-style: italic;
 }
 
-html.dark .diff-old .added, 
-html.dark .diff-new .added { 
-  color: #4ade80; /* Lighter Green for Dark Mode */
+/* --- DARK MODE DIFF COLORS (High Contrast) --- */
+html.dark .diff-old .deleted { 
+  background-color: rgba(248, 113, 113, 0.15); /* Very subtle red tint (15% opacity) */
+  color: #fca5a5;                              /* Bright Salmon/Red Text */
 }
-html.dark .diff-old .deleted, 
-html.dark .diff-new .deleted { 
-  color: #f87171; /* Lighter Red for Dark Mode */
+
+html.dark .diff-new .added { 
+  background-color: rgba(74, 222, 128, 0.15);  /* Very subtle green tint (15% opacity) */
+  color: #86efac;                              /* Bright Pastel Green Text */
+}
+
+html.dark .diff-index {
+  color: #94a3b8;            /* Slate 400 */
+  background-color: #1e293b; /* Dark Slate background */
 }
 
 
@@ -392,7 +407,7 @@ html.dark h4 a.link-dark:hover {
   font-size: 0.875rem;
 }
 
-/* --- 11. DataTables Pagination Fix --- */
+/* --- 11. DataTables Pagination --- */
 html.dark .dt-paging-button,
 html.dark .page-link, 
 html.dark .paginate_button {
@@ -429,7 +444,7 @@ html.dark .paginate_button.disabled {
     opacity: 0.5;
 }
 
-/* --- 12. Footer Fix --- */
+/* --- 12. Footer --- */
 .footer {
     background-color: var(--bg-secondary) !important;
     color: var(--text-secondary) !important;
