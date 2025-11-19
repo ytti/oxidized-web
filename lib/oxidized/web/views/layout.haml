@@ -1,36 +1,81 @@
 !!! 5
 %html{lang: 'en'}
-  !=haml :head
-  %body
-    %nav.navbar.navbar-expand-lg.bg-body-tertiary.border-bottom.border-secondary-subtle.mb-4
-      .container-fluid
-        %a.navbar-brand{href: url_for('/')}
-          %img{src: url_for('/images/oxidizing_40px.png')}
-          Oxidized
-        %button.navbar-toggler{type: 'button',
-                                  :'data-bs-toggle' => 'collapse',
-                                  :'data-bs-target' => '#ox-nav',
-                                  :'aria-expanded'  => 'false',
-                                  :'aria-label'     => 'Toggle navigation',
-                                  :'aria-controls'  => '#ox-nav'}
-          %span.navbar-toggler-icon
-        .collapse.navbar-collapse#ox-nav
-          %ul.navbar-nav.me-auto.mb-1
-            %li.nav-item
-              %a.nav-link{class: request.path_info == '/nodes/stats' ? 'active' : '',
-                            :'aria-current' => request.path_info == '/nodes/stats' ? 'page' : 'false',
-                            href: url_for('/nodes/stats')} Stats
-          %form.d-flex{role: 'search',
-                      action: url_for('/nodes/conf_search'),
-                      method: 'post'}
-            %input.form-control.me-2{type: 'text',
-                                      name: 'search_in_conf_textbox',
-                                      placeholder: 'Search in Configs',
-                                      :'aria-label' => 'Search in Configs'}
-            %button.btn.btn-primary{type: 'submit'}
-              %i.bi.bi-search
+  %head
+    -# Original head content
+    !=haml :head
+    
+    -# 1. Google Font
+    %link{rel: 'preconnect', href: 'https://fonts.googleapis.com'}
+    %link{rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: ''}
+    %link{href: 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap', rel: 'stylesheet'}
 
+    -# 2. Link to our new custom stylesheet
+    %link{rel: 'stylesheet', href: url_for('/assets/custom.css')}
+
+    -# 3. Simple Dark Mode Toggle Script
+    :javascript
+      // Set theme on initial load
+      if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+          document.documentElement.classList.add('dark');
+      } else {
+          document.documentElement.classList.remove('dark');
+      }
+      
+      function toggleTheme() {
+        var isDark = document.documentElement.classList.toggle('dark');
+        localStorage.theme = isDark ? 'dark' : 'light';
+      }
+
+
+%body
+  -# --- Modified Navbar ---
+  %nav.navbar.navbar-expand-lg.mb-4
     .container-fluid
-      =yield
-    !=haml :footer
+      -# Logo and Title
+      %a.navbar-brand{href: url_for('/')}
+         %img{src: url_for('/images/oxidizing_40px.png')}
+        Oxidized
 
+      -# Original Toggler (for mobile)
+      %button.navbar-toggler{type: 'button',
+                            :'data-bs-toggle' => 'collapse',
+                            :'data-bs-target' => '#ox-nav',
+                            :'aria-expanded'  => 'false',
+                            :'aria-label'     => 'Toggle navigation',
+                            :'aria-controls'  => '#ox-nav'}
+        %span.navbar-toggler-icon
+
+      -# Navbar Content
+      .collapse.navbar-collapse#ox-nav
+        %ul.navbar-nav.me-auto.mb-1
+          %li.nav-item
+            %a.nav-link{class: request.path_info == '/nodes/stats' ? 'active' : '',
+                        :'aria-current' => request.path_info == '/nodes/stats' ? 'page' : 'false',
+                        href: url_for('/nodes/stats')} Stats
+
+        -# Original Search Form
+        %form.d-flex.me-3{role: 'search',
+                          action: url_for('/nodes/conf_search'),
+                          method: 'post'}
+          %input.form-control.me-2{type: 'text',
+                                    name: 'search_in_conf_textbox',
+                                    placeholder: 'Search in Configs',
+                                    :'aria-label' => 'Search in Configs'}
+          %button.btn.btn-primary{type: 'submit'}
+            %i.bi.bi-search
+          
+        -# New Theme Toggle Button
+        %button.theme-toggle{type: 'button', onclick: 'toggleTheme()'}
+          -# Sun icon (light mode)
+          %svg#theme-icon-dark{xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", "stroke-width": "1.5", stroke: "currentColor"}
+            %path{"stroke-linecap": "round", "stroke-linejoin": "round", d: "M12 3v2.25m6.364.386-1.591 1.591M21 12h-2.25m-.386 6.364-1.591-1.591M12 18.75V21m-6.364-.386 1.591-1.591M12 18.75V21m-6.364-.386 1.591-1.591M3 12H.75m.386-6.364 1.591 1.591M12 12a2.25 2.25 0 0 1-2.25 2.25A2.25 2.25 0 0 1 7.5 12a2.25 2.25 0 0 1 2.25-2.25A2.25 2.25 0 0 1 12 12Z"}
+          -# Moon icon (dark mode)
+          %svg#theme-icon-light{xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", "stroke-width": "1.5", stroke: "currentColor"}
+            %path{"stroke-linecap": "round", "stroke-linejoin": "round", d: "M21.752 15.002A9.72 9.72 0 0 1 18 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 0 0 3 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 0 0 9.002-5.998Z"}
+
+  -# --- Main Content Area ---
+  %main.container-fluid.p-4
+    =yield
+  
+  -# Original Footer
+  !=haml :footer
