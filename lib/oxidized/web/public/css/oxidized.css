@@ -1,59 +1,487 @@
-/* Display status of device in /nodes and /stats */
-.status, .success, .no_connection, .never {
-  float: right;
-  width: 15px;
-  height: 15px;
-  border: 1px solid;
-  margin-right: 70%;
-  margin-bottom: 0px;
-  border-radius: 2px; }
+/* --- 1. Global Light Mode (Default) --- */
+:root {
+  --font-sans: 'Inter', sans-serif;
+  --bg-primary: #f1f5f9;
+  --bg-secondary: #ffffff;
+  --text-primary: #1e293b;
+  --text-secondary: #64748b;
+  --border-color: #e2e8f0;
+  --accent-blue: #2563eb;
+  --accent-blue-hover: #1d4ed8;
+  --table-header-bg: #f8fafc;
+  --table-row-hover: #f1f5f9;
+  --status-success-bg: #dcfce7;
+  --status-success-text: #166534;
+  --status-fail-bg: #fee2e2;
+  --status-fail-text: #991b1b;
+  --status-warn-bg: #fef9c3;
+  --status-warn-text: #854d0e;
+}
 
-.success {
-  background-color: #64FE2E; }
+/* --- 2. Global Dark Mode --- */
+html.dark {
+  --bg-primary: #0f172a;
+  --bg-secondary: #1e293b;
+  --text-primary: #e2e8f0;
+  --text-secondary: #94a3b8;
+  --border-color: #334155;
+  --accent-blue: #3b82f6;
+  --accent-blue-hover: #2563eb;
+  --table-header-bg: #334155;
+  --table-row-hover: #334155;
+  --status-success-bg: #115e32;
+  --status-success-text: #bbf7d0;
+  --status-fail-bg: #7f1d1d;
+  --status-fail-text: #fecaca;
+  --status-warn-bg: #713f12;
+  --status-warn-text: #fef08a;
+}
 
-.no_connection {
-  background-color: #FF0000; }
+/* --- 3. Base Styles --- */
+* {
+  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+}
 
-.never {
-  background-color: #58ACFA; }
+body {
+  font-family: var(--font-sans);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+}
 
-/* node/version/diffs */
-.added {
-  background-color: #DBFFDB; }
+h4 {
+  color: var(--text-primary);
+  font-weight: 600;
+}
 
-.deleted {
-  background-color: #FFDDDD; }
+a {
+  color: var(--accent-blue);
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+html.dark a {
+  color: var(--accent-blue-hover);
+}
+
+/* --- 4. Card Component --- */
+.card {
+  background-color: var(--bg-secondary);
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.1);
+  padding: 1.5rem;
+  border: 0;
+}
+.card-table {
+  background-color: var(--bg-secondary);
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+
+/* --- 5. Diff Views (Renamed & Modernized) --- */
+.versions .diff-view {
+    background-color: var(--bg-secondary);
+    border-radius: 0.75rem; 
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.1);
+    margin-top: 1.5rem;
+    padding: 1.5rem;
+}
+
+.diff-container {
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-radius: 0.5rem;
+  font-family: monospace;
+  overflow-x: auto;
+  background-color: var(--bg-secondary); /* Adapts to dark mode */
+  color: var(--text-primary);            /* Adapts to dark mode */
+  border: 1px solid var(--border-color);
+}
+
+/* Specific text colors for diffs (Standardized naming) */
+.diff-old .added, 
+.diff-new .added { 
+  color: #166534; /* Green */ 
+}
+.diff-old .deleted, 
+.diff-new .deleted { 
+  color: #991b1b; /* Red */ 
+}
+
+html.dark .diff-old .added, 
+html.dark .diff-new .added { 
+  color: #4ade80; /* Lighter Green for Dark Mode */
+}
+html.dark .diff-old .deleted, 
+html.dark .diff-new .deleted { 
+  color: #f87171; /* Lighter Red for Dark Mode */
+}
 
 
-.diff-index {
-  background-color: #FFFF99; }
+/* --- 6. Navbar/Header --- */
+.navbar {
+  background-color: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(1rem);
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.1);
+  border-bottom: 0;
+  position: sticky;
+  top: 0;
+  z-index: 40;
+}
+html.dark .navbar {
+  background-color: rgba(30, 41, 59, 0.6);
+}
 
-.diff-empty {
-  background-color: #F0F0F0; }
+.navbar .navbar-brand {
+  color: var(--text-primary);
+  font-weight: 700;
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.navbar .navbar-brand img {
+  height: 32px;
+  width: auto;
+}
 
-.diffs, .diffs_old, .diffs_new {
-  background-color: #FAFAFA;
-  border: 2px solid #ccc;
-  border-radius: 5px;
-  padding: 3px;
-  font-family: Consolas, "Lucida Console", monospace;
-  white-space: pre; }
+.navbar-nav .nav-link {
+    color: var(--text-primary) !important;
+    font-weight: 500;
+}
+.navbar-nav .nav-link:hover {
+    color: var(--accent-blue) !important;
+}
 
-.diffs_old {
-  float: left;
-  width: 49%;
-  overflow: auto; }
+.theme-toggle {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  background-color: transparent;
+  border: 0;
+}
+.theme-toggle:hover {
+  background-color: #f1f5f9;
+}
+html.dark .theme-toggle:hover {
+  background-color: #334155;
+}
+.theme-toggle svg {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+#theme-icon-light,
+html.dark #theme-icon-dark {
+  display: none;
+}
+html.dark #theme-icon-light {
+  display: block;
+}
 
-.diffs_new {
-  margin-left: 51%;
-  width: 49%;
-  overflow: auto; }
+/* --- 7. Buttons & Inputs --- */
+.btn {
+  font-family: var(--font-sans);
+  border-radius: 0.5rem;
+  font-weight: 600;
+  box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05);
+  transition: all 0.2s ease;
+  transform: scale(1.0);
+}
+.btn:hover {
+  transform: scale(1.05);
+}
 
-.old_version_title {
-  float: left;
-  width: 49%;
-  font-weight: bold; }
+.btn-primary {
+  background-color: var(--accent-blue);
+  border-color: var(--accent-blue);
+  color: white;
+}
+.btn-primary:hover,
+.btn-primary:active,
+.btn-primary:focus {
+  background-color: var(--accent-blue-hover);
+  border-color: var(--accent-blue-hover);
+}
 
-.new_version_title {
-  margin-left: 51%;
-  font-weight: bold; }
+div.dt-buttons .btn-primary {
+  background-color: var(--accent-blue) !important;
+  border-color: var(--accent-blue) !important;
+  color: white !important;
+}
+
+.form-control {
+  border-radius: 0.5rem;
+  border-color: #cbd5e1;
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+}
+html.dark .form-control {
+  border-color: #475569;
+  background-color: #334155;
+  color: var(--text-primary);
+}
+.form-control:focus {
+  box-shadow: 0 0 0 2px var(--accent-blue);
+  border-color: var(--accent-blue);
+  background-color: var(--bg-secondary);
+}
+html.dark .form-control:focus {
+  background-color: #334155;
+  color: var(--text-primary);
+}
+html.dark .form-control::placeholder {
+  color: #94a3b8;
+}
+
+/* --- 8. Table Styles --- */
+div.dataTables_wrapper {
+  padding: 1.5rem;
+}
+html.dark div.dataTables_wrapper {
+  color: var(--text-secondary);
+}
+html.dark .dataTables_length select,
+html.dark .dataTables_filter input {
+  background-color: #334155;
+  border-color: #475569;
+  color: var(--text-primary);
+}
+
+.table {
+  border: 0;
+  color: var(--text-primary);
+}
+.table > :not(caption) > * > * {
+  padding: 0.75rem 1.5rem;
+  background-color: var(--bg-secondary);
+  border-bottom-color: var(--border-color);
+  vertical-align: middle;
+}
+html.dark .table > :not(caption) > * > * {
+  background-color: var(--bg-secondary) !important;
+  border-bottom-color: var(--border-color) !important;
+  color: var(--text-primary) !important;
+}
+
+.table thead th {
+  background-color: var(--table-header-bg);
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  font-weight: 500;
+  border-bottom: 2px solid var(--border-color);
+}
+html.dark .table thead th {
+  background-color: var(--table-header-bg);
+  border-bottom: 2px solid var(--border-color);
+  color: var(--text-secondary);
+}
+
+.table tbody tr:hover > * {
+  background-color: var(--table-row-hover);
+  color: var(--text-primary);
+}
+html.dark .table tbody tr:hover > * {
+  background-color: var(--table-row-hover) !important;
+  color: var(--text-primary) !important;
+}
+
+.table-striped > tbody > tr:nth-of-type(odd) > * {
+  --bs-table-accent-bg: var(--bg-secondary);
+  color: var(--text-primary);
+}
+html.dark .table-striped > tbody > tr:nth-of-type(odd) > * {
+  --bs-table-accent-bg: var(--bg-secondary) !important;
+  color: var(--text-primary) !important;
+}
+
+.table-hover > tbody > tr:hover > * {
+  --bs-table-accent-bg: var(--table-row-hover);
+  color: var(--text-primary);
+}
+html.dark .table-hover > tbody > tr:hover > * {
+  --bs-table-accent-bg: var(--table-row-hover);
+  color: var(--text-primary);
+}
+
+/* --- 9. Status Indicators --- */
+.status-pill {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: capitalize;
+  background-color: var(--table-header-bg) !important;
+  color: var(--text-secondary) !important;
+}
+.status-pill span {
+  visibility: visible !important;
+}
+
+div.status-pill.status-pill-success,
+div.status-pill.status-pill-Success {
+  background-color: var(--status-success-bg) !important;
+  color: var(--status-success-text) !important;
+}
+
+div.status-pill.status-pill-fail,
+div.status-pill.status-pill-Fail {
+  background-color: var(--status-fail-bg) !important;
+  color: var(--status-fail-text) !important;
+}
+
+div.status-pill.status-pill-no_connection {
+  background-color: var(--status-warn-bg) !important;
+  color: var(--status-warn-text) !important;
+}
+
+.table tbody tr.warning > * {
+  background-color: var(--status-warn-bg);
+  color: var(--status-warn-text);
+}
+.table tbody tr.danger > * {
+  background-color: var(--status-fail-bg);
+  color: var(--status-fail-text);
+}
+.table tbody tr.warning:hover > *,
+.table tbody tr.danger:hover > * {
+  background-color: var(--table-row-hover);
+  color: var(--text-primary);
+}
+html.dark .table tbody tr.warning:hover > *,
+html.dark .table tbody tr.danger:hover > * {
+  color: var(--text-primary);
+}
+
+td a.link-dark,
+h4 a.link-dark {
+  color: var(--text-secondary) !important;
+  text-decoration: none;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+}
+td a.link-dark:hover,
+h4 a.link-dark:hover {
+  opacity: 1;
+  color: var(--text-primary) !important;
+}
+html.dark td a.link-dark:hover,
+html.dark h4 a.link-dark:hover {
+  color: var(--text-primary) !important;
+}
+
+/* --- 10. Node Detail Page <pre> block --- */
+.card pre {
+  background-color: var(--table-header-bg);
+  color: var(--text-primary);
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  margin: 0;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+.card code {
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 0.875rem;
+}
+
+/* --- 11. DataTables Pagination Fix --- */
+html.dark .dt-paging-button,
+html.dark .page-link, 
+html.dark .paginate_button {
+    color: var(--text-primary) !important;
+    background-color: var(--bg-secondary) !important;
+    border-color: var(--border-color) !important;
+    background: none !important;
+}
+
+html.dark .dt-paging-button:hover,
+html.dark .page-link:hover,
+html.dark .paginate_button:hover {
+    background-color: var(--table-row-hover) !important;
+    color: #ffffff !important;
+    border-color: var(--border-color) !important;
+    background: none !important;
+}
+
+html.dark .dt-paging-button.current,
+html.dark .page-item.active .page-link,
+html.dark .paginate_button.current {
+    background-color: var(--accent-blue) !important;
+    border-color: var(--accent-blue) !important;
+    color: #ffffff !important;
+    background: none !important;
+}
+
+html.dark .dt-paging-button.disabled,
+html.dark .page-item.disabled .page-link,
+html.dark .paginate_button.disabled {
+    color: var(--text-secondary) !important;
+    background-color: transparent !important;
+    border-color: transparent !important;
+    opacity: 0.5;
+}
+
+/* --- 12. Footer Fix --- */
+.footer {
+    background-color: var(--bg-secondary) !important;
+    color: var(--text-secondary) !important;
+    border-top: 1px solid var(--border-color) !important;
+    width: 100%;
+}
+html.dark .footer, 
+html.dark footer {
+    background-color: var(--bg-secondary) !important;
+    color: var(--text-secondary) !important;
+    border-top-color: var(--border-color) !important;
+}
+
+/* --- 13. DataTables Inputs Fix (Entries & Search) --- */
+html.dark input, 
+html.dark select, 
+html.dark textarea,
+html.dark .form-control,
+html.dark .form-select,
+html.dark .dataTables_wrapper select,
+html.dark .dataTables_wrapper input {
+    background-color: var(--bg-secondary) !important;
+    color: var(--text-primary) !important;
+    border: 1px solid var(--border-color) !important;
+    color-scheme: dark !important;
+}
+
+html.dark select, 
+html.dark .form-select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23e2e8f0' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e") !important;
+    background-repeat: no-repeat !important;
+    background-position: right 0.75rem center !important;
+    background-size: 16px 12px !important;
+    padding-right: 2rem !important;
+}
+
+html.dark select option {
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+}
+
+html.dark input:focus,
+html.dark select:focus,
+html.dark textarea:focus,
+html.dark .form-control:focus,
+html.dark .form-select:focus {
+    box-shadow: 0 0 0 2px var(--accent-blue) !important;
+    border-color: var(--accent-blue) !important;
+    outline: 0 !important;
+    background-color: var(--bg-secondary) !important;
+    color: var(--text-primary) !important;
+}
