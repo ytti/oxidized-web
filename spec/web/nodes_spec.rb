@@ -53,5 +53,12 @@ describe Oxidized::API::WebApp do
       result = JSON.parse(last_response.body)
       _(result.length).must_equal 4
     end
+    it 'shows all nodes of the default group' do
+      get '/nodes/group/default.json'
+
+      _(last_response.ok?).must_equal true
+      result = JSON.parse(last_response.body)
+      _(result.length).must_equal 3
+    end
   end
 end
