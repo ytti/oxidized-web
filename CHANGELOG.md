@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ### Added
 
 ### Changed
+- Dependency on Oxidized => 0.34.1 to support future releases (@robertcheramy)
 
 ### Fixed
 
