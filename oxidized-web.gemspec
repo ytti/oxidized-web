@@ -33,7 +33,8 @@ Gem::Specification.new do |s|
 
   s.add_dependency 'charlock_holmes',     '>= 0.7.5', '< 0.8.0'
   s.add_dependency 'emk-sinatra-url-for', '~> 0.2'
-  s.add_dependency 'haml',                '>= 6.0.0', '< 6.4.0'
+  # haml 7.0 requires ruby >= 3.2, so keep it < 7
+  s.add_dependency 'haml',                '>= 6.0.0', '< 7.0.0'
   s.add_dependency 'htmlentities',        '>= 4.3.0', '< 4.5.0'
   s.add_dependency 'json',                '>= 2.3.0', '< 2.17.0'
   # Only depend on a minimal version of Oxidized so we don't need to
