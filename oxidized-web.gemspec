@@ -43,7 +43,6 @@ Gem::Specification.new do |s|
   s.add_dependency 'sinatra',             '~> 4.1.1'
   s.add_dependency 'sinatra-contrib',     '~> 4.1.1'
 
-  s.add_development_dependency 'bundler',              '~> 2.2'
   s.add_development_dependency 'minitest',             '~> 5.18'
   s.add_development_dependency 'mocha',                '~> 2.1'
   s.add_development_dependency 'rack-test',            '~> 2.1'
