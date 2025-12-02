@@ -41,7 +41,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'oxidized',            '>= 0.34.1'
   s.add_dependency 'puma',                '~> 6.6.0'
   s.add_dependency 'sinatra',             '~> 4.1.1'
-  s.add_dependency 'sinatra-contrib',     '~> 4.1.1'
+  s.add_dependency 'sinatra-contrib',     '>= 4.1.1', '< 4.3.0'
 
   s.add_development_dependency 'minitest',             '~> 5.18'
   s.add_development_dependency 'mocha',                '~> 2.1'
