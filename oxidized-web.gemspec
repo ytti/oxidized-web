@@ -36,12 +36,13 @@ Gem::Specification.new do |s|
   s.add_dependency 'haml',                '>= 6.0.0', '< 6.4.0'
   s.add_dependency 'htmlentities',        '>= 4.3.0', '< 4.4.0'
   s.add_dependency 'json',                '>= 2.3.0', '< 2.14.0'
-  s.add_dependency 'oxidized',            '~> 0.34.1'
+  # Only depend on a minimal version of Oxidized so we don't need to
+  # update the gemspec for new Oxidized releases
+  s.add_dependency 'oxidized',            '>= 0.34.1'
   s.add_dependency 'puma',                '~> 6.6.0'
   s.add_dependency 'sinatra',             '~> 4.1.1'
   s.add_dependency 'sinatra-contrib',     '~> 4.1.1'
 
-  s.add_development_dependency 'bundler',              '~> 2.2'
   s.add_development_dependency 'minitest',             '~> 5.18'
   s.add_development_dependency 'mocha',                '~> 2.1'
   s.add_development_dependency 'rack-test',            '~> 2.1'
