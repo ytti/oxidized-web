@@ -32,7 +32,11 @@ module Oxidized
         value, @json = route_parse params[:splat].first
         @data = nodes.list.select do |node|
           next unless node[params[:filter].to_sym] == value ||
-            (params[:filter].to_sym == :group && node[params[:filter].to_sym].nil? && value.to_sym == :default)
+                      (
+                        params[:filter].to_sym == :group &&
+                        node[params[:filter].to_sym].nil? &&
+                        value.to_sym == :default
+                      )
 
           node[:status] = 'never'
           node[:time]   = 'never'

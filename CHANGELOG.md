@@ -8,13 +8,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ### Added
 
 ### Changed
+- Allow enumeration of nodes contained in the `default` group (@oogali)
 
 ### Fixed
-
-
-## [0.17.2 - 2025-11-28]
-### Changed
-- Allow enumeration of nodes contained in the `default` group (@oogali)
 
 
 ## [0.17.1 – 2025-08-01]
