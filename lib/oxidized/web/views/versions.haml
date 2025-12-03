@@ -30,12 +30,12 @@
             %td
               - params = "node=#{@node}&group=#{@group}&oid=#{x[:oid]}"
               - params = "#{params}&epoch=#{x[:time].to_i}&num=#{nb}"
-              %a.link-dark.link-underline-opacity-0{title: 'configuration',
+              %a.link-body-emphasis.link-underline-opacity-0{title: 'configuration',
                  href: url_for("/node/version/view?#{params}")}
                 %i.bi.bi-cloud-download
               &nbsp;&nbsp;
               - if nb > 1
-                %a.link-dark.link-underline-opacity-0{title: 'Compare with previous version', href: url_for("/node/version/diffs?#{params}")}
+                %a.link-body-emphasis.link-underline-opacity-0{title: 'Compare with previous version', href: url_for("/node/version/diffs?#{params}")}
                   %i.bi.bi-file-earmark-diff
 
 :javascript
