@@ -3,14 +3,15 @@
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
-## [Unreleased]
+## [0.18.0 – 2025-12-03]
+It's finally here - dark mode. Enjoy!
 
 ### Added
 - Support for dark mode (@robertcheramy)
 
 ### Changed
 - Dependency on Oxidized => 0.34.1 to support future Oxidized releases (@robertcheramy)
-- Update weblibs to the latest versions (@robertcheramy)
+- Update web libraries to the latest versions (@robertcheramy)
 - Allow latest gems versions (@robertcheramy)
 - Limit Haml gem to < 7.0.0, as it doesn't support Ruby 3.1 (@robertcheramy)
 - Allow enumeration of nodes contained in the `default` group (@oogali)
