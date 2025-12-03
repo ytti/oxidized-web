@@ -152,7 +152,7 @@ Upload the release branch to github, make a Pull Request for it.
 6. Install an test the gem locally
 ```shell
 gem install --user-install pkg/oxidized-web-0.xx.yy.gem
-~/.local/share/gem/ruby/3.1.0/bin/oxidized
+~/.local/share/gem/ruby/3.3.0/bin/oxidized
 ```
 
 ## Release in github
@@ -162,7 +162,7 @@ git push origin 0.xx.yy
 ```
 
 Make a release from the tag in github.
-- Take the release notes frm CHANGELOG.md
+- Take the release notes from CHANGELOG.md
 - List new contributors (generated automatically)
 - Keep the Full Changelog (generated automatically)
 
@@ -174,7 +174,7 @@ Push the gem with ‘rake push’
 You need an account at rubygems which is allowed to push oxidized
 
 ## Release in docker.io
-In order to release in docker.io, oxidized be released to a new version,
+In order to release in docker.io, oxidized has to be released to a new version,
 as the container is build there.
 
 ## Update CHANGELOG.md for next release
