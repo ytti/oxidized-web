@@ -9,31 +9,41 @@
   border-radius: 2px; }
 
 .success {
-  background-color: #64FE2E; }
+  background-color: var(--bs-success);
+}
 
 .no_connection {
-  background-color: #FF0000; }
+  background-color: var(--bs-danger);
+}
 
 .never {
-  background-color: #58ACFA; }
+  background-color: var(--bs-info);
+}
 
 /* node/version/diffs */
 .added {
-  background-color: #DBFFDB; }
+  background-color: var(--bs-success-bg-subtle);
+  color: var(--bs-success-text-emphasis);
+}
 
 .deleted {
-  background-color: #FFDDDD; }
-
+  background-color: var(--bs-danger-bg-subtle);
+  color: var(--bs-danger-text-emphasis);
+}
 
 .diff-index {
-  background-color: #FFFF99; }
+  background-color: var(--bs-warning-bg-subtle);
+  color: var(--bs-warning-text-emphasis);
+}
 
 .diff-empty {
-  background-color: #F0F0F0; }
+  background-color: var(--bs-secondary-bg);
+  color: var(--bs-secondary-color);
+}
 
 .diffs, .diffs_old, .diffs_new {
-  background-color: #FAFAFA;
-  border: 2px solid #ccc;
+  background-color: var(--bs-body-bg);
+  border: 2px solid var(--bs-border-color);
   border-radius: 5px;
   padding: 3px;
   font-family: Consolas, "Lucida Console", monospace;
@@ -56,4 +66,5 @@
 
 .new_version_title {
   margin-left: 51%;
-  font-weight: bold; }
+  font-weight: bold;
+}
