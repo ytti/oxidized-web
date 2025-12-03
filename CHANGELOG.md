@@ -12,6 +12,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Update weblibs to the latest versions (@robertcheramy)
 - Allow latest gems versions (@robertcheramy)
 - Limit Haml gem to < 7.0.0, as it doesn't support Ruby 3.1 (@robertcheramy)
+- Allow enumeration of nodes contained in the `default` group (@oogali)
 
 ### Fixed
 - Remove redundant dependency on bundler producing a CI failure on ruby-head (@robertcheramy)
