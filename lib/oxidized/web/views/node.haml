@@ -5,13 +5,13 @@
       %span /
       =@data[:name]
       &nbsp;
-      %a.link-dark.link-underline-opacity-0{title: 'configuration',
+      %a.link-body-emphasis.link-underline-opacity-0{title: 'configuration',
         href: url_for("/node/fetch/#{@data[:full_name]}")}
         %i.bi.bi-cloud-download
-      %a.link-dark.link-underline-opacity-0{title: 'versions',
+      %a.link-body-emphasis.link-underline-opacity-0{title: 'versions',
         href: url_for("/node/version?node_full=#{@data[:full_name]}")}
         %i.bi.bi-stack
-      %a.link-dark.link-underline-opacity-0{title: 'update',
+      %a.link-body-emphasis.link-underline-opacity-0{title: 'update',
         href: url_for("/node/next/#{@data[:full_name]}")}
         %i.bi.bi-repeat
     %pre.bg-body-tertiary.border.border-secondary-subtle.rounded

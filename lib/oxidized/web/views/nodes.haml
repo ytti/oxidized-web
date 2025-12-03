@@ -45,15 +45,15 @@
             %td.time{ epoch: node[:time].to_i }= node[:time]
             %td.time{ epoch: node[:mtime].to_i }= node[:mtime]
             %td
-              %a.link-dark.link-underline-opacity-0{title: 'Configuration',
+              %a.link-body-emphasis.link-underline-opacity-0{title: 'Configuration',
                   href: url_for("/node/fetch/#{node[:full_name]}")}
                 %i.bi.bi-cloud-download
               &nbsp;&nbsp;
-              %a.link-dark.link-underline-opacity-0{title: 'Versions',
+              %a.link-body-emphasis.link-underline-opacity-0{title: 'Versions',
                 href: url_for("/node/version?node_full=#{node[:full_name]}")}
                 %i.bi.bi-stack
               &nbsp;&nbsp;
-              %a.link-dark.link-underline-opacity-0{title: 'Update configuration',
+              %a.link-body-emphasis.link-underline-opacity-0{title: 'Update configuration',
                 href: url_for("/node/next/#{node[:full_name]}")}
                 %i.bi.bi-repeat
 
