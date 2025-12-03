@@ -5,7 +5,7 @@
 
 # How to run / develop oxidized-web from git
 ## Using the latest oxidized package
-When you develop oxidized-web, it is quite simple to run it from git. As it depends on oxidized,
+When you develop oxidized-web, it is simple to run it from git. As it depends on oxidized,
 oxidized will be included in `bundle install`, and you just have to run `bundle exec oxidized`.
 You need bundler, if not installed yet. On debian-based systems, you can run `sudo apt install ruby-bundler` to install it.
 
@@ -60,12 +60,12 @@ bundle exec oxidized
 ```
 
 
-# Update the weblibs
-The weblibs are beeing downloaded and maintained by `npm`.
+# Update the Web Libraries
+The web libraries are downloaded and managed with `npm`.
 
-Run `npm install` to download the weblibs. They will be stored under
-`node_modules`.
-The file `package-lock.json` (wich is tracked in git) ensures that every
+Run `npm install` to download the web libraries. They will be stored under
+`/node_modules`.
+The file `package-lock.json` (which is tracked in git) ensures that every
 developer gets the same versions.
 
 Run `npm outdated` to get a list of new releases:
@@ -76,11 +76,11 @@ Package             Current  Wanted  Latest  Location                         De
 datatables.net-bs5    2.0.7   2.0.8   2.0.8  node_modules/datatables.net-bs5  oxidized-web
 ```
 
-Run `npm update` to get the latest releases. They still are not used
+Run `npm update` to get the latest releases. They still are not used by
 oxidzed-web. Run `rake weblibs` to sync `node_modules` with
 `lib/oxidized/web/public/weblibs`.
 
-Test, and commit the changes to the weblibs **and** package-lock.json. Don't
+Test, and commit the changes to the web libraries **and** package-lock.json. Don't
 forget to document your changes in CHANGELOG.md.
 
 # How to release a new version of Oxidized-web?
@@ -111,7 +111,7 @@ bundle outaded
 
 Test again after updating!
 
-## Update the weblibs to the latest versions
+## Update the web libraries to the latest versions
 ```
 npm outdated
 ```
@@ -125,15 +125,17 @@ Run `bundle exec rake chmod`
 Run `bundle exec rake` on the git repository to check the code against rubocop
 and run the defined tests in `/spec`.
 
-Run Oxidized-web from git against the latest Oxidized version `bundle exec oxdized`
+Run Oxidized-web from git against the latest Oxidized version `bundle exec oxidized`
 
 When testing the web application, open the javascript console in the browser to
 see any errors.
 
 ## Bump the version
 Update CHANGELOG.md:
-- review it
-- add release notes
+- review it.
+- add release notes.
+- look into the next Milestone and inform about important issues planned for
+  next release.
 - set the new version (replace `[Unreleased]` with `[0.xx.yy – 202Y-MM-DD]`)
 
 Change the version in `lib/oxidized/web/version.rb`
