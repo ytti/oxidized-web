@@ -36,7 +36,7 @@ Gem::Specification.new do |s|
   # haml 7.0 requires ruby >= 3.2, so keep it < 7
   s.add_dependency 'haml',                '>= 6.0.0', '< 7.0.0'
   s.add_dependency 'htmlentities',        '>= 4.3.0', '< 4.5.0'
-  s.add_dependency 'json',                '>= 2.3.0', '< 2.18.0'
+  s.add_dependency 'json',                '>= 2.3.0', '< 2.19.0'
   # Only depend on a minimal version of Oxidized so we don't need to
   # update the gemspec for new Oxidized releases
   s.add_dependency 'oxidized',            '>= 0.34.1'
