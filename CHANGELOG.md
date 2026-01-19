@@ -8,6 +8,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ### Added
 
 ### Changed
+- Reintroduce support for ruby 3.0 / see Oxidized Issue #3688 (@robertcheramy)
+- Update web libraries to the latest versions (@robertcheramy)
+- Fix Gem policy to automatic update minor versions (@robertcheramy)
 
 ### Fixed
 
