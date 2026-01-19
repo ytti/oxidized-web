@@ -104,7 +104,7 @@ It is nicer to read in a GUI, so you can use something like
 
 ## Update the gem dependencies to the latest versions
 ```
-bundle outaded
+bundle outdated
 bundle update
 bundle outaded
 ```
