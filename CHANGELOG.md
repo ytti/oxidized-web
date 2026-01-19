@@ -3,16 +3,13 @@
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
-## [Unreleased]
-
-### Added
+## [0.18.1 – 2026-01-19]
+Maintenance release to update dependencies.
 
 ### Changed
 - Reintroduce support for ruby 3.0 / see Oxidized Issue #3688 (@robertcheramy)
 - Update web libraries to the latest versions (@robertcheramy)
 - Fix Gem policy to automatic update minor versions (@robertcheramy)
-
-### Fixed
 
 
 ## [0.18.0 – 2025-12-03]

@@ -35,6 +35,8 @@ Gem::Specification.new do |s|
 
   s.add_dependency 'charlock_holmes',     '~> 0.7'
   s.add_dependency 'emk-sinatra-url-for', '~> 0.2'
+  # HAML 7.0.0 changed default attr_quote from ' to ".
+  # Updating needs the unit tests to be fixed.
   s.add_dependency 'haml',                '>= 6', '<7'
   s.add_dependency 'htmlentities',        '~> 4.3'
   s.add_dependency 'json',                '~> 2.3'
@@ -45,8 +47,8 @@ Gem::Specification.new do |s|
   s.add_dependency 'sinatra',             '~> 4.1'
   s.add_dependency 'sinatra-contrib',     '~> 4.1'
 
-  s.add_development_dependency 'minitest',             '~> 5.18'
-  s.add_development_dependency 'mocha',                '~> 3.0'
+  s.add_development_dependency 'minitest',             '>= 5.18', '<7'
+  s.add_development_dependency 'mocha',                '>= 2.1', '<4'
   s.add_development_dependency 'rack-test',            '~> 2.1'
   s.add_development_dependency 'rails_best_practices', '~> 1.19'
   s.add_development_dependency 'rake',                 '~> 13.0'
