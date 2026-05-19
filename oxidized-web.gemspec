@@ -56,7 +56,7 @@ Gem::Specification.new do |s|
   # updates to patches
   s.add_development_dependency 'rubocop',              '~> 1.84.2'
   s.add_development_dependency 'rubocop-minitest',     '~> 0.38.0'
-  s.add_development_dependency 'rubocop-rails',        '~> 2.34.2'
+  s.add_development_dependency 'rubocop-rails',        '~> 2.35.1'
   s.add_development_dependency 'rubocop-rake',         '~> 0.7.1'
   s.add_development_dependency 'simplecov',            '~> 0.22'
   s.add_development_dependency 'simplecov-html',       '~> 0.13'
