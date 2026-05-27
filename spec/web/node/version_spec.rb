@@ -150,7 +150,7 @@ describe Oxidized::API::WebApp do
                        "+changed line new2\n " \
                        "\n " \
                        "unchanged line\n",
-               stat: [1, 2] }
+                stat: [1, 2] }
 
       @nodes.expects(:version).with('sw5', nil).returns(@versions)
       @nodes.expects(:get_diff).returns(@diff)
