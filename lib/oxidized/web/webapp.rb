@@ -201,9 +201,9 @@ module Oxidized
             @info[:num2] = num
             break
           end
-          @data = nodes.get_diff node, @info[:group], @info[:oid], oid2
+          @data = nodes.get_diff node, group, @info[:oid], oid2
         else
-          @data = nodes.get_diff node, @info[:group], @info[:oid], nil
+          @data = nodes.get_diff node, group, @info[:oid], nil
         end
         @stat = %w[null null]
         if @data != 'no diffs' && !@data.nil?
