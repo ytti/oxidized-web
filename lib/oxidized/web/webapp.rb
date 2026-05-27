@@ -160,13 +160,13 @@ module Oxidized
         node, @json = route_parse :node
         @info = {
           node: node,
-          group: params[:group],
+          group: params[:group] || '',
           oid: params[:oid],
           time: Time.at(params[:epoch].to_i),
           num: params[:num]
         }
 
-        the_data = nodes.get_version node, @info[:group], @info[:oid]
+        the_data = nodes.get_version node, @info[:group].empty? ? nil : @info[:group], @info[:oid]
         if %w[json text].include?(params[:format])
           @data = the_data
         else
@@ -181,7 +181,7 @@ module Oxidized
         node, @json = route_parse :node
         @data = nil
         @info = { node: node,
-                  group: params[:group],
+                  group: params[:group] || '',
                   oid: params[:oid],
                   time: Time.at(params[:epoch].to_i),
                   num: params[:num],
