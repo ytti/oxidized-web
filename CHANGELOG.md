@@ -10,6 +10,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ### Changed
 
 ### Fixed
+- Fix `NoMethodError` when `group=` param is absent from `/node/version/view` and `/node/version/diffs` requests. `params[:group]` was assigned directly to `@info[:group]`; the HAML templates and `get_diff` calls then called methods on `nil`. Normalise to `''` on input and pass `nil` to the oxidized backend where required (@makaiver)
 
 
 ## [0.18.1 – 2026-01-19]
