@@ -71,11 +71,18 @@ describe Oxidized::API::WebApp do
           "2025-02-05 19:49:00 +0100</td>\n"
         )).must_equal true
     end
+
+    it 'returns 200 when node_full is absent (no NoMethodError)' do
+      @nodes.expects(:version).with('', nil).returns([])
+
+      get '/node/version'
+      _(last_response.ok?).must_equal true
+    end
   end
 
   describe 'get /node/version/view.?:format?' do
     it 'fetches a previous version from git' do
-      @nodes.expects(:get_version).with('sw5', '', 'c8aa93cab5').returns('Old configuration of sw5')
+      @nodes.expects(:get_version).with('sw5', nil, 'c8aa93cab5').returns('Old configuration of sw5')
 
       get '/node/version/view?node=sw5&group=&oid=c8aa93cab5&epoch=1738781340&num=2'
       _(last_response.ok?).must_equal true
@@ -90,7 +97,7 @@ describe Oxidized::API::WebApp do
     end
 
     it 'does not display binary content' do
-      @nodes.expects(:get_version).with('sw5', '', 'c8aa93cab5').returns("\xff\x42 binary content\x00")
+      @nodes.expects(:get_version).with('sw5', nil, 'c8aa93cab5').returns("\xff\x42 binary content\x00")
 
       get '/node/version/view?node=sw5&group=&oid=c8aa93cab5&epoch=1738781340&num=2'
       _(last_response.ok?).must_equal true
@@ -107,7 +114,7 @@ describe Oxidized::API::WebApp do
 
     it 'does not encode html-chars in text-format' do
       configuration = "text &/<> \n ascii;"
-      @nodes.expects(:get_version).with('sw5', '', 'c8aa93cab5').returns(configuration)
+      @nodes.expects(:get_version).with('sw5', nil, 'c8aa93cab5').returns(configuration)
       get '/node/version/view?node=sw5&group=&oid=c8aa93cab5&epoch=1738781340&num=2&format=text'
 
       _(last_response.ok?).must_equal true
@@ -116,7 +123,7 @@ describe Oxidized::API::WebApp do
 
     it 'does not encode html-chars in json-format' do
       configuration = "text &/<> \n ascii;"
-      @nodes.expects(:get_version).with('sw5', '', 'c8aa93cab5').returns(configuration)
+      @nodes.expects(:get_version).with('sw5', nil, 'c8aa93cab5').returns(configuration)
       get '/node/version/view?node=sw5&group=&oid=c8aa93cab5&epoch=1738781340&num=2&format=json'
 
       _(last_response.ok?).must_equal true
