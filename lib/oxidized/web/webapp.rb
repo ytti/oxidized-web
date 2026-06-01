@@ -65,13 +65,21 @@ module Oxidized
       end
 
       post '/nodes/conf_search.?:format?' do
-        @to_research = Regexp.new params[:search_in_conf_textbox]
-        nodes_list = nodes.list.map
+        search_term = params[:search_in_conf_textbox].to_s
         @nodes_match = []
-        nodes_list.each do |n|
-          node, @json = route_parse n[:name]
-          config = nodes.fetch node, n[:group]
-          @nodes_match.push({ node: n[:name], full_name: n[:full_name] }) if config[@to_research]
+        unless search_term.empty?
+          begin
+            @to_research = Regexp.new search_term
+          rescue RegexpError
+            @to_research = nil
+          end
+          if @to_research
+            nodes.list.map.each do |n|
+              node, @json = route_parse n[:name]
+              config = nodes.fetch node, n[:group]
+              @nodes_match.push({ node: n[:name], full_name: n[:full_name] }) if config[@to_research]
+            end
+          end
         end
         @data = @nodes_match
         out :conf_search
@@ -142,7 +150,7 @@ module Oxidized
         @data = nil
         @group = nil
         @node = nil
-        node_full = params[:node_full]
+        node_full = params[:node_full].to_s
         if node_full.include? '/'
           node_full = node_full.rpartition("/")
           @group = node_full[0]
@@ -254,7 +262,7 @@ module Oxidized
         e = if param.respond_to?(:to_str)
               param.split '.'
             else
-              params[param].split '.'
+              params[param].to_s.split '.'
             end
         if e.last == 'json'
           e.pop
