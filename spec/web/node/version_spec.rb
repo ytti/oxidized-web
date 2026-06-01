@@ -71,11 +71,18 @@ describe Oxidized::API::WebApp do
           "2025-02-05 19:49:00 +0100</td>\n"
         )).must_equal true
     end
+
+    it 'returns 200 when node_full is absent (no NoMethodError)' do
+      @nodes.expects(:version).with('', nil).returns([])
+
+      get '/node/version'
+      _(last_response.ok?).must_equal true
+    end
   end
 
   describe 'get /node/version/view.?:format?' do
     it 'fetches a previous version from git' do
-      @nodes.expects(:get_version).with('sw5', '', 'c8aa93cab5').returns('Old configuration of sw5')
+      @nodes.expects(:get_version).with('sw5', nil, 'c8aa93cab5').returns('Old configuration of sw5')
 
       get '/node/version/view?node=sw5&group=&oid=c8aa93cab5&epoch=1738781340&num=2'
       _(last_response.ok?).must_equal true
@@ -90,7 +97,7 @@ describe Oxidized::API::WebApp do
     end
 
     it 'does not display binary content' do
-      @nodes.expects(:get_version).with('sw5', '', 'c8aa93cab5').returns("\xff\x42 binary content\x00")
+      @nodes.expects(:get_version).with('sw5', nil, 'c8aa93cab5').returns("\xff\x42 binary content\x00")
 
       get '/node/version/view?node=sw5&group=&oid=c8aa93cab5&epoch=1738781340&num=2'
       _(last_response.ok?).must_equal true
@@ -107,7 +114,7 @@ describe Oxidized::API::WebApp do
 
     it 'does not encode html-chars in text-format' do
       configuration = "text &/<> \n ascii;"
-      @nodes.expects(:get_version).with('sw5', '', 'c8aa93cab5').returns(configuration)
+      @nodes.expects(:get_version).with('sw5', nil, 'c8aa93cab5').returns(configuration)
       get '/node/version/view?node=sw5&group=&oid=c8aa93cab5&epoch=1738781340&num=2&format=text'
 
       _(last_response.ok?).must_equal true
@@ -116,11 +123,19 @@ describe Oxidized::API::WebApp do
 
     it 'does not encode html-chars in json-format' do
       configuration = "text &/<> \n ascii;"
-      @nodes.expects(:get_version).with('sw5', '', 'c8aa93cab5').returns(configuration)
+      @nodes.expects(:get_version).with('sw5', nil, 'c8aa93cab5').returns(configuration)
       get '/node/version/view?node=sw5&group=&oid=c8aa93cab5&epoch=1738781340&num=2&format=json'
 
       _(last_response.ok?).must_equal true
       _(last_response.body).must_equal '["text &/<> \n"," ascii;"]'
+    end
+
+    it 'returns 200 when group param is absent (no NoMethodError)' do
+      @nodes.expects(:get_version).with('sw5', nil, 'c8aa93cab5').returns('Old configuration of sw5')
+
+      get '/node/version/view?node=sw5&oid=c8aa93cab5&epoch=1738781340&num=2'
+      _(last_response.ok?).must_equal true
+      _(last_response.body.include?('Old configuration of sw5')).must_equal true
     end
   end
 
@@ -156,6 +171,36 @@ describe Oxidized::API::WebApp do
           "<span class='time' epoch='1738781340'>" \
           "#{Time.at(1738781340)}</span>"
         )).must_equal true
+    end
+
+    it 'returns 200 when group param is absent (no NoMethodError)' do
+      @versions = [
+        { oid: "C006", time: Time.parse("2025-02-05 19:49:00 +0100") },
+        { oid: "C003", time: Time.parse("2025-02-05 19:03:00 +0100") }
+      ]
+      @diff = { patch: "diff --git a/sw5 b/sw5\nsome diff\n", stat: [1, 1] }
+
+      @nodes.expects(:version).with('sw5', nil).returns(@versions)
+      @nodes.expects(:get_diff).with('sw5', nil, 'C006', nil).returns(@diff)
+
+      get '/node/version/diffs?node=sw5&oid=C006&epoch=1738781340&num=2'
+      _(last_response.ok?).must_equal true
+    end
+
+    it 'passes nil group to get_diff for ungrouped nodes' do
+      @versions = [
+        { oid: "C006", time: Time.parse("2025-02-05 19:49:00 +0100") },
+        { oid: "C003", time: Time.parse("2025-02-05 19:03:00 +0100") }
+      ]
+      @diff = { patch: "diff --git a/sw5 b/sw5\nsome diff\n", stat: [1, 1] }
+
+      # Explicitly assert nil is passed, not '' — empty string would resolve
+      # to wrong git path in oxidized's yield_repo_and_path
+      @nodes.expects(:version).with('sw5', nil).returns(@versions)
+      @nodes.expects(:get_diff).with('sw5', nil, 'C006', nil).returns(@diff)
+
+      get '/node/version/diffs?node=sw5&oid=C006&epoch=1738781340&num=2'
+      _(last_response.ok?).must_equal true
     end
   end
 end
