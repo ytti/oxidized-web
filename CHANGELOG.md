@@ -6,10 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ## [Unreleased]
 
 ### Added
+- Security regression tests for XSS prevention in node name, version, and diff views (@mattimustang)
 
 ### Changed
 
 ### Fixed
+- Fix XSS vulnerability (CWE-79) by enabling HAML's escape_html globally; user-controlled values in node names, group names, model names, and URL parameters are now HTML-escaped in all templates (@mattimustang)
 
 
 ## [0.18.1 – 2026-01-19]

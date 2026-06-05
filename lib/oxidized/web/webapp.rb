@@ -11,7 +11,7 @@ module Oxidized
     class WebApp < Sinatra::Base
       helpers Sinatra::UrlForHelper
       set :public_folder, proc { File.join(root, 'public') }
-      set :haml, { escape_html: false }
+      set :haml, { escape_html: true }
 
       get '/' do
         redirect url_for('/nodes')
