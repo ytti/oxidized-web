@@ -23,6 +23,7 @@
           %form.d-flex{role: 'search',
                       action: url_for('/nodes/conf_search'),
                       method: 'post'}
+            %input{type: 'hidden', name: 'authenticity_token', value: Rack::Protection::AuthenticityToken.token(session)}
             %input.form-control.me-2{type: 'text',
                                       name: 'search_in_conf_textbox',
                                       placeholder: 'Search in Configs',
