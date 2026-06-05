@@ -4,6 +4,9 @@ require 'sinatra/url_for'
 require 'tilt/haml'
 require 'htmlentities'
 require 'charlock_holmes'
+require 'rack/session'
+require 'rack/protection'
+require 'securerandom'
 module Oxidized
   module API
     require 'oxidized/web/version'
@@ -12,6 +15,13 @@ module Oxidized
       helpers Sinatra::UrlForHelper
       set :public_folder, proc { File.join(root, 'public') }
       set :haml, { escape_html: false }
+
+      use Rack::Session::Cookie,
+          key:       'rack.session',
+          secret:    SecureRandom.hex(32),
+          same_site: :strict,
+          http_only: true
+      use Rack::Protection::AuthenticityToken unless ENV['APP_ENV'] == 'test'
 
       get '/' do
         redirect url_for('/nodes')
