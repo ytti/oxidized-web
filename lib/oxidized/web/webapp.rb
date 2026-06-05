@@ -4,6 +4,7 @@ require 'sinatra/url_for'
 require 'tilt/haml'
 require 'htmlentities'
 require 'charlock_holmes'
+require 'timeout'
 module Oxidized
   module API
     require 'oxidized/web/version'
@@ -65,13 +66,23 @@ module Oxidized
       end
 
       post '/nodes/conf_search.?:format?' do
-        @to_research = Regexp.new params[:search_in_conf_textbox]
+        begin
+          @to_research = Regexp.new(params[:search_in_conf_textbox])
+        rescue RegexpError => e
+          halt 400, "Invalid regular expression: #{e.message}"
+        end
         nodes_list = nodes.list.map
         @nodes_match = []
         nodes_list.each do |n|
           node, @json = route_parse n[:name]
           config = nodes.fetch node, n[:group]
-          @nodes_match.push({ node: n[:name], full_name: n[:full_name] }) if config[@to_research]
+          begin
+            Timeout.timeout(2) do
+              @nodes_match.push({ node: n[:name], full_name: n[:full_name] }) if config[@to_research]
+            end
+          rescue Timeout::Error
+            next
+          end
         end
         @data = @nodes_match
         out :conf_search

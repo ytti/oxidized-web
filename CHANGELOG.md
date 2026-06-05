@@ -10,6 +10,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ### Changed
 
 ### Fixed
+- Fix ReDoS vulnerability in `/nodes/conf_search`: invalid patterns now return HTTP 400 instead
+  of an unhandled exception, and per-node regex evaluation is wrapped in a 2-second timeout
+  so a crafted pattern cannot hang a Puma worker thread indefinitely (CWE-1333)
 
 
 ## [0.18.1 – 2026-01-19]
