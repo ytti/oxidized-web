@@ -28,7 +28,7 @@
             %td.time{ epoch: x[:time].to_i }= x[:time]
             %td #{time_from_now x[:time]}
             %td
-              - params = "node=#{@node}&group=#{@group}&oid=#{x[:oid]}"
+              - params = "node=#{url_param @node}&group=#{url_param @group}&oid=#{url_param x[:oid]}"
               - params = "#{params}&epoch=#{x[:time].to_i}&num=#{nb}"
               %a.link-body-emphasis.link-underline-opacity-0{title: 'configuration',
                  href: url_for("/node/version/view?#{params}")}

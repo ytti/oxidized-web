@@ -158,4 +158,21 @@ describe Oxidized::API::WebApp do
         )).must_equal true
     end
   end
+
+  describe 'post /node/version/diffs' do
+    # issue #396: selecting a second version to compare failed when the node
+    # name contained spaces/brackets, because the POST handler built the
+    # redirect URL by raw string interpolation. The redirect must be encoded.
+    it 'url-encodes node names with special characters in the redirect' do
+      post '/node/version/diffs',
+           node: 'router1 [192.168.1.1]', group: '', oid: 'C006',
+           epoch: '1738781340', num: '3', oid2: 'C003'
+
+      _(last_response.status).must_equal 302
+      location = last_response.headers['Location']
+      _(location.include?('node=router1+%5B192.168.1.1%5D')).must_equal true
+      _(location.include?('router1 [')).must_equal false
+      _(location.include?('oid2=C003')).must_equal true
+    end
+  end
 end

@@ -218,7 +218,9 @@ module Oxidized
 
       # used for diff between 2 distant commit
       post '/node/version/diffs' do
-        redirect url_for("/node/version/diffs?node=#{params[:node]}&group=#{params[:group]}&oid=#{params[:oid]}&epoch=#{params[:epoch]}&num=#{params[:num]}&oid2=#{params[:oid2]}")
+        redirect url_for("/node/version/diffs?node=#{url_param params[:node]}&group=#{url_param params[:group]}" \
+                         "&oid=#{url_param params[:oid]}&epoch=#{url_param params[:epoch]}" \
+                         "&num=#{url_param params[:num]}&oid2=#{url_param params[:oid2]}")
       end
 
       # Taken von Haml 5.0, so it still works in 6.0
@@ -261,6 +263,13 @@ module Oxidized
           json = true
         end
         [e.join('.'), json]
+      end
+
+      # URL-encode a query-string value so node names containing spaces or other
+      # special characters (e.g. "router1 [192.168.1.1]") survive the round-trip
+      # through generated links and redirects. See issue #396.
+      def url_param(value)
+        Rack::Utils.escape(value.to_s)
       end
 
       # give the time elapsed between now and a date (Time object)

@@ -20,7 +20,7 @@
 
 .row
   .col-sm-6
-    - params = "node=#{@info[:node]}&group=#{@info[:group]}&oid=#{@info[:oid]}"
+    - params = "node=#{url_param @info[:node]}&group=#{url_param @info[:group]}&oid=#{url_param @info[:oid]}"
     - params = "#{params}&epoch=#{@info[:time].to_i}&num=#{@info[:num]}"
     %form{action: url_for("/node/version/diffs?#{params}"), method: 'post', role: 'form'}
       .form-group
