@@ -10,7 +10,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ### Changed
 
 ### Fixed
-- Fix version comparison for nodes whose name contains spaces or other special characters (e.g. `router1 [192.168.1.1]`): the diff redirect and links now URL-encode the node name / see issue #396
+- URL-encode node names in web UI links and redirects, so nodes whose name contains spaces, `+`, brackets or other special characters (e.g. `router1 [192.168.1.1]`, `router1+(test123+)`) work on the version/diff pages / see issues #396 and #414
 
 
 ## [0.18.1 – 2026-01-19]

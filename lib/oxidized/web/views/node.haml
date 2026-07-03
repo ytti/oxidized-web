@@ -9,7 +9,7 @@
         href: url_for("/node/fetch/#{@data[:full_name]}")}
         %i.bi.bi-cloud-download
       %a.link-body-emphasis.link-underline-opacity-0{title: 'versions',
-        href: url_for("/node/version?node_full=#{@data[:full_name]}")}
+        href: url_for("/node/version?node_full=#{url_param @data[:full_name]}")}
         %i.bi.bi-stack
       %a.link-body-emphasis.link-underline-opacity-0{title: 'update',
         href: url_for("/node/next/#{@data[:full_name]}")}

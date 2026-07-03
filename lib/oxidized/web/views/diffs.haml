@@ -5,7 +5,7 @@
         - node_full = "#{@info[:group]}/#{@info[:node]}"
       - else
         - node_full = "#{@info[:node]}"
-      %a{href: url_for("/node/version?node_full=#{node_full}")} versions
+      %a{href: url_for("/node/version?node_full=#{url_param node_full}")} versions
       \/ Diff version #{@info[:num]} - #{@info[:num2]} for node
       %b #{@info[:node]}
 .row
