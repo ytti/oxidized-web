@@ -65,15 +65,35 @@ module Oxidized
       end
 
       post '/nodes/conf_search.?:format?' do
-        @to_research = Regexp.new params[:search_in_conf_textbox]
-        nodes_list = nodes.list.map
+        @search_term = params[:search_in_conf_textbox].to_s
+        redirect url_for('/nodes') if @search_term.empty?
+
+        # regex search is the default; the search form on the results page
+        # sends 'off' (via a hidden field) when the checkbox is unticked
+        @regex_search = params[:search_regex_checkbox] != 'off'
         @nodes_match = []
-        nodes_list.each do |n|
-          node, @json = route_parse n[:name]
-          config = nodes.fetch node, n[:group]
-          @nodes_match.push({ node: n[:name], full_name: n[:full_name] }) if config[@to_research]
+        begin
+          pattern = @regex_search ? @search_term : Regexp.escape(@search_term)
+          @to_research = Regexp.new pattern
+        rescue RegexpError => e
+          @error = "Invalid regular expression: #{e.message}"
         end
-        @data = @nodes_match
+
+        if @error
+          status 400
+          @data = { error: @error }
+        else
+          nodes.list.each do |n|
+            node, @json = route_parse n[:name]
+            config = convert_to_utf8 nodes.fetch(node, n[:group]).to_s
+            matches = config_search_matches config, @to_research
+            next if matches.empty?
+
+            @nodes_match.push({ node: n[:name], full_name: n[:full_name],
+                                matches: matches })
+          end
+          @data = @nodes_match
+        end
         out :conf_search
       end
 
@@ -225,6 +245,9 @@ module Oxidized
       HTML_ESCAPE = { '&' => '&amp;', '<' => '&lt;', '>' => '&gt;', '"' => '&quot;', "'" => '&#39;' }.freeze
       HTML_ESCAPE_ONCE_REGEX = /['"><]|&(?!(?:[a-zA-Z]+|#(?:\d+|[xX][0-9a-fA-F]+));)/
 
+      # lines of context shown around each config search match
+      CONF_SEARCH_CONTEXT_LINES = 2
+
       private
 
       def out(template = :text)
@@ -261,6 +284,60 @@ module Oxidized
           json = true
         end
         [e.join('.'), json]
+      end
+
+      # give one entry per line of config matching regexp, with the 1-based
+      # line number and a snippet of the line surrounded by up to
+      # CONF_SEARCH_CONTEXT_LINES lines of context on each side
+      def config_search_matches(config, regexp)
+        lines = config.lines.map(&:chomp)
+        matches = []
+        lines.each_with_index do |line, index|
+          next unless line.match?(regexp)
+
+          from = [index - CONF_SEARCH_CONTEXT_LINES, 0].max
+          to = [index + CONF_SEARCH_CONTEXT_LINES, lines.length - 1].min
+          snippet = (from..to).map do |i|
+            { number: i + 1, text: lines[i], match: i == index }
+          end
+          matches.push({ line_number: index + 1, snippet: snippet })
+        end
+        matches
+      end
+
+      # HTML-escape line, wrapping every regexp match in <mark>
+      def highlight_matches(line, regexp)
+        html = +''
+        pos = 0
+        while pos <= line.length && (md = regexp.match(line, pos))
+          if md[0].empty?
+            # zero-width match: emit up to and including the character at the
+            # match position, so the scan always advances
+            html << escape_once(line[pos..md.begin(0)])
+            pos = md.begin(0) + 1
+          else
+            html << escape_once(line[pos...md.begin(0)])
+            html << "<mark>#{escape_once(md[0])}</mark>"
+            pos = md.end(0)
+          end
+        end
+        html << escape_once(line[pos..].to_s)
+        html
+      end
+
+      # HTML for one config search snippet: line-numbered text with the
+      # matches highlighted
+      def snippet_html(match, regexp)
+        width = match[:snippet].last[:number].to_s.length
+        match[:snippet].map do |line|
+          number = line[:number].to_s.rjust(width)
+          text = if line[:match]
+                   highlight_matches(line[:text], regexp)
+                 else
+                   escape_once(line[:text])
+                 end
+          "#{number}: #{text}"
+        end.join("\n")
       end
 
       # give the time elapsed between now and a date (Time object)

@@ -2,37 +2,64 @@
   .col-8
     %h4
       %a{href: url_for('/nodes')} nodes
-      \/ Nodes that contain 
+      \/ Nodes that contain
       %b
-        &= "#{@to_research}"
+        &= @search_term
   .col-4
     %form.float-end#oxButtons
       %button.btn.btn-primary{type: 'button', onclick: 'history.go();'}
         %i.bi.bi-arrow-clockwise
         Refresh page
 
-.row
-  .table-responsive
-    %table.table.table-sm.table-striped.table-hover#versionsTable
-      %thead
-        %tr
-          %th Name
-          %th Configuration
+.row.mb-3
+  .col-lg-6
+    %form{action: url_for('/nodes/conf_search'), method: 'post'}
+      .input-group
+        %input.form-control{type: 'text',
+                            name: 'search_in_conf_textbox',
+                            value: @search_term,
+                            :'aria-label' => 'Search in Configs'}
+        %button.btn.btn-primary{type: 'submit'}
+          %i.bi.bi-search
+          Search
+      .form-check.mt-1
+        %input{type: 'hidden', name: 'search_regex_checkbox', value: 'off'}
+        %input.form-check-input#conf-search-regex{type: 'checkbox',
+                                                  name: 'search_regex_checkbox',
+                                                  value: 'on',
+                                                  checked: @regex_search}
+        %label.form-check-label{for: 'conf-search-regex'} Use regular expression
 
-      %tbody
-        - @nodes_match.each do |x|
+- if @error
+  .row
+    .col-lg-6
+      .alert.alert-danger&= @error
+- else
+  .row
+    .table-responsive
+      %table.table.table-sm.table-striped.table-hover#versionsTable
+        %thead
           %tr
-            %td #{x[:node]}
-            %td
-              %a{title: 'configuration',
-                 href: url_for("/node/fetch/#{x[:full_name]}")}
-                %i.bi.bi-cloud-download
+            %th Name
+            %th Matches
 
-:javascript
-  $(function() {
-    $('#versionsTable').dataTable({
-      autoWidth: false,
-      "order": [[0, "asc"]]
+        %tbody
+          - @nodes_match.each do |x|
+            %tr
+              %td
+                %a{title: 'configuration',
+                   href: url_for("/node/fetch/#{x[:full_name]}")}
+                  %i.bi.bi-cloud-download
+                  = x[:node]
+              %td
+                - x[:matches].each do |m|
+                  %pre.border.rounded.p-2.mb-2><
+                    != snippet_html(m, @to_research)
+
+  :javascript
+    $(function() {
+      $('#versionsTable').dataTable({
+        autoWidth: false,
+        "order": [[0, "asc"]]
+      });
     });
-  });
-
