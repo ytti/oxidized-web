@@ -41,6 +41,14 @@ describe Oxidized::API::WebApp do
         '  description access port',
         'system {',
         '  host-name sw4',
+        '}',
+        'routing-options {',
+        '  autonomous-system 64512;',
+        '  router-id 192.0.2.1;',
+        '}',
+        'policy-options {',
+        '  description primary policy',
+        '  description secondary policy',
         '}'
       ].join("\n")
       @nodes.stubs(:fetch).returns('no match here')
@@ -56,7 +64,7 @@ describe Oxidized::API::WebApp do
       _(result[0]['node']).must_equal 'sw4'
     end
 
-    it 'returns a snippet with two lines of context around each match' do
+    it 'merges overlapping context into one snippet' do
       post '/nodes/conf_search.json', search_in_conf_textbox: 'description'
 
       matches = JSON.parse(last_response.body)[0]['matches']
@@ -64,14 +72,27 @@ describe Oxidized::API::WebApp do
 
       first = matches[0]
       _(first['line_number']).must_equal 2
-      _(first['snippet'].map { |l| l['number'] }).must_equal [1, 2, 3, 4]
+      _(first['line_numbers']).must_equal [2, 5]
+      _(first['snippet'].map { |l| l['number'] }).must_equal [1, 2, 3, 4, 5, 6, 7]
       _(first['snippet'][1]['match']).must_equal true
       _(first['snippet'][1]['text']).must_equal '  description uplink to core'
       _(first['snippet'][0]['match']).must_equal false
+      _(first['snippet'][4]['match']).must_equal true
 
       second = matches[1]
-      _(second['line_number']).must_equal 5
-      _(second['snippet'].map { |l| l['number'] }).must_equal [3, 4, 5, 6, 7]
+      _(second['line_number']).must_equal 14
+      _(second['line_numbers']).must_equal [14, 15]
+      _(second['snippet'].map { |l| l['number'] }).must_equal [12, 13, 14, 15, 16]
+      _(second['snippet'].select { |l| l['match'] }.map { |l| l['number'] }).must_equal [14, 15]
+    end
+
+    it 'merges context windows that touch without overlapping' do
+      post '/nodes/conf_search.json', search_in_conf_textbox: 'uplink|host-name'
+
+      matches = JSON.parse(last_response.body)[0]['matches']
+      _(matches.length).must_equal 1
+      _(matches[0]['line_numbers']).must_equal [2, 7]
+      _(matches[0]['snippet'].map { |l| l['number'] }).must_equal (1..9).to_a
     end
 
     it 'highlights the matched text in the html view' do
@@ -86,7 +107,9 @@ describe Oxidized::API::WebApp do
 
       result = JSON.parse(last_response.body)
       _(result.length).must_equal 1
-      _(result[0]['matches'].map { |m| m['line_number'] }).must_equal [1, 4]
+      _(result[0]['matches'].length).must_equal 1
+      _(result[0]['matches'][0]['line_number']).must_equal 1
+      _(result[0]['matches'][0]['line_numbers']).must_equal [1, 4]
     end
 
     it 'treats the search term as literal text when regex is unticked' do
@@ -110,7 +133,7 @@ describe Oxidized::API::WebApp do
 
       result = JSON.parse(last_response.body)
       _(result.length).must_equal 1
-      _(result[0]['matches'].map { |m| m['line_number'] }).must_equal [2, 5]
+      _(result[0]['matches'].map { |m| m['line_numbers'] }).must_equal [[2, 5], [14, 15]]
     end
 
     it 'pre-fills the search form with the term and checkbox state' do

@@ -290,23 +290,43 @@ module Oxidized
         [e.join('.'), json]
       end
 
-      # give one entry per line of config matching regexp, with the 1-based
-      # line number and a snippet of the line surrounded by up to
-      # CONF_SEARCH_CONTEXT_LINES lines of context on each side
+      # Give one entry per distinct region of the config matching +regexp+.
+      # Context windows that overlap or touch are merged so nearby matches do
+      # not return duplicate snippets. +line_number+ remains the first match
+      # for API compatibility; +line_numbers+ contains every match in the
+      # merged region.
       def config_search_matches(config, regexp)
         lines = config.lines.map(&:chomp)
-        matches = []
-        lines.each_with_index do |line, index|
-          next unless line.match?(regexp)
+        match_indexes = lines.each_index.select { |index| lines[index].match?(regexp) }
+        return [] if match_indexes.empty?
 
-          from = [index - CONF_SEARCH_CONTEXT_LINES, 0].max
-          to = [index + CONF_SEARCH_CONTEXT_LINES, lines.length - 1].min
-          snippet = (from..to).map do |i|
-            { number: i + 1, text: lines[i], match: i == index }
+        regions = match_indexes.each_with_object([]) do |index, merged|
+          region = {
+            from: [index - CONF_SEARCH_CONTEXT_LINES, 0].max,
+            to: [index + CONF_SEARCH_CONTEXT_LINES, lines.length - 1].min,
+            matches: [index]
+          }
+
+          if merged.any? && region[:from] <= merged.last[:to] + 1
+            merged.last[:to] = [merged.last[:to], region[:to]].max
+            merged.last[:matches] << index
+          else
+            merged << region
           end
-          matches.push({ line_number: index + 1, snippet: snippet })
         end
-        matches
+
+        regions.map do |region|
+          matching_lines = region[:matches].to_h { |index| [index, true] }
+          snippet = (region[:from]..region[:to]).map do |index|
+            { number: index + 1, text: lines[index], match: matching_lines.has_key?(index) }
+          end
+          line_numbers = region[:matches].map { |index| index + 1 }
+          {
+            line_number: line_numbers.first,
+            line_numbers: line_numbers,
+            snippet: snippet
+          }
+        end
       end
 
       # HTML-escape line, wrapping every regexp match in <mark>

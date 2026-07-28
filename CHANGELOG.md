@@ -6,8 +6,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ## [Unreleased]
 
 ### Added
-- Config search results show each matching line with two lines of context,
-  line numbers and the match highlighted (@bpbp-boop)
+- Config search results show matching lines with two lines of context, line
+  numbers and highlighted matches. Overlapping or touching context windows are
+  merged into a single snippet (@bpbp-boop)
 - Search form on the results page, with an option to search for literal text
   instead of a regular expression (@bpbp-boop)
 
