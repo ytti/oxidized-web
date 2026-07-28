@@ -29,6 +29,13 @@
                                                   value: 'on',
                                                   checked: @regex_search}
         %label.form-check-label{for: 'conf-search-regex'} Use regular expression
+      .form-check
+        %input{type: 'hidden', name: 'search_case_sensitive_checkbox', value: 'off'}
+        %input.form-check-input#conf-search-case-sensitive{type: 'checkbox',
+                                                           name: 'search_case_sensitive_checkbox',
+                                                           value: 'on',
+                                                           checked: @case_sensitive_search}
+        %label.form-check-label{for: 'conf-search-case-sensitive'} Case sensitive
 
 - if @error
   .row

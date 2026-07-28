@@ -97,13 +97,31 @@ describe Oxidized::API::WebApp do
       _(result.length).must_equal 0
     end
 
+    it 'treats the search term as case-sensitive by default' do
+      post '/nodes/conf_search.json', search_in_conf_textbox: 'DESCRIPTION'
+
+      result = JSON.parse(last_response.body)
+      _(result.length).must_equal 0
+    end
+
+    it 'matches case-insensitively when case sensitivity is unticked' do
+      post '/nodes/conf_search.json', search_in_conf_textbox: 'DESCRIPTION',
+                                      search_case_sensitive_checkbox: 'off'
+
+      result = JSON.parse(last_response.body)
+      _(result.length).must_equal 1
+      _(result[0]['matches'].map { |m| m['line_number'] }).must_equal [2, 5]
+    end
+
     it 'pre-fills the search form with the term and checkbox state' do
       post '/nodes/conf_search', search_in_conf_textbox: 'description'
 
       _(last_response.ok?).must_equal true
       _(last_response.body).must_include "value='description'"
       _(last_response.body).must_include "name='search_regex_checkbox'"
-      _(last_response.body).must_include 'checked'
+      _(last_response.body).must_include "name='search_case_sensitive_checkbox'"
+      _(last_response.body).must_match(/<input(?=[^>]*\bid='conf-search-regex')(?=[^>]*\bchecked)[^>]*>/)
+      _(last_response.body).must_match(/<input(?=[^>]*\bid='conf-search-case-sensitive')(?=[^>]*\bchecked)[^>]*>/)
     end
 
     it 'keeps the regex checkbox unticked after a literal search' do
@@ -111,7 +129,15 @@ describe Oxidized::API::WebApp do
                                  search_regex_checkbox: 'off'
 
       _(last_response.ok?).must_equal true
-      _(last_response.body).wont_include 'checked'
+      _(last_response.body).wont_match(/<input(?=[^>]*\bid='conf-search-regex')(?=[^>]*\bchecked)[^>]*>/)
+    end
+
+    it 'keeps the case-sensitive checkbox unticked after an insensitive search' do
+      post '/nodes/conf_search', search_in_conf_textbox: 'description',
+                                 search_case_sensitive_checkbox: 'off'
+
+      _(last_response.ok?).must_equal true
+      _(last_response.body).wont_match(/<input(?=[^>]*\bid='conf-search-case-sensitive')(?=[^>]*\bchecked)[^>]*>/)
     end
   end
 

@@ -71,10 +71,14 @@ module Oxidized
         # regex search is the default; the search form on the results page
         # sends 'off' (via a hidden field) when the checkbox is unticked
         @regex_search = params[:search_regex_checkbox] != 'off'
+        # preserve the existing case-sensitive default; the search form sends
+        # 'off' (via a hidden field) when the checkbox is unticked
+        @case_sensitive_search = params[:search_case_sensitive_checkbox] != 'off'
         @nodes_match = []
         begin
           pattern = @regex_search ? @search_term : Regexp.escape(@search_term)
-          @to_research = Regexp.new pattern
+          options = @case_sensitive_search ? 0 : Regexp::IGNORECASE
+          @to_research = Regexp.new pattern, options
         rescue RegexpError => e
           @error = "Invalid regular expression: #{e.message}"
         end
