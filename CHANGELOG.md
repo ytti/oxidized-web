@@ -6,10 +6,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ## [Unreleased]
 
 ### Added
+- Config search results show matching lines with two lines of context, line
+  numbers and highlighted matches. Overlapping or touching context windows are
+  merged into a single snippet (@bpbp-boop)
+- Search form on the results page, with an option to search for literal text
+  instead of a regular expression (@bpbp-boop)
 
 ### Changed
 
 ### Fixed
+- Config search returns 400 on an invalid regular expression instead of
+  crashing (@bpbp-boop)
 
 
 ## [0.18.1 – 2026-01-19]

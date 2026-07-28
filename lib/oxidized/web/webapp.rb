@@ -65,15 +65,39 @@ module Oxidized
       end
 
       post '/nodes/conf_search.?:format?' do
-        @to_research = Regexp.new params[:search_in_conf_textbox]
-        nodes_list = nodes.list.map
+        @search_term = params[:search_in_conf_textbox].to_s
+        redirect url_for('/nodes') if @search_term.empty?
+
+        # regex search is the default; the search form on the results page
+        # sends 'off' (via a hidden field) when the checkbox is unticked
+        @regex_search = params[:search_regex_checkbox] != 'off'
+        # preserve the existing case-sensitive default; the search form sends
+        # 'off' (via a hidden field) when the checkbox is unticked
+        @case_sensitive_search = params[:search_case_sensitive_checkbox] != 'off'
         @nodes_match = []
-        nodes_list.each do |n|
-          node, @json = route_parse n[:name]
-          config = nodes.fetch node, n[:group]
-          @nodes_match.push({ node: n[:name], full_name: n[:full_name] }) if config[@to_research]
+        begin
+          pattern = @regex_search ? @search_term : Regexp.escape(@search_term)
+          options = @case_sensitive_search ? 0 : Regexp::IGNORECASE
+          @to_research = Regexp.new pattern, options
+        rescue RegexpError => e
+          @error = "Invalid regular expression: #{e.message}"
         end
-        @data = @nodes_match
+
+        if @error
+          status 400
+          @data = { error: @error }
+        else
+          nodes.list.each do |n|
+            node, @json = route_parse n[:name]
+            config = convert_to_utf8 nodes.fetch(node, n[:group]).to_s
+            matches = config_search_matches config, @to_research
+            next if matches.empty?
+
+            @nodes_match.push({ node: n[:name], full_name: n[:full_name],
+                                matches: matches })
+          end
+          @data = @nodes_match
+        end
         out :conf_search
       end
 
@@ -225,6 +249,9 @@ module Oxidized
       HTML_ESCAPE = { '&' => '&amp;', '<' => '&lt;', '>' => '&gt;', '"' => '&quot;', "'" => '&#39;' }.freeze
       HTML_ESCAPE_ONCE_REGEX = /['"><]|&(?!(?:[a-zA-Z]+|#(?:\d+|[xX][0-9a-fA-F]+));)/
 
+      # lines of context shown around each config search match
+      CONF_SEARCH_CONTEXT_LINES = 2
+
       private
 
       def out(template = :text)
@@ -261,6 +288,80 @@ module Oxidized
           json = true
         end
         [e.join('.'), json]
+      end
+
+      # Give one entry per distinct region of the config matching +regexp+.
+      # Context windows that overlap or touch are merged so nearby matches do
+      # not return duplicate snippets. +line_number+ remains the first match
+      # for API compatibility; +line_numbers+ contains every match in the
+      # merged region.
+      def config_search_matches(config, regexp)
+        lines = config.lines.map(&:chomp)
+        match_indexes = lines.each_index.select { |index| lines[index].match?(regexp) }
+        return [] if match_indexes.empty?
+
+        regions = match_indexes.each_with_object([]) do |index, merged|
+          region = {
+            from: [index - CONF_SEARCH_CONTEXT_LINES, 0].max,
+            to: [index + CONF_SEARCH_CONTEXT_LINES, lines.length - 1].min,
+            matches: [index]
+          }
+
+          if merged.any? && region[:from] <= merged.last[:to] + 1
+            merged.last[:to] = [merged.last[:to], region[:to]].max
+            merged.last[:matches] << index
+          else
+            merged << region
+          end
+        end
+
+        regions.map do |region|
+          matching_lines = region[:matches].to_h { |index| [index, true] }
+          snippet = (region[:from]..region[:to]).map do |index|
+            { number: index + 1, text: lines[index], match: matching_lines.has_key?(index) }
+          end
+          line_numbers = region[:matches].map { |index| index + 1 }
+          {
+            line_number: line_numbers.first,
+            line_numbers: line_numbers,
+            snippet: snippet
+          }
+        end
+      end
+
+      # HTML-escape line, wrapping every regexp match in <mark>
+      def highlight_matches(line, regexp)
+        html = +''
+        pos = 0
+        while pos <= line.length && (md = regexp.match(line, pos))
+          if md[0].empty?
+            # zero-width match: emit up to and including the character at the
+            # match position, so the scan always advances
+            html << escape_once(line[pos..md.begin(0)])
+            pos = md.begin(0) + 1
+          else
+            html << escape_once(line[pos...md.begin(0)])
+            html << "<mark>#{escape_once(md[0])}</mark>"
+            pos = md.end(0)
+          end
+        end
+        html << escape_once(line[pos..].to_s)
+        html
+      end
+
+      # HTML for one config search snippet: line-numbered text with the
+      # matches highlighted
+      def snippet_html(match, regexp)
+        width = match[:snippet].last[:number].to_s.length
+        match[:snippet].map do |line|
+          number = line[:number].to_s.rjust(width)
+          text = if line[:match]
+                   highlight_matches(line[:text], regexp)
+                 else
+                   escape_once(line[:text])
+                 end
+          "#{number}: #{text}"
+        end.join("\n")
       end
 
       # give the time elapsed between now and a date (Time object)
