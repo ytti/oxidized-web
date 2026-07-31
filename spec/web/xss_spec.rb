@@ -62,7 +62,7 @@ describe Oxidized::API::WebApp do
 
   describe 'stored XSS prevention' do
     it 'escapes node names in /nodes list' do
-      malicious = '<script>alert(1)</script>'
+      malicious = "'><script>alert(1)</script>"
       @nodes.expects(:list).returns(
         [{ name: malicious, ip: '10.0.0.1', model: 'ios',
            full_name: malicious, group: 'default', time: Time.now, mtime: Time.now }]
@@ -71,12 +71,13 @@ describe Oxidized::API::WebApp do
       get '/nodes'
 
       _(last_response.ok?).must_equal true
-      _(last_response.body).must_include('&lt;script&gt;alert(1)&lt;/script&gt;')
+      _(last_response.body).must_include('&#39;&gt;&lt;script&gt;alert(1)&lt;/script&gt;')
+      _(last_response.body).wont_include("'><script>alert(1)</script>")
       _(last_response.body).wont_include('<script>alert(1)</script>')
     end
 
     it 'escapes node names in /nodes/stats' do
-      malicious = '<script>alert(1)</script>'
+      malicious = "'><script>alert(1)</script>"
       stats = mock('Oxidized::Node::Stats')
       stats.stubs(:successes).returns(1)
       stats.stubs(:failures).returns(0)
@@ -89,7 +90,8 @@ describe Oxidized::API::WebApp do
       get '/nodes/stats'
 
       _(last_response.ok?).must_equal true
-      _(last_response.body).must_include('&lt;script&gt;alert(1)&lt;/script&gt;')
+      _(last_response.body).must_include('&#39;&gt;&lt;script&gt;alert(1)&lt;/script&gt;')
+      _(last_response.body).wont_include("'><script>alert(1)</script>")
       _(last_response.body).wont_include('<script>alert(1)</script>')
     end
   end
