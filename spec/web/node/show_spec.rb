@@ -125,5 +125,19 @@ describe Oxidized::API::WebApp do
         _(@serialized_node[:vars]["enable"]).must_equal "secret_enable"
       end
     end
+
+    describe "HTML escaping" do
+      it "escapes HTML special characters in var values" do
+        app.set(:configuration, { hide_node_vars: [] })
+        @serialized_node[:vars][:enable] = "<script>alert(1)</script>"
+
+        get '/node/show/sw5'
+        _(last_response.ok?).must_equal true
+        body = last_response.body
+
+        _(body).must_include("&lt;script&gt;alert(1)&lt;/script&gt;")
+        _(body).wont_include("<script>alert(1)</script>")
+      end
+    end
   end
 end

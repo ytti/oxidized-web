@@ -9,6 +9,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Security regression tests for XSS prevention in node name, version, diff, stats views and HTMLEntities encoding of device config content (@mattimustang, @robertcheramy)
 
 ### Changed
+- Remove the no longer needed escape_once helper call in node.haml, relying on HAML's global escape_html instead (@robertcheramy)
 
 ### Fixed
 - Fix XSS vulnerability (CWE-79) by enabling HAML's escape_html globally; user-controlled values in node names, group names, model names, and URL parameters are now HTML-escaped in all templates (@mattimustang)
