@@ -10,7 +10,10 @@ module Oxidized
     class WebApp < Sinatra::Base
       helpers Sinatra::UrlForHelper
       set :public_folder, proc { File.join(root, 'public') }
-      set :haml, { escape_html: true }
+      # attr_quote: use double quotes for HTML attributes. Set explicitly so the
+      # output is stable across Haml versions. Haml 7.3.0 changed the default
+      # from "'" to '"' (haml/haml#1188); older versions still default to "'".
+      set :haml, { escape_html: true, attr_quote: '"' }
 
       get '/' do
         redirect url_for('/nodes')
