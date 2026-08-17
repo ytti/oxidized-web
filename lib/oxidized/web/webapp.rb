@@ -1,5 +1,4 @@
 require 'sinatra/base'
-require 'sinatra/json'
 require 'sinatra/url_for'
 require 'tilt/haml'
 require 'htmlentities'
@@ -229,10 +228,11 @@ module Oxidized
 
       def out(template = :text)
         if @json || (params[:format] == 'json')
+          content_type :json
           if @data.is_a?(String)
-            json @data.lines
+            JSON.generate(@data.lines)
           else
-            json @data
+            JSON.generate(@data)
           end
         elsif (template == :text) || (params[:format] == 'text')
           content_type :text
