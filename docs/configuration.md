@@ -23,6 +23,10 @@ You can set the following parameter:
 - `url_prefix`: Defines a URL prefix (default: no prefix)
 - `vhosts`: A list of virtual hosts to listen to. If not specified, it will
   respond to any virtual host.
+- `mtime_from_versions`: `true`/`false`: Enables or disables display
+  last configuration change date on nodes list from last version.
+  Can increase node list display time depend on used `output` realization
+  (default: `false`)
 
 ## Examples
 
