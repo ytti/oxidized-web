@@ -47,6 +47,9 @@ module Oxidized
             node[:status] = node[:last][:status]
             node[:time]   = node[:last][:end]
           end
+          if settings.configuration[:mtime_from_versions] == true
+            set_mtime_from_versions(node)
+          end
           node
         end
         out :nodes
@@ -60,6 +63,9 @@ module Oxidized
           if node[:last]
             node[:status] = node[:last][:status]
             node[:time]   = node[:last][:end]
+          end
+          if settings.configuration[:mtime_from_versions] == true
+            set_mtime_from_versions(node)
           end
           node
         end
@@ -351,6 +357,20 @@ module Oxidized
 
         data
       end
+    
+      # set node last changed time to last version time
+      # potential can be long operation
+      def set_mtime_from_versions(node)
+        if node[:mtime] == 'unknown' || node[:mtime].nil?
+          group = node[:group] == 'default' ? nil : node[:group]
+          versions = nodes.version(node[:name], group)
+          if versions.is_a?(Array) && !versions.empty? && versions.first[:time]
+            node[:mtime] = versions.first[:time]
+          end
+        end
+        node
+      end
+    
     end
   end
 end
