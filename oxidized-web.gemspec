@@ -39,7 +39,7 @@ Gem::Specification.new do |s|
   # Updating needs the unit tests to be fixed.
   s.add_dependency 'haml',                '>= 6', '< 8'
   s.add_dependency 'htmlentities',        '~> 4.3'
-  s.add_dependency 'json',                '~> 2.3'
+  s.add_dependency 'json',                '>= 2.3', '< 4.0'
   # Only depend on a minimal version of Oxidized so we don't need to
   # update the gemspec for new Oxidized releases
   s.add_dependency 'oxidized',            '>= 0.34.1'
