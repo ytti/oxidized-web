@@ -23,6 +23,7 @@
     - params = "node=#{@info[:node]}&group=#{@info[:group]}&oid=#{@info[:oid]}"
     - params = "#{params}&epoch=#{@info[:time].to_i}&num=#{@info[:num]}"
     %form{action: url_for("/node/version/diffs?#{params}"), method: 'post', role: 'form'}
+      %input{type: 'hidden', name: 'authenticity_token', value: Rack::Protection::AuthenticityToken.token(session)}
       .form-group
         %select.form-select#oid2{name: 'oid2'}
           - diff2 = {}

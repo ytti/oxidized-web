@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ## [Unreleased]
 
 ### Added
+- CSRF protection: enable Rack::Session::Cookie (SameSite=Strict, HttpOnly) and Rack::Protection::AuthenticityToken on all state-changing endpoints; add authenticity_token to all HTML forms (@mattimustang)
+- Security regression tests for CSRF token presence in rendered forms (@mattimustang)
 - Security regression tests for XSS prevention in node name, version, diff, stats views and HTMLEntities encoding of device config content (@mattimustang, @robertcheramy)
 
 ### Changed
