@@ -8,10 +8,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ### Added
 - CSRF protection: enable Rack::Session::Cookie (SameSite=Strict, HttpOnly) and Rack::Protection::AuthenticityToken on all state-changing endpoints; add authenticity_token to all HTML forms (@mattimustang)
 - Security regression tests for CSRF token presence in rendered forms (@mattimustang)
+- Security regression tests for XSS prevention in node name, version, diff, stats views and HTMLEntities encoding of device config content (@mattimustang, @robertcheramy)
 
 ### Changed
+- Remove the no longer needed escape_once helper call in node.haml, relying on HAML's global escape_html instead (@robertcheramy)
+- Update web libraries to the latest versions (@robertcheramy)
+- Encode JSON output with the standard library instead of Sinatra's json helper (@robertcheramy)
+- Set HAML's `attr_quote` explicitly to `"` for stable output across HAML versions (@robertcheramy)
 
 ### Fixed
+- Fix XSS vulnerability (CWE-79) by enabling HAML's escape_html globally; user-controlled values in node names, group names, model names, and URL parameters are now HTML-escaped in all templates (@mattimustang)
 
 
 ## [0.18.1 – 2026-01-19]

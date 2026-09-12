@@ -37,7 +37,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'emk-sinatra-url-for', '~> 0.2'
   # HAML 7.0.0 changed default attr_quote from ' to ".
   # Updating needs the unit tests to be fixed.
-  s.add_dependency 'haml',                '>= 6', '<7'
+  s.add_dependency 'haml',                '>= 6', '< 8'
   s.add_dependency 'htmlentities',        '~> 4.3'
   s.add_dependency 'json',                '~> 2.3'
   # Only depend on a minimal version of Oxidized so we don't need to
@@ -54,8 +54,8 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'rake',                 '~> 13.0'
   # Rubocop introduces new rules in minor versions, so we limit automatic
   # updates to patches
-  s.add_development_dependency 'rubocop',              '~> 1.84.2'
-  s.add_development_dependency 'rubocop-minitest',     '~> 0.38.0'
+  s.add_development_dependency 'rubocop',              '~> 1.89.0'
+  s.add_development_dependency 'rubocop-minitest',     '~> 0.39.1'
   s.add_development_dependency 'rubocop-rails',        '~> 2.34.2'
   s.add_development_dependency 'rubocop-rake',         '~> 0.7.1'
   s.add_development_dependency 'simplecov',            '~> 0.22'
