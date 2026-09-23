@@ -73,6 +73,7 @@ module Oxidized
         nodes_list.each do |n|
           node, @json = route_parse n[:name]
           config = nodes.fetch node, n[:group]
+          config = convert_to_utf8(config)
           @nodes_match.push({ node: n[:name], full_name: n[:full_name] }) if config[@to_research]
         end
         @data = @nodes_match
