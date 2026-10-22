@@ -1,55 +1,67 @@
-.row
-  .col-4
-    %h4
-      %a{href: url_for('/nodes')} nodes
-      \/ Versions for node
-      %b #{@node}
-  .col-8
-    %form.float-end#oxButtons
-      %button.btn.btn-primary{type: 'button', onclick: 'history.go();'}
-        %i.bi.bi-arrow-clockwise
-        Refresh page
+.page-heading
+  .page-heading-copy
+    .breadcrumbs
+      %a{href: url_for('/nodes')} Devices
+      %i.bi.bi-chevron-right{:'aria-hidden' => 'true'}
+      %span Configuration history
+    %span.eyebrow.text-muted Version control
+    %h1 Configuration history
+    %p
+      Versions for
+      %strong= @node
+      - if @group
+        %span.text-muted in #{@group}
+  .page-heading-actions
+    %a.btn.btn-outline-secondary{href: url_for('/nodes')}
+      %i.bi.bi-arrow-left{:'aria-hidden' => 'true'}
+      Device inventory
 
-.row
+.history-summary
+  .history-summary-icon
+    %i.bi.bi-clock-history{:'aria-hidden' => 'true'}
+  .history-summary-copy
+    %strong= @data.count
+    %span saved configuration versions
+
+.table-card.history-card
+  .table-toolbar
+    %span.toolbar-label Available versions
   .table-responsive
-    %table.table.table-sm.table-striped.table-hover#versionsTable
+    %table.table.table-hover.align-middle#versionsTable
       %thead
         %tr
           %th Version
-          %th Date
-          %th Elapsed time
+          %th Saved at
+          %th Age
           %th Actions
-
       %tbody
         - nb = @data.count + 1
         - @data.each do |x|
+          - version_num = nb -= 1
           %tr
-            %td #{nb -= 1}
-            %td.time{ epoch: x[:time].to_i }= x[:time]
-            %td #{time_from_now x[:time]}
-            %td
+            %td.version-number
+              %span.version-chip v#{version_num}
+              - if version_num == @data.count
+                %span.latest-chip Latest
+            %td.time{epoch: x[:time].to_i}= x[:time]
+            %td= time_from_now x[:time]
+            %td.actions-cell
               - params = "node=#{@node}&group=#{@group}&oid=#{x[:oid]}"
-              - params = "#{params}&epoch=#{x[:time].to_i}&num=#{nb}"
-              %a.link-body-emphasis.link-underline-opacity-0{title: 'configuration',
-                 href: url_for("/node/version/view?#{params}")}
-                %i.bi.bi-cloud-download
-              &nbsp;&nbsp;
-              - if nb > 1
-                %a.link-body-emphasis.link-underline-opacity-0{title: 'Compare with previous version', href: url_for("/node/version/diffs?#{params}")}
-                  %i.bi.bi-file-earmark-diff
+              - params = "#{params}&epoch=#{x[:time].to_i}&num=#{version_num}"
+              %a.action-link{title: 'Download configuration version', :'aria-label' => "Download version #{version_num} for #{@node}", href: url_for("/node/version/view?#{params}")}
+                %i.bi.bi-cloud-download{:'aria-hidden' => 'true'}
+              - if version_num > 1
+                %a.action-link{title: 'Compare with previous version', :'aria-label' => "Compare version #{version_num} for #{@node} with the previous version", href: url_for("/node/version/diffs?#{params}")}
+                  %i.bi.bi-file-earmark-diff{:'aria-hidden' => 'true'}
 
 :javascript
   $(function() {
-    $('#versionsTable').dataTable({
-      "order": [[0, "desc"]],
-      bAutoWidth: false,
-      columnDefs: [
-        {
-          targets: '_all',
-          className: 'text-start'
-        }
-      ],
+    $('#versionsTable').DataTable({
+      order: [[0, 'desc']],
+      autoWidth: false,
+      columnDefs: [{ targets: '_all', className: 'text-start' }],
       stateSave: true,
-      searching: false
+      searching: false,
+      lengthChange: false
     });
   });

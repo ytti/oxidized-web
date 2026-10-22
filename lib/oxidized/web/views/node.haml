@@ -1,21 +1,28 @@
-.row
-  .col-sm-12
-    %h4
-      %a{href: url_for('/nodes')} nodes
-      %span /
-      =@data[:name]
-      &nbsp;
-      %a.link-body-emphasis.link-underline-opacity-0{title: 'configuration',
-        href: url_for("/node/fetch/#{@data[:full_name]}")}
-        %i.bi.bi-cloud-download
-      %a.link-body-emphasis.link-underline-opacity-0{title: 'versions',
-        href: url_for("/node/version?node_full=#{@data[:full_name]}")}
-        %i.bi.bi-stack
-      %a.link-body-emphasis.link-underline-opacity-0{title: 'update',
-        href: url_for("/node/next/#{@data[:full_name]}")}
-        %i.bi.bi-repeat
-    %pre.bg-body-tertiary.border.border-secondary-subtle.rounded
-      %code
-        =JSON.pretty_generate(@data)
+.page-heading
+  .page-heading-copy
+    .breadcrumbs
+      %a{href: url_for('/nodes')} Devices
+      %i.bi.bi-chevron-right{:'aria-hidden' => 'true'}
+      %span= @data[:name]
+    %span.eyebrow.text-muted Device details
+    %h1= @data[:name]
+    %p Node metadata as reported by Oxidized.
+  .page-heading-actions
+    %a.btn.btn-outline-secondary{href: url_for("/node/fetch/#{@data[:full_name]}")}
+      %i.bi.bi-cloud-download{:'aria-hidden' => 'true'}
+      Configuration
+    %a.btn.btn-outline-secondary{href: url_for("/node/version?node_full=#{@data[:full_name]}")}
+      %i.bi.bi-clock-history{:'aria-hidden' => 'true'}
+      History
+    %a.btn.btn-primary{href: url_for("/node/next/#{@data[:full_name]}")}
+      %i.bi.bi-arrow-repeat{:'aria-hidden' => 'true'}
+      Run backup
+.config-panel
+  .config-panel-header
+    .config-panel-label
+      %i.bi.bi-card-list{:'aria-hidden' => 'true'}
+      Device metadata
+  %pre.config-view{role: 'region', :'aria-label' => 'Device metadata', tabindex: '0'}
+    %code= JSON.pretty_generate(@data)
 
 
