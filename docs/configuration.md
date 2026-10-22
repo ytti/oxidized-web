@@ -25,7 +25,11 @@ You can set the following parameter:
   respond to any virtual host.
 - `mtime_from_versions`: `true`/`false`: Enables or disables display
   last configuration change date on nodes list from last version.
-  Can increase node list display time depend on used `output` realization
+  Only works with outputs with versions support (currently git and gitcrypt).
+  Activating this option can increase node list display time depending
+  on the size of your git repository and the output realization.
+  The git output caches the data, which increases the speed of subsequent
+  calls but consumes more memory.
   (default: `false`)
 
 ## Examples
