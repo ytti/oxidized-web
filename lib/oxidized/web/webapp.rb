@@ -15,6 +15,12 @@ module Oxidized
       # from "'" to '"' (haml/haml#1188); older versions still default to "'".
       set :haml, { escape_html: true, attr_quote: '"' }
 
+      if ENV["BASIC_AUTH_USERNAME"] && ENV["BASIC_AUTH_PASSWORD"]
+        use Rack::Auth::Basic, "Restricted Area" do |username, password|
+          username == ENV["BASIC_AUTH_USERNAME"] and password == ENV["BASIC_AUTH_PASSWORD"]
+        end
+      end
+
       get '/' do
         redirect url_for('/nodes')
       end
