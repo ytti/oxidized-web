@@ -364,7 +364,6 @@ module Oxidized
         end
         node
       end
-
     end
   end
 end
