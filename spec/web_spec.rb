@@ -64,18 +64,20 @@ describe Oxidized::API::Web do
             'port' => 3000,
             'url_prefix' => '/api',
             'vhosts' => ['example.com', 'test.com'],
-            'hide_node_vars' => %w[enable password]
+            'hide_node_vars' => %w[enable password],
+            'mtime_from_versions' => true
           }
         ),
         expected: { addr: '0.0.0.0', port: 3000, uri_prefix: '/api',
                     vhosts: ["example.com", "test.com"],
-                    hide_node_vars: %i[enable password] },
+                    hide_node_vars: %i[enable password],
+                    mtime_from_versions: true },
         description: 'all values provided'
       },
       {
         configuration: Asetus::ConfigStruct.new,
         expected: { addr: '127.0.0.1', port: 8888, uri_prefix: '/',
-                    vhosts: [], hide_node_vars: [] },
+                    vhosts: [], hide_node_vars: [], mtime_from_versions: false },
         description: 'all default values'
       },
       {
@@ -83,7 +85,7 @@ describe Oxidized::API::Web do
           { 'hide_node_vars' => 'enable' }
         ),
         expected: { addr: '127.0.0.1', port: 8888, uri_prefix: '/',
-                    vhosts: [], hide_node_vars: [] },
+                    vhosts: [], hide_node_vars: [], mtime_from_versions: false },
         description: 'return an empty list when hide_node_vars not a hash'
       }
     ]
