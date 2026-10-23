@@ -1,5 +1,5 @@
 require_relative '../spec_helper'
-require 'cgi'
+require 'cgi/escape'
 
 describe Oxidized::API::WebApp do
   include Rack::Test::Methods
