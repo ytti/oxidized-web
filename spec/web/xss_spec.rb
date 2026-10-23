@@ -11,6 +11,7 @@ describe Oxidized::API::WebApp do
   before do
     @nodes = mock('Oxidized::Nodes')
     app.set(:nodes, @nodes)
+    app.set(:configuration, { hide_node_vars: [], mtime_from_versions: false })
   end
 
   describe 'reflected XSS prevention' do
