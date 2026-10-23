@@ -1,5 +1,5 @@
 require_relative '../spec_helper'
-require 'cgi'
+require 'cgi/escape'
 
 describe Oxidized::API::WebApp do
   include Rack::Test::Methods
@@ -35,7 +35,7 @@ describe Oxidized::API::WebApp do
 
     it 'escapes node name in /node/version/view' do
       malicious = '<script>alert(1)</script>'
-      @nodes.expects(:get_version).with(malicious, '', 'abc123').returns('device config')
+      @nodes.expects(:get_version).with(malicious, nil, 'abc123').returns('device config')
 
       get "/node/version/view?node=#{CGI.escape(malicious)}&group=&oid=abc123&epoch=0&num=1"
 
@@ -48,7 +48,7 @@ describe Oxidized::API::WebApp do
       malicious = '<script>alert(1)</script>'
       versions = [{ oid: 'C006', time: Time.parse('2025-02-05 19:49:00 +0100') }]
       @nodes.expects(:version).with(malicious, nil).returns(versions)
-      @nodes.expects(:get_diff).with(malicious, '', 'C006', nil).returns(
+      @nodes.expects(:get_diff).with(malicious, nil, 'C006', nil).returns(
         { patch: "- old line\n+ new line\n", stat: [1, 1] }
       )
 
@@ -99,7 +99,7 @@ describe Oxidized::API::WebApp do
   describe 'config content encoding' do
     it 'encodes script tags in device config on /node/version/view' do
       payload = '<script>alert(1)</script>'
-      @nodes.expects(:get_version).with('router1', '', 'abc123').returns(payload)
+      @nodes.expects(:get_version).with('router1', nil, 'abc123').returns(payload)
 
       get '/node/version/view?node=router1&group=&oid=abc123&epoch=0&num=1'
 
@@ -112,7 +112,7 @@ describe Oxidized::API::WebApp do
       payload_patch = "- <script>alert(1)</script>\n+ safe line\n"
       versions = [{ oid: 'C006', time: Time.parse('2025-02-05 19:49:00 +0100') }]
       @nodes.expects(:version).with('router1', nil).returns(versions)
-      @nodes.expects(:get_diff).with('router1', '', 'C006', nil).returns(
+      @nodes.expects(:get_diff).with('router1', nil, 'C006', nil).returns(
         { patch: payload_patch, stat: [1, 1] }
       )
 

@@ -15,6 +15,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Set HAML's `attr_quote` explicitly to `"` for stable output across HAML versions (@robertcheramy)
 
 ### Fixed
+- Fix `NoMethodError` when `group=` param is absent from `/node/version/view` and `/node/version/diffs` requests. `params[:group]` was assigned directly to `@info[:group]`; `params[:group]` is now normalized to '' so the HAML templates render the no-group branch instead of crashing with a 500 (@makaiver)
+- Fix `NoMethodError` and `RegexpError` crashes on `/node/version`, `/nodes/conf_search` and in `route_parse` when params are missing or contain a malformed regex; return empty results instead of a 500 (@makaiver)
 - Fix XSS vulnerability (CWE-79) by enabling HAML's escape_html globally; user-controlled values in node names, group names, model names, and URL parameters are now HTML-escaped in all templates (@mattimustang)
 
 

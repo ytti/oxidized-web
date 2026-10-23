@@ -39,7 +39,7 @@ Gem::Specification.new do |s|
   # Updating needs the unit tests to be fixed.
   s.add_dependency 'haml',                '>= 6', '< 8'
   s.add_dependency 'htmlentities',        '~> 4.3'
-  s.add_dependency 'json',                '~> 2.3'
+  s.add_dependency 'json',                '>= 2.3', '< 4.0'
   # Only depend on a minimal version of Oxidized so we don't need to
   # update the gemspec for new Oxidized releases
   s.add_dependency 'oxidized',            '>= 0.34.1'
@@ -54,9 +54,9 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'rake',                 '~> 13.0'
   # Rubocop introduces new rules in minor versions, so we limit automatic
   # updates to patches
-  s.add_development_dependency 'rubocop',              '~> 1.89.0'
-  s.add_development_dependency 'rubocop-minitest',     '~> 0.39.1'
-  s.add_development_dependency 'rubocop-rails',        '~> 2.34.2'
+  s.add_development_dependency 'rubocop',              '~> 1.92.0'
+  s.add_development_dependency 'rubocop-minitest',     '~> 0.41.0'
+  s.add_development_dependency 'rubocop-rails',        '~> 2.38.0'
   s.add_development_dependency 'rubocop-rake',         '~> 0.7.1'
   s.add_development_dependency 'simplecov',            '~> 0.22'
   s.add_development_dependency 'simplecov-html',       '~> 0.13'

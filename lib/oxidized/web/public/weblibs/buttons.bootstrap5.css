@@ -49,8 +49,9 @@ div.dt-button-info {
   margin-top: -100px;
   margin-left: -200px;
   background-color: white;
-  border-radius: 0.75em;
-  box-shadow: 3px 4px 10px 1px rgba(0, 0, 0, 0.8);
+  border-radius: 5px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   text-align: center;
   z-index: 2003;
   overflow: hidden;
