@@ -32,6 +32,7 @@ module Oxidized
       # and extract the optional ".json" with route_parse
       get '/nodes/:filter/*' do
         value, @json = route_parse params[:splat].first
+        mtime_from_versions = settings.configuration[:mtime_from_versions]
         @data = nodes.list.select do |node|
           next unless node[params[:filter].to_sym] == value ||
                       (
@@ -47,12 +48,14 @@ module Oxidized
             node[:status] = node[:last][:status]
             node[:time]   = node[:last][:end]
           end
+          assign_mtime_from_versions(node) if mtime_from_versions
           node
         end
         out :nodes
       end
 
       get '/nodes.?:format?' do
+        mtime_from_versions = settings.configuration[:mtime_from_versions]
         @data = nodes.list.map do |node|
           node[:status] = 'never'
           node[:time]   = 'never'
@@ -61,6 +64,7 @@ module Oxidized
             node[:status] = node[:last][:status]
             node[:time]   = node[:last][:end]
           end
+          assign_mtime_from_versions(node) if mtime_from_versions
           node
         end
         out :nodes
@@ -358,6 +362,17 @@ module Oxidized
         end
 
         data
+      end
+
+      # set node last changed time to last version time
+      # potential can be long operation
+      def assign_mtime_from_versions(node)
+        if node[:mtime] == 'unknown' || node[:mtime].nil?
+          group = node[:group] == 'default' ? nil : node[:group]
+          versions = nodes.version(node[:name], group)
+          node[:mtime] = versions.first[:time] if versions.is_a?(Array) && !versions.empty? && versions.first[:time]
+        end
+        node
       end
     end
   end

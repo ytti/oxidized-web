@@ -23,6 +23,14 @@ You can set the following parameter:
 - `url_prefix`: Defines a URL prefix (default: no prefix)
 - `vhosts`: A list of virtual hosts to listen to. If not specified, it will
   respond to any virtual host.
+- `mtime_from_versions`: `true`/`false`: Enables or disables display
+  last configuration change date on nodes list from last version.
+  Only works with outputs with versions support (currently git and gitcrypt).
+  Activating this option can increase node list display time depending
+  on the size of your git repository and the output realization.
+  The git output caches the data, which increases the speed of subsequent
+  calls but consumes more memory.
+  (default: `false`)
 
 ## Examples
 
