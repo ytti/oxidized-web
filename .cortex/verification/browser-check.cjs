@@ -1,0 +1,63 @@
+const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+(async () => {
+  const browser = await chromium.launch({ headless: true, channel: 'chrome' });
+  const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
+  const errors = [];
+  page.on('pageerror', error => errors.push(error.message));
+  const output = 'docs/redesign/screenshots';
+  fs.mkdirSync(output, { recursive: true });
+  for (const [route, table, search] of [['/nodes', '#nodesTable', '#inventorySearch'], ['/nodes/stats', '#statsTable', '#statsSearch']]) {
+    await page.goto('http://127.0.0.1:9299' + route);
+    await page.waitForSelector(table + ' tbody tr');
+    await page.waitForFunction(selector => window.jQuery?.fn.dataTable.isDataTable(selector), table);
+    assert.equal(await page.locator(table + ' tbody tr').count(), 3);
+    await page.locator(search).fill('branch-mikrotik');
+    await page.waitForFunction(selector => document.querySelectorAll(selector + ' tbody tr').length === 1, table);
+    assert.match(await page.locator(table + ' tbody').innerText(), /branch-mikrotik/);
+    await page.locator('#resetSearch').click();
+    await page.waitForFunction(selector => document.querySelectorAll(selector + ' tbody tr').length === 3, table);
+    await page.locator('.buttons-colvis').click();
+    const columnIndex = route === '/nodes' ? 3 : 2;
+    const columnButton = page.locator('.buttons-columnVisibility').filter({ hasText: route === '/nodes' ? /^Group$/ : /^Total Failures$/ });
+    await columnButton.click();
+    assert.equal(await page.evaluate(({ table, columnIndex }) => jQuery(table).DataTable().column(columnIndex).visible(), { table, columnIndex }), false);
+    await columnButton.click();
+    assert.equal(await page.evaluate(({ table, columnIndex }) => jQuery(table).DataTable().column(columnIndex).visible(), { table, columnIndex }), true);
+    console.log('PASS search/reset/column visibility ' + route);
+  }
+  await page.goto('http://127.0.0.1:9299/nodes');
+  await page.screenshot({ path: output + '/inventory-desktop-light.png', fullPage: true });
+  await page.locator('#theme-toggle').click();
+  assert.equal(await page.locator('html').getAttribute('data-bs-theme'), 'dark');
+  await page.reload();
+  assert.equal(await page.locator('html').getAttribute('data-bs-theme'), 'dark');
+  await page.screenshot({ path: output + '/inventory-desktop-dark.png', fullPage: true });
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.locator('#sidebar-toggle').click();
+  assert.equal(await page.locator('#sidebar-toggle').getAttribute('aria-expanded'), 'true');
+  assert.equal(await page.locator('#app-sidebar').evaluate(el => el.inert), false);
+  await page.keyboard.press('Escape');
+  assert.equal(await page.locator('#sidebar-toggle').getAttribute('aria-expanded'), 'false');
+  assert.equal(await page.locator('#app-sidebar').evaluate(el => el.inert), true);
+  await page.waitForFunction(() => document.querySelector('#app-sidebar').getBoundingClientRect().right <= 0);
+  assert.equal(await page.evaluate(() => document.activeElement.id), 'sidebar-toggle');
+  assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
+  await page.screenshot({ path: output + '/inventory-mobile-dark.png', fullPage: true });
+  await page.locator('#theme-toggle').click();
+  await page.screenshot({ path: output + '/inventory-mobile-light.png', fullPage: true });
+  console.log('PASS desktop/mobile navigation and theme persistence');
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  for (const route of ['/node/version?node_full=core-cisco', '/node/version/view?node=core-cisco&oid=new&num=2&epoch=1750000000', '/node/version/diffs?node=core-cisco&oid=new&num=2&epoch=1750000000&oid2=old']) {
+    const response = await page.goto('http://127.0.0.1:9299' + route);
+    assert.equal(response.status(), 200);
+    assert.equal(await page.locator('h1').count(), 1);
+  }
+  assert.match(await page.locator('.diffs_old').innerText(), /old description/);
+  assert.match(await page.locator('.diffs_new').innerText(), /new description/);
+  await page.screenshot({ path: output + '/diff-desktop-light.png', fullPage: true });
+  assert.deepEqual(errors, []);
+  console.log('PASS history/config/diff pages; no browser JavaScript errors');
+  await browser.close();
+})().catch(error => { console.error(error); process.exitCode = 1; });

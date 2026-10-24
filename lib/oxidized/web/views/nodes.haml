@@ -1,94 +1,151 @@
-.row
-  .col-4
-    %h4 nodes /
-  .col-8
-    %form.float-end#oxButtons
-      %button.btn.btn-primary{type: 'button', onclick: 'history.go();'}
-        %i.bi.bi-arrow-clockwise
-        Refresh page
-      %button.btn.btn-primary#resetSearch{type: 'button'}
-        %i.bi.bi-eraser-fill
-        Reset search
-      %button.btn.btn-primary#reload{type: 'button'}
-        %i.bi.bi-repeat
-        Reload node list from source backend
+- total_nodes = @data.length
+- successful_nodes = @data.count { |node| node[:status].to_s == 'success' }
+- failed_nodes = @data.count { |node| node[:status].to_s == 'no_connection' }
+- nodes_without_history = @data.count { |node| node[:status].to_s == 'never' }
+- recent_changes = @data.select { |node| node[:mtime] }.sort_by { |node| node[:mtime].to_i }.reverse.first(5)
 
-.hidden.alert#flashMessage
+.page-heading
+  .page-heading-copy
+    %span.eyebrow.text-muted Network overview
+    %h1 Device inventory
+    %p Monitor managed devices and the outcome of their latest configuration backup.
+  .page-heading-actions
+    %button.btn.btn-outline-secondary{type: 'button', onclick: 'window.location.reload();'}
+      %i.bi.bi-arrow-clockwise{:'aria-hidden' => 'true'}
+      Refresh
+    %button.btn.btn-primary#reload{type: 'button'}
+      %i.bi.bi-arrow-repeat{:'aria-hidden' => 'true'}
+      Reload source
 
-.row
+.alert.d-none#flashMessage{role: 'status', :'aria-live' => 'polite'}
+
+.overview-grid{:'aria-label' => 'Latest backup summary'}
+  .metric-card.metric-card-neutral
+    .metric-topline
+      %span.metric-icon
+        %i.bi.bi-hdd-stack{:'aria-hidden' => 'true'}
+      %span.metric-caption Total devices
+    %strong.metric-value= total_nodes
+    %span.metric-note Devices in the current node list
+  .metric-card.metric-card-success
+    .metric-topline
+      %span.metric-icon
+        %i.bi.bi-check2-circle{:'aria-hidden' => 'true'}
+      %span.metric-caption Latest backup successful
+    %strong.metric-value= successful_nodes
+    %span.metric-note Devices whose most recent run succeeded
+  .metric-card.metric-card-danger
+    .metric-topline
+      %span.metric-icon
+        %i.bi.bi-exclamation-circle{:'aria-hidden' => 'true'}
+      %span.metric-caption Latest backup failed
+    %strong.metric-value= failed_nodes
+    %span.metric-note Devices whose most recent run failed
+  .metric-card.metric-card-muted
+    .metric-topline
+      %span.metric-icon
+        %i.bi.bi-clock-history{:'aria-hidden' => 'true'}
+      %span.metric-caption No backup history
+    %strong.metric-value= nodes_without_history
+    %span.metric-note Devices with no recorded latest run
+
+.section-heading
+  .section-heading-copy
+    %h2 Managed devices
+    %p Search, filter, inspect configuration history, or trigger a backup.
+
+.table-card
+  .table-toolbar
+    .table-search
+      %i.bi.bi-search{:'aria-hidden' => 'true'}
+      %label.visually-hidden{for: 'inventorySearch'} Search device inventory
+      %input#inventorySearch{type: 'search', placeholder: 'Search name, address, model, or group…'}
+    %button.btn.btn-outline-secondary.btn-sm#resetSearch{type: 'button'}
+      %i.bi.bi-eraser{:'aria-hidden' => 'true'}
+      Clear search
   .table-responsive
-    %table.table.table-sm.table-striped.table-hover#nodesTable
+    %table.table.table-hover.align-middle#nodesTable
       %thead
         %tr
-          %th Name
-          %th IP
-          %th Model
+          %th Device
+          %th Address
+          %th Platform / model
           %th Group
-          %th Last Status
-          %th Last Update
-          %th Last Changed
+          %th Latest backup
+          %th Last backup time
+          %th Last changed
           %th Actions
-
       %tbody
-        - @data.sort_by{|e|e[:name]}.each do |node|
+        - @data.sort_by { |node| node[:name].to_s.downcase }.each do |node|
           %tr
+            %td.device-cell
+              %a.device-name{href: url_for("/node/show/#{node[:name]}")}= node[:name]
+              %span.device-subtitle= node[:full_name] unless node[:full_name] == node[:name]
+            %td.text-muted= node[:ip]
             %td
-              %a{href: url_for("/node/show/#{node[:name]}")} #{node[:name]}
-            %td= node[:ip]
+              %a.model-link{href: url_for("/nodes/model/#{node[:model]}")}= node[:model]
             %td
-              %a{href: url_for("/nodes/model/#{node[:model]}")} #{node[:model]}
+              %a.group-link{href: url_for("/nodes/group/#{node[:group]}")}= node[:group]
             %td
-              %a{href: url_for("/nodes/group/#{node[:group]}")} #{node[:group]}
-            %td
-              %div{title: node[:status], class: node[:status]}
-                %span{style: 'visibility: hidden'}#{node[:status]}
-            %td.time{ epoch: node[:time].to_i }= node[:time]
-            %td.time{ epoch: node[:mtime].to_i }= node[:mtime]
-            %td
-              %a.link-body-emphasis.link-underline-opacity-0{title: 'Configuration',
-                  href: url_for("/node/fetch/#{node[:full_name]}")}
-                %i.bi.bi-cloud-download
-              &nbsp;&nbsp;
-              %a.link-body-emphasis.link-underline-opacity-0{title: 'Versions',
-                href: url_for("/node/version?node_full=#{node[:full_name]}")}
-                %i.bi.bi-stack
-              &nbsp;&nbsp;
-              %a.link-body-emphasis.link-underline-opacity-0{title: 'Update configuration',
-                href: url_for("/node/next/#{node[:full_name]}")}
-                %i.bi.bi-repeat
+              %span{title: node[:status].to_s.tr('_', ' '), class: node[:status].to_s}= node[:status].to_s.tr('_', ' ')
+            %td.time.text-nowrap{epoch: node[:time] ? node[:time].to_i : ''}= node[:time]
+            %td.time.text-nowrap{epoch: node[:mtime] ? node[:mtime].to_i : ''}= node[:mtime]
+            %td.actions-cell
+              %a.action-link{title: 'Download current configuration', :'aria-label' => "Download configuration for #{node[:name]}", href: url_for("/node/fetch/#{node[:full_name]}")}
+                %i.bi.bi-cloud-download{:'aria-hidden' => 'true'}
+              %a.action-link{title: 'View configuration history', :'aria-label' => "View configuration history for #{node[:name]}", href: url_for("/node/version?node_full=#{node[:full_name]}")}
+                %i.bi.bi-clock-history{:'aria-hidden' => 'true'}
+              %a.action-link{title: 'Run configuration backup', :'aria-label' => "Run configuration backup for #{node[:name]}", href: url_for("/node/next/#{node[:full_name]}")}
+                %i.bi.bi-arrow-repeat{:'aria-hidden' => 'true'}
 
 :javascript
   $(function() {
     var table = $('#nodesTable').DataTable({
       columnDefs: [
-        {
-          /* Hide IP address by default */
-          target: 1,
-          visible: false,
-        },
-        {
-          /* do not permit to hide Name and Actions */
-          targets: [0,7],
-          className: 'noVis'
-        },
+        { target: 1, visible: false },
+        { targets: [0, 7], className: 'noVis' },
       ],
-      buttons:
-        [{
-          extend: 'colvis',
-          columns: ':not(.noVis)',
-          className: 'btn-primary',
-        }],
+      buttons: [{
+        extend: 'colvis',
+        columns: ':not(.noVis)',
+        className: 'btn-primary',
+        text: '<i class="bi bi-layout-three-columns" aria-hidden="true"></i> Columns'
+      }],
       autoWidth: false,
       lengthMenu: [20, 50, 250, 500, { label: 'All', value: -1 }],
       stateSave: true,
+      order: [[0, 'asc']]
     });
 
-    table.buttons(0,0).container().prependTo($('#oxButtons'));
-    table.buttons(0,0).nodes().removeClass('btn-secondary');
+    table.buttons(0, 0).container().appendTo($('.table-toolbar'));
+    table.buttons(0, 0).nodes().removeClass('btn-secondary');
 
+    $('#inventorySearch').on('input', function() {
+      table.search(this.value).draw();
+    });
     $('#resetSearch').on('click', function() {
-        table.search('').draw();
+      $('#inventorySearch').val('');
+      table.search('').draw();
+      table.columns().search('').draw();
     });
   });
 
-
+.section-heading.recent-heading
+  .section-heading-copy
+    %h2 Recent configuration changes
+    %p Most recently modified device configurations, based on the node modification timestamps.
+.recent-changes-card
+  - if recent_changes.empty?
+    .empty-state No device modification timestamps are available.
+  - else
+    - recent_changes.each do |node|
+      .recent-change-row
+        .recent-change-icon
+          %i.bi.bi-file-earmark-diff{:'aria-hidden' => 'true'}
+        .recent-change-device
+          %a.device-name{href: url_for("/node/show/#{node[:name]}")}= node[:name]
+          %span.device-subtitle
+            #{node[:model]} · #{node[:group]}
+        %span.time.recent-change-time{epoch: node[:mtime].to_i}= node[:mtime]
+        %a.action-link{title: 'View configuration history', :'aria-label' => "View configuration history for #{node[:name]}", href: url_for("/node/version?node_full=#{node[:full_name]}")}
+          %i.bi.bi-arrow-up-right{:'aria-hidden' => 'true'}
