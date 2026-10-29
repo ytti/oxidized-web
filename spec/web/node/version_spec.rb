@@ -26,28 +26,29 @@ describe Oxidized::API::WebApp do
 
       get '/node/version?node_full=sw5'
       _(last_response.ok?).must_equal true
-      _(last_response.body.include?(
-          "<tr>\n<td>3</td>\n<td class=\"time\" epoch=\"1738781340\">" \
-          "2025-02-05 19:49:00 +0100</td>\n"
-        )).must_equal true
+      _(last_response.body).must_include('<span class="version-chip">v3</span>')
+      _(last_response.body).must_include(
+        "<td class=\"time\" epoch=\"1738781340\">2025-02-05 19:49:00 +0100</td>"
+      )
 
       _(last_response.body.include?(
           "href=\"/node/version/view?node=sw5&amp;group=&amp;oid=C006&amp;" \
-          "epoch=1738781340&amp;num=3\" title=\"configuration\">"
+          "epoch=1738781340&amp;num=3\""
         )).must_equal true
       _(last_response.body.include?(
           "href=\"/node/version/diffs?node=sw5&amp;group=&amp;oid=C006&amp;" \
-          "epoch=1738781340&amp;num=3\" title=\"Compare with previous version\">"
+          "epoch=1738781340&amp;num=3\""
         )).must_equal true
       _(last_response.body.include?(
           "href=\"/node/version/view?node=sw5&amp;group=&amp;oid=C001&amp;" \
-          "epoch=1738778460&amp;num=1\" title=\"configuration\">"
+          "epoch=1738778460&amp;num=1\""
         )).must_equal true
       # Compare to the version previous 1 is not possible, so don't display it
       _(last_response.body.include?(
           "href=\"/node/version/diffs?node=sw5&amp;group=&amp;oid=C001&amp;" \
-          "epoch=1738778460&amp;num=1\" title=\"Compare with previous version\">"
+          "epoch=1738778460&amp;num=1\""
         )).must_equal false
+      _(last_response.body.scan('class="latest-chip"').length).must_equal 1
     end
 
     it 'fetches all versions of a node with a group' do
@@ -55,10 +56,16 @@ describe Oxidized::API::WebApp do
 
       get '/node/version?node_full=group1/sw5'
       _(last_response.ok?).must_equal true
-      _(last_response.body.include?(
-          "<tr>\n<td>3</td>\n<td class=\"time\" epoch=\"1738781340\">" \
-          "2025-02-05 19:49:00 +0100</td>\n"
-        )).must_equal true
+      _(last_response.body).must_include('<span class="version-chip">v3</span>')
+      _(last_response.body).must_include(
+        "<td class=\"time\" epoch=\"1738781340\">2025-02-05 19:49:00 +0100</td>"
+      )
+      _(last_response.body).must_include(
+        'href="/node/version/view?node=sw5&amp;group=group1&amp;oid=C006&amp;epoch=1738781340&amp;num=3"'
+      )
+      _(last_response.body).must_include(
+        'href="/node/version/diffs?node=sw5&amp;group=group1&amp;oid=C006&amp;epoch=1738781340&amp;num=3"'
+      )
     end
 
     it 'fetches all versions of a node with a group with /' do
@@ -66,10 +73,10 @@ describe Oxidized::API::WebApp do
 
       get '/node/version?node_full=gr/oup1/sw5'
       _(last_response.ok?).must_equal true
-      _(last_response.body.include?(
-          "<tr>\n<td>3</td>\n<td class=\"time\" epoch=\"1738781340\">" \
-          "2025-02-05 19:49:00 +0100</td>\n"
-        )).must_equal true
+      _(last_response.body).must_include('<span class="version-chip">v3</span>')
+      _(last_response.body).must_include(
+        "<td class=\"time\" epoch=\"1738781340\">2025-02-05 19:49:00 +0100</td>"
+      )
     end
 
     it 'returns 200 when node_full is absent (no NoMethodError)' do
@@ -87,10 +94,12 @@ describe Oxidized::API::WebApp do
       get '/node/version/view?node=sw5&group=&oid=c8aa93cab5&epoch=1738781340&num=2'
       _(last_response.ok?).must_equal true
       _(last_response.body.include?('Old configuration of sw5')).must_equal true
+      _(last_response.body).must_include(
+        'href="/node/version/view?node=sw5&amp;group=&amp;oid=c8aa93cab5&amp;epoch=1738781340&amp;num=2&amp;format=text"'
+      )
       # The test needs to pass in any timezone, so we use Time.parse to get the
       # right string
       _(last_response.body.include?(
-          "Date of version:\n" \
           "<span class=\"time\" epoch=\"1738781340\">" \
           "#{Time.at(1738781340)}</span>"
         )).must_equal true
@@ -162,12 +171,24 @@ describe Oxidized::API::WebApp do
       @nodes.expects(:version).with('sw5', nil).returns(@versions)
       @nodes.expects(:get_diff).returns(@diff)
 
-      get '/node/version/diffs?node=sw5&group=&oid=C006&epoch=1738781340&num=3'
+      get '/node/version/diffs?node=sw5&group=&oid=C006&epoch=1738781340&num=3&oid2=C001'
       _(last_response.ok?).must_equal true
+      body = last_response.body
+      _(body).must_include('aria-label="Previous configuration version"')
+      _(body).must_include('aria-label="Selected configuration version"')
+      _(body).must_include('changed line old')
+      _(body).must_include('changed line new1')
+      _(body).must_match(/<option(?=[^>]*\bselected(?:="selected")?(?:\s|>))(?=[^>]*value="C001")[^>]*>/)
+      previous_pane = body.split('<div class="diff-pane diff-pane-old">', 2).last
+                          .split('<div class="diff-pane diff-pane-new">', 2).first
+      selected_pane = body.split('<div class="diff-pane diff-pane-new">', 2).last
+      _(previous_pane).must_include('changed line old')
+      _(previous_pane).wont_include('changed line new1')
+      _(selected_pane).must_include('changed line new1')
+      _(selected_pane).wont_include('changed line old')
       # The test needs to pass in any timezone, so we use Time.parse to get the
       # right string
       _(last_response.body.include?(
-          "Date of version:\n" \
           "<span class=\"time\" epoch=\"1738781340\">" \
           "#{Time.at(1738781340)}</span>"
         )).must_equal true

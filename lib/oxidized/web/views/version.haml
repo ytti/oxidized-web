@@ -1,23 +1,32 @@
-.row
-  .col-8
-    %h4
+.page-heading
+  .page-heading-copy
+    .breadcrumbs
+      %a{href: url_for('/nodes')} Devices
+      %i.bi.bi-chevron-right{:'aria-hidden' => 'true'}
       - if @info[:group] != ''
         - params = "node_full=#{@info[:group] + '/' + @info[:node]}"
       - else
         - params = "node_full=#{@info[:node]}"
-      %a{href: url_for("/node/version?#{params}")} versions
-      \/ version #{@info[:num]} for node
-      %b #{@info[:node]}
-  .col-4
-    .float-end
-      %a.btn.btn-primary{:href => "#{request.path}?#{request.query_string}&format=text"} raw
-.row
-  .col-sm-12
-    Date of version:
-    %span.time{ epoch: @info[:time].to_i }= @info[:time]
+      %a{href: url_for("/node/version?#{params}")} History
+      %i.bi.bi-chevron-right{:'aria-hidden' => 'true'}
+      %span Version #{@info[:num]}
+    %span.eyebrow.text-muted Configuration snapshot
+    %h1= @info[:node]
+    %p
+      Version #{@info[:num]} captured
+      %span.time{epoch: @info[:time].to_i}= @info[:time]
+  .page-heading-actions
+    %a.btn.btn-outline-secondary{href: "#{request.path}?#{request.query_string}&format=text"}
+      %i.bi.bi-download{:'aria-hidden' => 'true'}
+      Download raw
 
-.row
-  .col-sm-12
-    %pre.bg-body-tertiary.border.border-secondary-subtle.rounded
+.config-panel
+  .config-panel-header
+    .config-panel-label
+      %i.bi.bi-file-earmark-code{:'aria-hidden' => 'true'}
+      Configuration
+    %span.config-format Plain text
+  %pre.config-view{role: 'region', :'aria-label' => 'Configuration text', tabindex: '0'}
+    %code
       - @data.each_line do |line|
         != escape_once("#{line}")

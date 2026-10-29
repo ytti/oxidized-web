@@ -1,19 +1,24 @@
-.row
-  .col-8
-    %h4
-      %a{href: url_for('/nodes')} nodes
-      \/ Nodes that contain 
-      %b
-        &= "#{@to_research}"
-  .col-4
-    %form.float-end#oxButtons
-      %button.btn.btn-primary{type: 'button', onclick: 'history.go();'}
-        %i.bi.bi-arrow-clockwise
-        Refresh page
+.page-heading
+  .page-heading-copy
+    .breadcrumbs
+      %a{href: url_for('/nodes')} Devices
+      %i.bi.bi-chevron-right{:'aria-hidden' => 'true'}
+      %span Configuration search
+    %span.eyebrow.text-muted Search results
+    %h1 Configuration matches
+    %p
+      Nodes whose current configuration matches
+      %strong&= "#{@to_research}"
+  .page-heading-actions
+    %button.btn.btn-outline-secondary{type: 'button', onclick: 'window.location.reload();'}
+      %i.bi.bi-arrow-clockwise{:'aria-hidden' => 'true'}
+      Refresh
 
-.row
+.table-card.search-results-card
+  .table-toolbar
+    %span.toolbar-label #{@nodes_match.length} matching devices
   .table-responsive
-    %table.table.table-sm.table-striped.table-hover#versionsTable
+    %table.table.table-hover.align-middle#versionsTable
       %thead
         %tr
           %th Name
@@ -22,11 +27,11 @@
       %tbody
         - @nodes_match.each do |x|
           %tr
-            %td #{x[:node]}
+            %td.device-name= x[:node]
             %td
-              %a{title: 'configuration',
+              %a.action-link{title: 'Download configuration', :'aria-label' => "Download configuration for #{x[:node]}",
                  href: url_for("/node/fetch/#{x[:full_name]}")}
-                %i.bi.bi-cloud-download
+                %i.bi.bi-cloud-download{:'aria-hidden' => 'true'}
 
 :javascript
   $(function() {

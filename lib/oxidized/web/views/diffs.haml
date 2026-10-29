@@ -1,92 +1,106 @@
-.row
-  .col-4
-    %h4
+.page-heading
+  .page-heading-copy
+    .breadcrumbs
+      %a{href: url_for('/nodes')} Devices
+      %i.bi.bi-chevron-right{:'aria-hidden' => 'true'}
       - if @info[:group] != ''
         - node_full = "#{@info[:group]}/#{@info[:node]}"
       - else
         - node_full = "#{@info[:node]}"
-      %a{href: url_for("/node/version?node_full=#{node_full}")} versions
-      \/ Diff version #{@info[:num]} - #{@info[:num2]} for node
-      %b #{@info[:node]}
-.row
-  .col-sm-12
-    Date of version:
-    %span.time{ epoch: @info[:time].to_i }= @info[:time]
-.row
-  .col-sm-12
-    Number of lines changed:
-    %span.added added #{@stat[0]}
-    %span.deleted removed #{@stat[1]}
+      %a{href: url_for("/node/version?node_full=#{node_full}")} History
+      %i.bi.bi-chevron-right{:'aria-hidden' => 'true'}
+      %span Configuration comparison
+    %span.eyebrow.text-muted Change review
+    %h1 Configuration diff
+    %p Compare two saved snapshots for #{@info[:node]}.
+  .page-heading-actions
+    %a.btn.btn-outline-secondary{href: url_for("/node/version?node_full=#{node_full}")}
+      %i.bi.bi-arrow-left{:'aria-hidden' => 'true'}
+      Version history
 
-.row
-  .col-sm-6
-    - params = "node=#{@info[:node]}&group=#{@info[:group]}&oid=#{@info[:oid]}"
-    - params = "#{params}&epoch=#{@info[:time].to_i}&num=#{@info[:num]}"
-    %form{action: url_for("/node/version/diffs?#{params}"), method: 'post', role: 'form'}
-      .form-group
-        %select.form-select#oid2{name: 'oid2'}
-          - diff2 = {}
-          - num = @oids_dates.count + 1
+.diff-summary
+  .diff-stat
+    %span.diff-stat-mark.added +
+    %strong #{@stat[0]}
+    %span lines added
+  .diff-stat
+    %span.diff-stat-mark.deleted −
+    %strong #{@stat[1]}
+    %span lines removed
+  .diff-summary-time
+    %span.text-muted Selected version
+    %span.time{epoch: @info[:time].to_i}= @info[:time]
+
+.diff-select-card
+  .diff-select-copy
+    %strong Choose comparison version
+    %span Compare this snapshot against another saved configuration.
+  - params = "node=#{@info[:node]}&group=#{@info[:group]}&oid=#{@info[:oid]}"
+  - params = "#{params}&epoch=#{@info[:time].to_i}&num=#{@info[:num]}"
+  %form.diff-select-form{action: url_for("/node/version/diffs?#{params}"), method: 'post', role: 'form'}
+    %label.visually-hidden{for: 'oid2'} Previous configuration version
+    %select.form-select#oid2{name: 'oid2'}
+      - diff2 = {}
+      - num = @oids_dates.count + 1
+      - next_id = false
+      - @oids_dates.each do |x|
+        - version_number = num -= 1
+        %option{value: x[:oid], selected: @info[:num2].to_i == version_number} Version #{version_number} (#{time_from_now x[:time]})
+        - if (x[:oid].to_s == @info[:oid2]) || (next_id)
+          - diff2 = {num: num, time: x[:time]}
           - next_id = false
-          - @oids_dates.each do |x|
-            %option{value: x[:oid]} Version #{num -= 1} (#{time_from_now x[:time]})
-            - if (x[:oid].to_s == @info[:oid2]) || (next_id)
-              - diff2 = {num: num, time: x[:time]}
-              - next_id = false
-            - elsif (x[:oid].to_s == @info[:oid]) && !(@info[:oid2])
-              - next_id = true
+        - elsif (x[:oid].to_s == @info[:oid]) && !(@info[:oid2])
+          - next_id = true
+    %button.btn.btn-primary{type: 'submit'}
+      %i.bi.bi-arrow-left-right{:'aria-hidden' => 'true'}
+      Compare versions
 
-      %button.btn.btn-primary{type: 'submit'} Get Diffs!
+.diff-pane-heading
+  .diff-pane-title
+    %span.diff-version-label Previous version
+    %strong Version #{diff2[:num]}
+    %span.time{epoch: diff2[:time].to_i}= diff2[:time]
+  .diff-pane-title.diff-pane-title-new
+    %span.diff-version-label Selected version
+    %strong Version #{@info[:num]}
+    %span.time{epoch: @info[:time].to_i}= @info[:time]
 
-.row
-  .col-sm-12
-    .old_version_title Version #{diff2[:num]} (#{time_from_now diff2[:time]})
-    .new_version_title Version #{@info[:num]} (#{time_from_now @info[:time]})
-
-.row
-  .col-sm-12
-    .diffs_old
+.diff-pane-grid{:'aria-label' => 'Side-by-side configuration comparison'}
+  .diff-pane.diff-pane-old
+    .diffs_old{role: 'region', :'aria-label' => 'Previous configuration version', tabindex: '0'}
       - @diff[:old_diff].each do |line|
         - if /^\+.*/.match(line)
           .added><
             != escape_once("#{line}")
-
         - elsif /^\-.*/.match(line)
           .deleted><
             != escape_once("#{line}")
-
         - elsif /^@@\s.*@@.*$/.match(line)
           .diff-index><
             != escape_once("#{line}")
-
         - elsif /^empty_line&nbsp;/.match(line)
           - line.slice! "empty_line"
           .diff-empty><
             != escape_once("#{line}")
-
         - else
           %div><
             != escape_once("#{line}")
-
-    .diffs_new
+  .diff-pane.diff-pane-new
+    .diffs_new{role: 'region', :'aria-label' => 'Selected configuration version', tabindex: '0'}
       - @diff[:new_diff].each do |line|
         - if /^\+.*/.match(line)
           .added><
             != escape_once("#{line}")
-
         - elsif /^\-.*/.match(line)
           .deleted><
             != escape_once("#{line}")
-
         - elsif /^@@\s.*@@.*$/.match(line)
           .diff-index><
             != escape_once("#{line}")
-
         - elsif /^empty_line&nbsp;/.match(line)
           - line.slice! "empty_line"
           .diff-empty><
             != escape_once("#{line}")
-
         - else
           %div><
             != escape_once("#{line}")

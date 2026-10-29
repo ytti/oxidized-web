@@ -7,7 +7,7 @@
     "lib": "lib"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node --test spec/js/app-shell.test.js spec/js/theme-toggle.test.js"
   },
   "author": "The oxidized project",
   "license": "Apache 2.0",
