@@ -95,6 +95,57 @@ describe Oxidized::API::WebApp do
       _(matches[0]['snippet'].map { |l| l['number'] }).must_equal (1..9).to_a
     end
 
+    it 'matches a regular expression that spans lines' do
+      post '/nodes/conf_search.json', search_in_conf_textbox: 'uplink[\s\S]*host-name'
+
+      result = JSON.parse(last_response.body)
+      _(result.length).must_equal 1
+      matches = result[0]['matches']
+      _(matches.length).must_equal 1
+      _(matches[0]['line_number']).must_equal 2
+      _(matches[0]['line_numbers']).must_equal (2..7).to_a
+      _(matches[0]['snippet'].map { |l| l['number'] }).must_equal (1..9).to_a
+
+      snippet = matches[0]['snippet'].to_h { |l| [l['number'], l['highlights']] }
+      _(snippet[1]).must_equal []
+      _(snippet[2]).must_equal [[14, 28]]
+      _(snippet[3]).must_equal [[0, 10]]
+      _(snippet[7]).must_equal [[0, 11]]
+      _(snippet[8]).must_equal []
+    end
+
+    it 'matches a newline in the search term' do
+      post '/nodes/conf_search.json', search_in_conf_textbox: 'core\n  mtu'
+
+      matches = JSON.parse(last_response.body)[0]['matches']
+      _(matches.length).must_equal 1
+      _(matches[0]['line_numbers']).must_equal [2, 3]
+    end
+
+    it 'matches \R as a line break' do
+      post '/nodes/conf_search.json', search_in_conf_textbox: 'core\R'
+
+      matches = JSON.parse(last_response.body)[0]['matches']
+      _(matches[0]['line_numbers']).must_equal [2]
+      _(matches[0]['snippet'][1]['highlights']).must_equal [[24, 28]]
+    end
+
+    it 'anchors \A to the start of the config, not each line' do
+      post '/nodes/conf_search.json', search_in_conf_textbox: '\Ainterface'
+
+      matches = JSON.parse(last_response.body)[0]['matches']
+      _(matches.length).must_equal 1
+      _(matches[0]['line_numbers']).must_equal [1]
+    end
+
+    it 'highlights each line of a multi-line match in the html view' do
+      post '/nodes/conf_search', search_in_conf_textbox: 'core\n  mtu'
+
+      _(last_response.ok?).must_equal true
+      _(last_response.body).must_include '2:   description uplink to <mark>core</mark>'
+      _(last_response.body).must_include '3: <mark>  mtu</mark> 9000'
+    end
+
     it 'highlights the matched text in the html view' do
       post '/nodes/conf_search', search_in_conf_textbox: 'description'
 

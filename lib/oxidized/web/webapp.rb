@@ -291,76 +291,99 @@ module Oxidized
       end
 
       # Give one entry per distinct region of the config matching +regexp+.
-      # Context windows that overlap or touch are merged so nearby matches do
-      # not return duplicate snippets. +line_number+ remains the first match
-      # for API compatibility; +line_numbers+ contains every match in the
-      # merged region.
+      # The regexp runs against the whole config, so patterns that span lines
+      # (\n, \R, [\s\S], /m with .) and string anchors (\A, \z) work. Lines are
+      # only used to build the snippet. Context windows that overlap or touch
+      # are merged so nearby matches do not return duplicate snippets.
+      # +line_number+ remains the first match for API compatibility;
+      # +line_numbers+ contains every line a match touches in the region.
+      # Each snippet line has +highlights+: [from, to) character ranges of the
+      # match on that line.
       def config_search_matches(config, regexp)
-        lines = config.lines.map(&:chomp)
-        match_indexes = lines.each_index.select { |index| lines[index].match?(regexp) }
-        return [] if match_indexes.empty?
+        lines = config.lines
+        return [] if lines.empty?
 
-        regions = match_indexes.each_with_object([]) do |index, merged|
-          region = {
-            from: [index - CONF_SEARCH_CONTEXT_LINES, 0].max,
-            to: [index + CONF_SEARCH_CONTEXT_LINES, lines.length - 1].min,
-            matches: [index]
-          }
+        line_starts = lines.each_with_object([0]) { |line, starts| starts << (starts.last + line.length) }
+        lines = lines.map(&:chomp)
+        hits = config_search_hits(config, regexp, line_starts)
+        return [] if hits.empty?
 
-          if merged.any? && region[:from] <= merged.last[:to] + 1
-            merged.last[:to] = [merged.last[:to], region[:to]].max
-            merged.last[:matches] << index
-          else
-            merged << region
-          end
-        end
-
-        regions.map do |region|
-          matching_lines = region[:matches].to_h { |index| [index, true] }
+        highlights = config_search_highlights(hits, lines, line_starts)
+        config_search_regions(hits, lines.length).map do |region|
           snippet = (region[:from]..region[:to]).map do |index|
-            { number: index + 1, text: lines[index], match: matching_lines.has_key?(index) }
+            { number: index + 1, text: lines[index], match: highlights.has_key?(index),
+              highlights: highlights.fetch(index, []) }
           end
-          line_numbers = region[:matches].map { |index| index + 1 }
-          {
-            line_number: line_numbers.first,
-            line_numbers: line_numbers,
-            snippet: snippet
-          }
+          line_numbers = snippet.select { |line| line[:match] }.map { |line| line[:number] }
+          { line_number: line_numbers.first, line_numbers: line_numbers, snippet: snippet }
         end
       end
 
-      # HTML-escape line, wrapping every regexp match in <mark>
-      def highlight_matches(line, regexp)
-        html = +''
-        pos = 0
-        while pos <= line.length && (md = regexp.match(line, pos))
-          if md[0].empty?
-            # zero-width match: emit up to and including the character at the
-            # match position, so the scan always advances
-            html << escape_once(line[pos..md.begin(0)])
-            pos = md.begin(0) + 1
-          else
-            html << escape_once(line[pos...md.begin(0)])
-            html << "<mark>#{escape_once(md[0])}</mark>"
-            pos = md.end(0)
+      # Every match of +regexp+ in +config+, with its character offsets and
+      # the first and last line it touches
+      def config_search_hits(config, regexp, line_starts)
+        config.to_enum(:scan, regexp).map do
+          from, to = Regexp.last_match.offset(0)
+          first = config_search_line_at(line_starts, from)
+          # a zero-width match sits on one line; otherwise the line of the
+          # last matched character, so a match ending in "\n" stays on its line
+          last = to > from ? config_search_line_at(line_starts, to - 1) : first
+          { from: from, to: to, first: first, last: last }
+        end
+      end
+
+      # Index of the line that holds character +offset+
+      def config_search_line_at(line_starts, offset)
+        (line_starts.bsearch_index { |start| start > offset } || (line_starts.length - 1)) - 1
+      end
+
+      # Map of line index => [from, to) ranges of matched text on that line.
+      # A line is a key if any match touches it, even when only its newline
+      # or a zero-width position matched.
+      def config_search_highlights(hits, lines, line_starts)
+        hits.each_with_object({}) do |hit, highlights|
+          (hit[:first]..hit[:last]).each do |index|
+            ranges = (highlights[index] ||= [])
+            from = [hit[:from] - line_starts[index], 0].max
+            to = [hit[:to] - line_starts[index], lines[index].length].min
+            ranges << [from, to] if to > from
           end
         end
-        html << escape_once(line[pos..].to_s)
-        html
+      end
+
+      # Line ranges to show: each match plus context, merged when they
+      # overlap or touch
+      def config_search_regions(hits, line_count)
+        hits.each_with_object([]) do |hit, merged|
+          from = [hit[:first] - CONF_SEARCH_CONTEXT_LINES, 0].max
+          to = [hit[:last] + CONF_SEARCH_CONTEXT_LINES, line_count - 1].min
+
+          if merged.any? && from <= merged.last[:to] + 1
+            merged.last[:to] = [merged.last[:to], to].max
+          else
+            merged << { from: from, to: to }
+          end
+        end
+      end
+
+      # HTML-escape +text+, wrapping each [from, to) range in <mark>
+      def highlight_ranges(text, ranges)
+        html = +''
+        pos = 0
+        ranges.each do |from, to|
+          html << escape_once(text[pos...from])
+          html << "<mark>#{escape_once(text[from...to])}</mark>"
+          pos = to
+        end
+        html << escape_once(text[pos..])
       end
 
       # HTML for one config search snippet: line-numbered text with the
       # matches highlighted
-      def snippet_html(match, regexp)
+      def snippet_html(match)
         width = match[:snippet].last[:number].to_s.length
         match[:snippet].map do |line|
-          number = line[:number].to_s.rjust(width)
-          text = if line[:match]
-                   highlight_matches(line[:text], regexp)
-                 else
-                   escape_once(line[:text])
-                 end
-          "#{number}: #{text}"
+          "#{line[:number].to_s.rjust(width)}: #{highlight_ranges(line[:text], line[:highlights])}"
         end.join("\n")
       end
 
