@@ -3,6 +3,9 @@ require 'sinatra/url_for'
 require 'tilt/haml'
 require 'htmlentities'
 require 'charlock_holmes'
+require 'rack/session'
+require 'rack/protection'
+require 'securerandom'
 module Oxidized
   module API
     require 'oxidized/web/version'
@@ -14,6 +17,13 @@ module Oxidized
       # output is stable across Haml versions. Haml 7.3.0 changed the default
       # from "'" to '"' (haml/haml#1188); older versions still default to "'".
       set :haml, { escape_html: true, attr_quote: '"' }
+
+      use Rack::Session::Cookie,
+          key:       'rack.session',
+          secret:    SecureRandom.hex(32),
+          same_site: :strict,
+          http_only: true
+      use Rack::Protection::AuthenticityToken unless ENV['APP_ENV'] == 'test'
 
       get '/' do
         redirect url_for('/nodes')
