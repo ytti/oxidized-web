@@ -42,8 +42,8 @@ Gem::Specification.new do |s|
   s.add_dependency 'json',                '>= 2.3', '< 4.0'
   # Only depend on a minimal version of Oxidized so we don't need to
   # update the gemspec for new Oxidized releases
-  s.add_dependency 'oxidized',            '>= 0.34.1'
-  s.add_dependency 'puma',                '>= 6.6', '< 8'
+  s.add_dependency 'oxidized',            '>= 0.38.0'
+  s.add_dependency 'puma',                '>= 6.6', '< 9'
   s.add_dependency 'sinatra',             '~> 4.1'
   s.add_dependency 'sinatra-contrib',     '~> 4.1'
 
