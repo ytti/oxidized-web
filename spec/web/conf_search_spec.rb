@@ -52,6 +52,21 @@ describe Oxidized::API::WebApp do
       ]
     end
 
+    it 'skips nodes without config' do
+      @nodes.expects(:list).returns(
+        [{ name: 'none', full_name: 'none', group: nil },
+         { name: 'sw5', full_name: 'sw5', group: nil }]
+      )
+      # output file returns nil when the config file does not exist
+      @nodes.expects(:fetch).with('none', nil).returns(nil)
+      @nodes.expects(:fetch).with('sw5', nil).returns("hostname sw5\n")
+      post '/nodes/conf_search.json', search_in_conf_textbox: 'hostname'
+      _(last_response.ok?).must_equal true
+      _(JSON.parse(last_response.body)).must_equal [
+        { 'node' => 'sw5', 'full_name' => 'sw5' }
+      ]
+    end
+
     describe 'with non-ASCII characters' do
       # Output modules (e.g. git/rugged) return the config as ASCII-8BIT
       before do

@@ -83,6 +83,9 @@ module Oxidized
             nodes.list.map.each do |n|
               node, @json = route_parse n[:name]
               config = nodes.fetch node, n[:group]
+              # no config available (e.g. output file returns nil)
+              next unless config
+
               # binary configs cannot be searched
               config = text_to_utf8(config)
               next unless config
