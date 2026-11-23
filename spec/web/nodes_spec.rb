@@ -19,6 +19,7 @@ describe Oxidized::API::WebApp do
        { name: 'sw9', ip: '10.10.10.9',  model: 'aos', time: 'time', mtime: 'mtime', group: 'gr/oup1' }]
     )
     app.set(:nodes, @nodes)
+    app.set(:configuration, { hide_node_vars: [], mtime_from_versions: false })
   end
 
   describe '/nodes.?:format?' do
