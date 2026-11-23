@@ -37,6 +37,21 @@ describe Oxidized::API::WebApp do
       _(last_response.ok?).must_equal true
     end
 
+    it 'does not match binary configs' do
+      @nodes.expects(:list).returns(
+        [{ name: 'bin', full_name: 'bin', group: nil },
+         { name: 'txt', full_name: 'txt', group: nil }]
+      )
+      @nodes.expects(:fetch).with('bin', nil).returns("\xff\x42 binary content\x00".b)
+      @nodes.expects(:fetch).with('txt', nil).returns("description binary\n".b)
+      # must not match the placeholder 'The text contains binary values...'
+      post '/nodes/conf_search.json', search_in_conf_textbox: 'binary'
+      _(last_response.ok?).must_equal true
+      _(JSON.parse(last_response.body)).must_equal [
+        { 'node' => 'txt', 'full_name' => 'txt' }
+      ]
+    end
+
     describe 'with non-ASCII characters' do
       # Output modules (e.g. git/rugged) return the config as ASCII-8BIT
       before do

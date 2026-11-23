@@ -83,7 +83,10 @@ module Oxidized
             nodes.list.map.each do |n|
               node, @json = route_parse n[:name]
               config = nodes.fetch node, n[:group]
-              config = convert_to_utf8(config)
+              # binary configs cannot be searched
+              config = text_to_utf8(config)
+              next unless config
+
               @nodes_match.push({ node: n[:name], full_name: n[:full_name] }) if config[@to_research]
             end
           end
@@ -340,13 +343,17 @@ module Oxidized
         text.gsub(HTML_ESCAPE_ONCE_REGEX, HTML_ESCAPE)
       end
 
+      # Converts text to UTF-8, returns a placeholder message for binary data
       def convert_to_utf8(text)
+        text_to_utf8(text) || 'The text contains binary values - cannot display'
+      end
+
+      # Converts text to UTF-8, returns nil for binary data
+      def text_to_utf8(text)
         detection = ::CharlockHolmes::EncodingDetector.detect(text)
-        if detection[:type] == :text
-          ::CharlockHolmes::Converter.convert text, detection[:encoding], 'UTF-8'
-        else
-          'The text contains binary values - cannot display'
-        end
+        return unless detection[:type] == :text
+
+        ::CharlockHolmes::Converter.convert text, detection[:encoding], 'UTF-8'
       end
 
       def filter_node_vars(serialized_node)
