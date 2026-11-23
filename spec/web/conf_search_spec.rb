@@ -36,5 +36,71 @@ describe Oxidized::API::WebApp do
       post '/nodes/conf_search', search_in_conf_textbox: 'hostname'
       _(last_response.ok?).must_equal true
     end
+
+    it 'does not match binary configs' do
+      @nodes.expects(:list).returns(
+        [{ name: 'bin', full_name: 'bin', group: nil },
+         { name: 'txt', full_name: 'txt', group: nil }]
+      )
+      @nodes.expects(:fetch).with('bin', nil).returns("\xff\x42 binary content\x00".b)
+      @nodes.expects(:fetch).with('txt', nil).returns("description binary\n".b)
+      # must not match the placeholder 'The text contains binary values...'
+      post '/nodes/conf_search.json', search_in_conf_textbox: 'binary'
+      _(last_response.ok?).must_equal true
+      _(JSON.parse(last_response.body)).must_equal [
+        { 'node' => 'txt', 'full_name' => 'txt' }
+      ]
+    end
+
+    it 'skips nodes without config' do
+      @nodes.expects(:list).returns(
+        [{ name: 'none', full_name: 'none', group: nil },
+         { name: 'sw5', full_name: 'sw5', group: nil }]
+      )
+      # output file returns nil when the config file does not exist
+      @nodes.expects(:fetch).with('none', nil).returns(nil)
+      @nodes.expects(:fetch).with('sw5', nil).returns("hostname sw5\n")
+      post '/nodes/conf_search.json', search_in_conf_textbox: 'hostname'
+      _(last_response.ok?).must_equal true
+      _(JSON.parse(last_response.body)).must_equal [
+        { 'node' => 'sw5', 'full_name' => 'sw5' }
+      ]
+    end
+
+    describe 'with non-ASCII characters' do
+      # Output modules (e.g. git/rugged) return the config as ASCII-8BIT
+      before do
+        @nodes.expects(:list).returns(
+          [{ name: 'utf8', full_name: 'utf8', group: nil },
+           { name: 'latin1', full_name: 'latin1', group: nil },
+           { name: 'ascii', full_name: 'ascii', group: nil }]
+        )
+        @nodes.expects(:fetch).with('utf8', nil)
+              .returns("hostname utf8\ndescription Bod\xC3\xB8 \xC3\xA5\n".b)
+        @nodes.expects(:fetch).with('latin1', nil)
+              .returns("hostname latin1\ndescription Bod\xF8 \xE5\n".b)
+        @nodes.expects(:fetch).with('ascii', nil)
+              .returns("hostname ascii\ndescription Bodo a\n".b)
+      end
+
+      it 'finds UTF-8 and Latin1 encoded configs' do
+        post '/nodes/conf_search.json', search_in_conf_textbox: 'Bodø å'
+        _(last_response.ok?).must_equal true
+        _(JSON.parse(last_response.body)).must_equal [
+          { 'node' => 'utf8', 'full_name' => 'utf8' },
+          { 'node' => 'latin1', 'full_name' => 'latin1' }
+        ]
+      end
+
+      it 'still finds ASCII search terms in all configs' do
+        post '/nodes/conf_search.json', search_in_conf_textbox: 'description'
+        _(last_response.ok?).must_equal true
+        _(JSON.parse(last_response.body)).must_equal [
+          { 'node' => 'utf8', 'full_name' => 'utf8' },
+          { 'node' => 'latin1', 'full_name' => 'latin1' },
+          { 'node' => 'ascii', 'full_name' => 'ascii' }
+        ]
+      end
+    end
   end
 end
