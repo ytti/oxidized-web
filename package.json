@@ -18,6 +18,6 @@
     "datatables.net-buttons-bs5": "^4.0.1",
     "dayjs": "~1.11.13",
     "dayjs-plugin-utc": "~0.1.2",
-    "jquery": "~4.0.0"
+    "jquery": "~4.1.0"
   }
 }
