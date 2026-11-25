@@ -14,7 +14,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ### Changed
 - Remove the no longer needed escape_once helper call in node.haml, relying on HAML's global escape_html instead (@robertcheramy)
 - Update web libraries to the latest versions (@robertcheramy)
-- Do not include the tests (`spec/`) in the gem, as in oxidized (@robertcheramy)
+- The gem only contains the files needed at runtime and the documentation (`lib/`, `docs/`, README.md, CHANGELOG.md and LICENSE) (@robertcheramy)
 - Encode JSON output with the standard library instead of Sinatra's json helper (@robertcheramy)
 - Set HAML's `attr_quote` explicitly to `"` for stable output across HAML versions (@robertcheramy)
 - Set dependency on Oxidized => 0.38.0 to fix support for puma 8 (@robertcheramy)
