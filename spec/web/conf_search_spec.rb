@@ -57,6 +57,21 @@ describe Oxidized::API::WebApp do
       _(last_response.ok?).must_equal true
     end
 
+    it 'fetches nodes by their unchanged name and keeps the html format' do
+      @nodes.expects(:list).returns(
+        [{ name: 'sw1.', full_name: 'sw1.', group: nil },
+         { name: 'sw2.json', full_name: 'sw2.json', group: nil }]
+      )
+      @nodes.expects(:fetch).with('sw1.', nil).returns("hostname sw1\n")
+      @nodes.expects(:fetch).with('sw2.json', nil).returns("hostname sw2\n")
+      post '/nodes/conf_search', search_in_conf_textbox: 'hostname'
+      _(last_response.ok?).must_equal true
+      _(last_response.content_type).must_match %r{\Atext/html}
+      _(last_response.body.scan(%r{href="/node/fetch/[^"]*"})).must_equal [
+        'href="/node/fetch/sw1."', 'href="/node/fetch/sw2.json"'
+      ]
+    end
+
     it 'does not match binary configs' do
       @nodes.expects(:list).returns(
         [{ name: 'bin', full_name: 'bin', group: nil },

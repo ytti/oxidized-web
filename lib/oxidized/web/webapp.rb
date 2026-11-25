@@ -103,8 +103,7 @@ module Oxidized
           (@search_term.empty? ? [] : nodes.list).each do |n|
             next if @search_node && n[:full_name] != @search_node
 
-            node, @json = route_parse n[:name]
-            config = nodes.fetch node, n[:group]
+            config = nodes.fetch n[:name], n[:group]
             # no config available (e.g. output file returns nil)
             next unless config
 
