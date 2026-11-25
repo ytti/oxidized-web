@@ -9,10 +9,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Security regression tests for XSS prevention in node name, version, diff, stats views and HTMLEntities encoding of device config content (@mattimustang, @robertcheramy)
 - Config search results show matching lines with two lines of context, line numbers and highlighted matches. Overlapping or touching context windows are merged into a single snippet. One snippet per node is shown by default (`search_max_matches`, 0 = all), with a link to all snippets of that node (`search_node`) (@bpbp-boop, @robertcheramy)
 - Search form on the results page, with options to search for literal text instead of a regular expression, to search case-insensitively and to set the number of snippets per node (@bpbp-boop)
+- AGENTS.md: add guidance for AI coding agents, and CONTRIBUTING.md with the AI contribution policy (@robertcheramy)
 
 ### Changed
 - Remove the no longer needed escape_once helper call in node.haml, relying on HAML's global escape_html instead (@robertcheramy)
 - Update web libraries to the latest versions (@robertcheramy)
+- The gem only contains the files needed at runtime and the documentation (`lib/`, `docs/`, README.md, CHANGELOG.md and LICENSE) (@robertcheramy)
 - Encode JSON output with the standard library instead of Sinatra's json helper (@robertcheramy)
 - Set HAML's `attr_quote` explicitly to `"` for stable output across HAML versions (@robertcheramy)
 - Set dependency on Oxidized => 0.38.0 to fix support for puma 8 (@robertcheramy)
@@ -21,6 +23,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Deprecated
 - Ruby 3.0 and 3.1 are deprecated, removal is planned for June 2028, see [docs/deprecated.md](docs/deprecated.md) (@robertcheramy)
+- The legacy configuration `rest` is listed as deprecated, removal is planned for April 2027 together with oxidized, see [docs/deprecated.md](docs/deprecated.md) (@robertcheramy)
 
 ### Fixed
 - Fix `NoMethodError` when `group=` param is absent from `/node/version/view` and `/node/version/diffs` requests. `params[:group]` was assigned directly to `@info[:group]`; `params[:group]` is now normalized to '' so the HAML templates render the no-group branch instead of crashing with a 500 (@makaiver)

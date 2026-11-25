@@ -1,10 +1,12 @@
 # Deprecations
-This page lists features and platforms that are deprecated in oxidized-web
-and will be removed in a future release.
+This page lists features, configuration options and platforms that are
+deprecated in oxidized-web and will be removed in a future release.
+Please migrate to the replacement before the planned removal.
 
-| Deprecated            | Since      | Planned removal | Replacement |
-|-----------------------|------------|-----------------|-------------|
-| Ruby 3.0 and Ruby 3.1 | unreleased | June 2028       | Ruby >= 3.2 |
+| Deprecated                                    | Since      | Planned removal | Replacement               |
+|-----------------------------------------------|------------|-----------------|---------------------------|
+| [Ruby 3.0 and Ruby 3.1](#ruby-30-and-ruby-31) | unreleased | June 2028       | Ruby >= 3.2               |
+| [Configuration `rest`](#configuration-rest)   | 0.16.0     | April 2027      | `extensions.oxidized-web` |
 
 ## Ruby 3.0 and Ruby 3.1
 Ruby 3.0 and 3.1 have reached their end of life (3.0 in April 2024, 3.1 in
@@ -58,3 +60,17 @@ Raising `required_ruby_version` in oxidized-web must be coordinated with
 - Both gems should therefore raise `required_ruby_version` and remove
   Ruby 3.0 and 3.1 from `.github/workflows/ruby.yml` in releases that are
   published together.
+
+## Configuration `rest`
+The old syntax `rest: 127.0.0.1:8888/prefix` to configure oxidized-web has been
+replaced by `extensions.oxidized-web` in oxidized-web 0.16.0. The old syntax
+still works, but oxidized logs a warning and ignores `extensions.oxidized-web`
+when `rest` is configured. The new syntax also supports options that are not
+available with `rest`, such as `vhosts` and `hide_node_vars`.
+
+See [Configuration](configuration.md).
+
+oxidized deprecated `rest` in version 0.33.0 and plans to remove it in April
+2027. oxidized-web will drop its support for `rest` (the method
+`parse_legacy_configuration` in `lib/oxidized/web.rb`) after oxidized has
+removed it, and raise its dependency to that oxidized version.
