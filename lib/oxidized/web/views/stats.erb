@@ -58,11 +58,6 @@
     var table = $('#statsTable').DataTable({
       columnDefs: [
         {
-          /* Hide IP address by default */
-          target: 1,
-          visible: false,
-        },
-        {
           /* do not permit to hide Name and Last Status */
           targets: [0,5],
           className: 'noVis'

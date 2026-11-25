@@ -21,6 +21,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Config search aborts with 400 when a regular expression takes more than one second on a config, to protect against ReDoS. Needs Ruby >= 3.2 (@robertcheramy)
 - Split webapp.rb into smaller files: helpers in `lib/oxidized/web/helpers/` and routes as Sinatra extensions in `lib/oxidized/web/routes/`. No functional change (@robertcheramy)
 - Replace the HAML templates with ERB templates rendered by Erubi, which escapes HTML by default. The dependency on haml is replaced by erubi. The generated HTML is unchanged apart from whitespace (@robertcheramy)
+- Show the column "Total Runs" on the stats page by default; it was hidden by a setting copied from the node list (@robertcheramy)
 - Remove the `X-UA-Compatible` meta tag, which only applied to Internet Explorer and was ineffective due to the invalid attribute `meta-equiv` (@robertcheramy)
 
 ### Deprecated
