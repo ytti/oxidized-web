@@ -358,7 +358,7 @@ module Oxidized
             { number: index + 1, text: lines[index], match: highlights.has_key?(index),
               highlights: highlights.fetch(index, []) }
           end
-          line_numbers = snippet.select { |line| line[:match] }.map { |line| line[:number] }
+          line_numbers = snippet.filter_map { |line| line[:number] if line[:match] }
           { line_number: line_numbers.first, line_numbers: line_numbers, snippet: snippet }
         end
       end
