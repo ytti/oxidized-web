@@ -2,9 +2,27 @@
   .col-8
     %h4
       %a{href: url_for('/nodes')} nodes
-      \/ Nodes that contain
-      %b
-        &= @search_term
+      - if @search_node
+        \/ Matches for
+        %b
+          &= @search_term
+        in
+        %b
+          &= @search_node
+      - else
+        \/ Nodes that contain
+        %b
+          &= @search_term
+    - if @search_node
+      %form{action: url_for('/nodes/conf_search'), method: 'post'}
+        %input{type: 'hidden', name: 'search_in_conf_textbox', value: @search_term}
+        %input{type: 'hidden', name: 'search_regex_checkbox', value: @regex_search ? 'on' : 'off'}
+        %input{type: 'hidden', name: 'search_case_sensitive_checkbox',
+               value: @case_sensitive_search ? 'on' : 'off'}
+        %input{type: 'hidden', name: 'search_max_matches', value: @max_matches}
+        %button.btn.btn-link.btn-sm.p-0{type: 'submit'}
+          %i.bi.bi-arrow-left
+          Back to all nodes
   .col-4
     %form.float-end#oxButtons
       %button.btn.btn-primary{type: 'button', onclick: 'history.go();'}
@@ -36,6 +54,11 @@
                                                            value: 'on',
                                                            checked: @case_sensitive_search}
         %label.form-check-label{for: 'conf-search-case-sensitive'} Case sensitive
+      .mt-1
+        %label.form-label.me-1{for: 'conf-search-max-matches'} Snippets per node
+        %select.form-select.form-select-sm.d-inline-block.w-auto#conf-search-max-matches{name: 'search_max_matches'}
+          - conf_search_max_matches_options.each do |n|
+            %option{value: n, selected: n == @max_matches}= n.zero? ? 'all' : n
 
 - if @error
   .row
@@ -62,6 +85,19 @@
                 - x[:matches].each do |m|
                   %pre.border.rounded.p-2.mb-2><
                     != snippet_html(m)
+                - hidden = x[:match_count] - x[:matches].length
+                - if hidden.positive?
+                  %form.conf-search-more{action: url_for('/nodes/conf_search'), method: 'post'}
+                    %input{type: 'hidden', name: 'search_in_conf_textbox', value: @search_term}
+                    %input{type: 'hidden', name: 'search_regex_checkbox', value: @regex_search ? 'on' : 'off'}
+                    %input{type: 'hidden', name: 'search_case_sensitive_checkbox',
+                           value: @case_sensitive_search ? 'on' : 'off'}
+                    %input{type: 'hidden', name: 'search_max_matches', value: @max_matches}
+                    %input{type: 'hidden', name: 'search_node', value: x[:full_name]}
+                    %span.text-body-secondary
+                      = "… #{hidden} more #{hidden == 1 ? 'snippet' : 'snippets'}"
+                    %button.btn.btn-link.btn-sm.p-0.align-baseline{type: 'submit'}
+                      = "show all #{x[:match_count]} in #{x[:node]}"
 
   :javascript
     $(function() {

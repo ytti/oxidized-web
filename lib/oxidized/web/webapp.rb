@@ -80,6 +80,13 @@ module Oxidized
         # preserve the existing case-sensitive default; the search form sends
         # 'off' (via a hidden field) when the checkbox is unticked
         @case_sensitive_search = params[:search_case_sensitive_checkbox] != 'off'
+        # snippets returned per node; 0 returns all of them
+        @max_matches = conf_search_max_matches params[:search_max_matches]
+        # restrict the search to one node (by full_name) and return all of
+        # its snippets; @max_matches is kept for the search form
+        @search_node = params[:search_node].to_s
+        @search_node = nil if @search_node.empty?
+        limit = @search_node ? 0 : @max_matches
         @nodes_match = []
         begin
           pattern = @regex_search ? @search_term : Regexp.escape(@search_term)
@@ -94,6 +101,8 @@ module Oxidized
           @data = { error: @error }
         else
           nodes.list.each do |n|
+            next if @search_node && n[:full_name] != @search_node
+
             node, @json = route_parse n[:name]
             config = nodes.fetch node, n[:group]
             # no config available (e.g. output file returns nil)
@@ -106,8 +115,10 @@ module Oxidized
             matches = config_search_matches config, @to_research
             next if matches.empty?
 
+            # match_count is the number of snippets before the per-node limit
             @nodes_match.push({ node: n[:name], full_name: n[:full_name],
-                                matches: matches })
+                                match_count: matches.length,
+                                matches: limit.zero? ? matches : matches.first(limit) })
           end
           @data = @nodes_match
         end
@@ -264,6 +275,10 @@ module Oxidized
 
       # lines of context shown around each config search match
       CONF_SEARCH_CONTEXT_LINES = 2
+      # snippets shown per node by default, and the choices offered in the
+      # search form (0 = all)
+      CONF_SEARCH_MAX_MATCHES_DEFAULT = 1
+      CONF_SEARCH_MAX_MATCHES_OPTIONS = [1, 5, 20, 100, 0].freeze
 
       private
 
@@ -302,6 +317,21 @@ module Oxidized
           json = true
         end
         [e.join('.'), json]
+      end
+
+      # Number of snippets to return per node from the +search_max_matches+
+      # parameter: a non-negative integer, 0 meaning all. Anything else
+      # (missing, not a number, negative) gives the default.
+      def conf_search_max_matches(param)
+        value = Integer(param.to_s, 10, exception: false)
+        value && value >= 0 ? value : CONF_SEARCH_MAX_MATCHES_DEFAULT
+      end
+
+      # Choices for the snippets-per-node select, including a value outside
+      # the predefined options that was requested directly (e.g. via the API)
+      def conf_search_max_matches_options
+        options = CONF_SEARCH_MAX_MATCHES_OPTIONS | [@max_matches]
+        options.sort_by { |n| n.zero? ? Float::INFINITY : n }
       end
 
       # Give one entry per distinct region of the config matching +regexp+.

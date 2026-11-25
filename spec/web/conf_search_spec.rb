@@ -55,7 +55,7 @@ describe Oxidized::API::WebApp do
       # must not match the placeholder 'The text contains binary values...'
       post '/nodes/conf_search.json', search_in_conf_textbox: 'binary'
       _(last_response.ok?).must_equal true
-      _(JSON.parse(last_response.body).map { |r| r.except('matches') }).must_equal [
+      _(JSON.parse(last_response.body).map { |r| r.slice('node', 'full_name') }).must_equal [
         { 'node' => 'txt', 'full_name' => 'txt' }
       ]
     end
@@ -70,7 +70,7 @@ describe Oxidized::API::WebApp do
       @nodes.expects(:fetch).with('sw5', nil).returns("hostname sw5\n")
       post '/nodes/conf_search.json', search_in_conf_textbox: 'hostname'
       _(last_response.ok?).must_equal true
-      _(JSON.parse(last_response.body).map { |r| r.except('matches') }).must_equal [
+      _(JSON.parse(last_response.body).map { |r| r.slice('node', 'full_name') }).must_equal [
         { 'node' => 'sw5', 'full_name' => 'sw5' }
       ]
     end
@@ -94,7 +94,7 @@ describe Oxidized::API::WebApp do
       it 'finds UTF-8 and Latin1 encoded configs' do
         post '/nodes/conf_search.json', search_in_conf_textbox: 'Bodø å'
         _(last_response.ok?).must_equal true
-        _(JSON.parse(last_response.body).map { |r| r.except('matches') }).must_equal [
+        _(JSON.parse(last_response.body).map { |r| r.slice('node', 'full_name') }).must_equal [
           { 'node' => 'utf8', 'full_name' => 'utf8' },
           { 'node' => 'latin1', 'full_name' => 'latin1' }
         ]
@@ -103,7 +103,7 @@ describe Oxidized::API::WebApp do
       it 'still finds ASCII search terms in all configs' do
         post '/nodes/conf_search.json', search_in_conf_textbox: 'description'
         _(last_response.ok?).must_equal true
-        _(JSON.parse(last_response.body).map { |r| r.except('matches') }).must_equal [
+        _(JSON.parse(last_response.body).map { |r| r.slice('node', 'full_name') }).must_equal [
           { 'node' => 'utf8', 'full_name' => 'utf8' },
           { 'node' => 'latin1', 'full_name' => 'latin1' },
           { 'node' => 'ascii', 'full_name' => 'ascii' }
@@ -149,7 +149,8 @@ describe Oxidized::API::WebApp do
       end
 
       it 'merges overlapping context into one snippet' do
-        post '/nodes/conf_search.json', search_in_conf_textbox: 'description'
+        post '/nodes/conf_search.json', search_in_conf_textbox: 'description',
+                                        search_max_matches: '0'
 
         matches = JSON.parse(last_response.body)[0]['matches']
         _(matches.length).must_equal 2
@@ -275,7 +276,7 @@ describe Oxidized::API::WebApp do
 
       it 'matches case-insensitively when case sensitivity is unticked' do
         post '/nodes/conf_search.json', search_in_conf_textbox: 'DESCRIPTION',
-                                        search_case_sensitive_checkbox: 'off'
+                                        search_case_sensitive_checkbox: 'off', search_max_matches: '0'
 
         result = JSON.parse(last_response.body)
         _(result.length).must_equal 1
@@ -284,7 +285,7 @@ describe Oxidized::API::WebApp do
 
       it 'combines regular expression and case-insensitive search' do
         post '/nodes/conf_search.json', search_in_conf_textbox: 'DESC.IPTION',
-                                        search_case_sensitive_checkbox: 'off'
+                                        search_case_sensitive_checkbox: 'off', search_max_matches: '0'
 
         result = JSON.parse(last_response.body)
         _(result.length).must_equal 1
@@ -316,6 +317,110 @@ describe Oxidized::API::WebApp do
 
         _(last_response.ok?).must_equal true
         _(last_response.body).wont_match(/<input(?=[^>]*\bid="conf-search-case-sensitive")(?=[^>]*\bchecked)[^>]*>/)
+      end
+
+      it 'uses the checkbox value when a browser sends the hidden field and the checkbox' do
+        header 'Content-Type', 'application/x-www-form-urlencoded'
+        post '/nodes/conf_search.json',
+             'search_in_conf_textbox=ge-0/0/.&search_regex_checkbox=off&search_regex_checkbox=on'
+
+        result = JSON.parse(last_response.body)
+        _(result.length).must_equal 1
+        _(result[0]['matches'][0]['line_numbers']).must_equal [1, 4]
+      end
+    end
+
+    describe 'with more snippets than the per-node limit' do
+      before do
+        @nodes.stubs(:list).returns(
+          [{ name: 'sw4', full_name: 'sw4', group: nil },
+           { name: 'sw5', full_name: 'core/sw5', group: 'core' }]
+        )
+        # 8 matches, each far enough apart to give its own snippet
+        config = (1..8).flat_map { |i| ["vlan #{i}", 'x', 'x', 'x', 'x', 'x'] }.join("\n")
+        @nodes.stubs(:fetch).with('sw4', nil).returns(config)
+        @nodes.stubs(:fetch).with('sw5', 'core').returns(config)
+      end
+
+      def search(**extra)
+        post '/nodes/conf_search.json', search_in_conf_textbox: 'vlan', **extra
+        JSON.parse(last_response.body)
+      end
+
+      it 'returns 1 snippet per node by default with the total count' do
+        result = search
+        _(result.length).must_equal 2
+        _(result[0]['match_count']).must_equal 8
+        _(result[0]['matches'].map { |m| m['line_number'] }).must_equal [1]
+      end
+
+      it 'returns the requested number of snippets' do
+        result = search(search_max_matches: '2')[0]
+        _(result['match_count']).must_equal 8
+        _(result['matches'].length).must_equal 2
+      end
+
+      it 'returns all snippets when the limit is 0' do
+        _(search(search_max_matches: '0')[0]['matches'].length).must_equal 8
+      end
+
+      it 'falls back to the default limit on an invalid value' do
+        _(search(search_max_matches: 'abc')[0]['matches'].length).must_equal 1
+        _(search(search_max_matches: '-1')[0]['matches'].length).must_equal 1
+      end
+
+      it 'searches only the given node and returns all its snippets' do
+        result = search(search_node: 'core/sw5', search_max_matches: '5')
+        _(result.length).must_equal 1
+        _(result[0]['full_name']).must_equal 'core/sw5'
+        _(result[0]['match_count']).must_equal 8
+        _(result[0]['matches'].length).must_equal 8
+      end
+
+      it 'returns no results for an unknown node' do
+        _(search(search_node: 'nope')).must_equal []
+      end
+
+      it 'shows how many snippets are hidden and links to the node search in the html view' do
+        post '/nodes/conf_search', search_in_conf_textbox: 'vlan'
+
+        body = last_response.body
+        _(last_response.ok?).must_equal true
+        _(body.scan('<mark>vlan</mark>').length).must_equal 2
+        _(body).must_include '… 7 more snippets'
+        _(body).must_include 'show all 8 in sw4'
+        _(body).must_match(%r{<input(?=[^>]*\bname="search_node")(?=[^>]*\bvalue="core/sw5")[^>]*>})
+        _(body).must_match(/<option(?=[^>]*\bvalue="1")(?=[^>]*\bselected)[^>]*>1</)
+      end
+
+      it 'shows all snippets of one node with a way back in the html view' do
+        post '/nodes/conf_search', search_in_conf_textbox: 'vlan', search_node: 'sw4',
+                                   search_max_matches: '5'
+
+        body = last_response.body
+        _(last_response.ok?).must_equal true
+        _(body.scan('<mark>vlan</mark>').length).must_equal 8
+        _(body).must_match(%r{Matches for\s*<b>\s*vlan\s*</b>\s*in\s*<b>\s*sw4\s*</b>})
+        _(body).must_include 'Back to all nodes'
+        _(body).wont_include 'more snippets'
+        # the selected limit is kept for the way back to all nodes
+        _(body).must_match(/<input(?=[^>]*\bname="search_max_matches")(?=[^>]*\btype="hidden")(?=[^>]*\bvalue="5")[^>]*>/)
+        _(body).must_match(/<option(?=[^>]*\bvalue="5")(?=[^>]*\bselected)[^>]*>5</)
+      end
+
+      it 'does not offer to show more when all snippets are shown' do
+        post '/nodes/conf_search', search_in_conf_textbox: 'vlan', search_max_matches: '0'
+
+        _(last_response.body.scan('<mark>vlan</mark>').length).must_equal 16
+        _(last_response.body).wont_include 'more snippets'
+        _(last_response.body).must_match(/<option(?=[^>]*\bvalue="0")(?=[^>]*\bselected)[^>]*>all</)
+      end
+
+      it 'adds a requested limit outside the predefined options to the select' do
+        post '/nodes/conf_search', search_in_conf_textbox: 'vlan', search_max_matches: '7'
+
+        _(last_response.body).must_include "… 1 more snippet\n"
+        _(last_response.body).must_match(/<option(?=[^>]*\bvalue="7")(?=[^>]*\bselected)[^>]*>7</)
       end
     end
   end

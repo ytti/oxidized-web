@@ -7,8 +7,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 - Security regression tests for XSS prevention in node name, version, diff, stats views and HTMLEntities encoding of device config content (@mattimustang, @robertcheramy)
-- Config search results show matching lines with two lines of context, line numbers and highlighted matches. Overlapping or touching context windows are merged into a single snippet (@bpbp-boop)
-- Search form on the results page, with an option to search for literal text instead of a regular expression (@bpbp-boop)
+- Config search results show matching lines with two lines of context, line numbers and highlighted matches. Overlapping or touching context windows are merged into a single snippet. One snippet per node is shown by default (`search_max_matches`, 0 = all), with a link to all snippets of that node (`search_node`) (@bpbp-boop, @robertcheramy)
+- Search form on the results page, with options to search for literal text instead of a regular expression, to search case-insensitively and to set the number of snippets per node (@bpbp-boop)
 
 ### Changed
 - Remove the no longer needed escape_once helper call in node.haml, relying on HAML's global escape_html instead (@robertcheramy)
