@@ -63,7 +63,8 @@ module Oxidized
           uri_prefix: normalize_uri(configuration.url_prefix? ||
                                     DEFAULT_URI_PREFIX),
           vhosts: configuration.vhosts? || [],
-          hide_node_vars: hide_node_vars
+          hide_node_vars: hide_node_vars,
+          mtime_from_versions: configuration.mtime_from_versions? || false
         }
       end
 

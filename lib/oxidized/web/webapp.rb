@@ -1,5 +1,4 @@
 require 'sinatra/base'
-require 'sinatra/json'
 require 'sinatra/url_for'
 require 'tilt/haml'
 require 'htmlentities'
@@ -11,7 +10,10 @@ module Oxidized
     class WebApp < Sinatra::Base
       helpers Sinatra::UrlForHelper
       set :public_folder, proc { File.join(root, 'public') }
-      set :haml, { escape_html: false }
+      # attr_quote: use double quotes for HTML attributes. Set explicitly so the
+      # output is stable across Haml versions. Haml 7.3.0 changed the default
+      # from "'" to '"' (haml/haml#1188); older versions still default to "'".
+      set :haml, { escape_html: true, attr_quote: '"' }
 
       get '/' do
         redirect url_for('/nodes')
@@ -30,6 +32,7 @@ module Oxidized
       # and extract the optional ".json" with route_parse
       get '/nodes/:filter/*' do
         value, @json = route_parse params[:splat].first
+        mtime_from_versions = settings.configuration[:mtime_from_versions]
         @data = nodes.list.select do |node|
           next unless node[params[:filter].to_sym] == value ||
                       (
@@ -45,12 +48,14 @@ module Oxidized
             node[:status] = node[:last][:status]
             node[:time]   = node[:last][:end]
           end
+          assign_mtime_from_versions(node) if mtime_from_versions
           node
         end
         out :nodes
       end
 
       get '/nodes.?:format?' do
+        mtime_from_versions = settings.configuration[:mtime_from_versions]
         @data = nodes.list.map do |node|
           node[:status] = 'never'
           node[:time]   = 'never'
@@ -59,6 +64,7 @@ module Oxidized
             node[:status] = node[:last][:status]
             node[:time]   = node[:last][:end]
           end
+          assign_mtime_from_versions(node) if mtime_from_versions
           node
         end
         out :nodes
@@ -89,7 +95,14 @@ module Oxidized
         else
           nodes.list.each do |n|
             node, @json = route_parse n[:name]
-            config = convert_to_utf8 nodes.fetch(node, n[:group]).to_s
+            config = nodes.fetch node, n[:group]
+            # no config available (e.g. output file returns nil)
+            next unless config
+
+            # binary configs cannot be searched
+            config = text_to_utf8(config)
+            next unless config
+
             matches = config_search_matches config, @to_research
             next if matches.empty?
 
@@ -166,7 +179,7 @@ module Oxidized
         @data = nil
         @group = nil
         @node = nil
-        node_full = params[:node_full]
+        node_full = params[:node_full].to_s
         if node_full.include? '/'
           node_full = node_full.rpartition("/")
           @group = node_full[0]
@@ -184,13 +197,13 @@ module Oxidized
         node, @json = route_parse :node
         @info = {
           node: node,
-          group: params[:group],
+          group: params[:group] || '',
           oid: params[:oid],
           time: Time.at(params[:epoch].to_i),
           num: params[:num]
         }
 
-        the_data = nodes.get_version node, @info[:group], @info[:oid]
+        the_data = nodes.get_version node, @info[:group].empty? ? nil : @info[:group], @info[:oid]
         if %w[json text].include?(params[:format])
           @data = the_data
         else
@@ -205,7 +218,7 @@ module Oxidized
         node, @json = route_parse :node
         @data = nil
         @info = { node: node,
-                  group: params[:group],
+                  group: params[:group] || '',
                   oid: params[:oid],
                   time: Time.at(params[:epoch].to_i),
                   num: params[:num],
@@ -225,9 +238,9 @@ module Oxidized
             @info[:num2] = num
             break
           end
-          @data = nodes.get_diff node, @info[:group], @info[:oid], oid2
+          @data = nodes.get_diff node, group, @info[:oid], oid2
         else
-          @data = nodes.get_diff node, @info[:group], @info[:oid], nil
+          @data = nodes.get_diff node, group, @info[:oid], nil
         end
         @stat = %w[null null]
         if @data != 'no diffs' && !@data.nil?
@@ -256,10 +269,11 @@ module Oxidized
 
       def out(template = :text)
         if @json || (params[:format] == 'json')
+          content_type :json
           if @data.is_a?(String)
-            json @data.lines
+            JSON.generate(@data.lines)
           else
-            json @data
+            JSON.generate(@data)
           end
         elsif (template == :text) || (params[:format] == 'text')
           content_type :text
@@ -281,7 +295,7 @@ module Oxidized
         e = if param.respond_to?(:to_str)
               param.split '.'
             else
-              params[param].split '.'
+              params[param].to_s.split '.'
             end
         if e.last == 'json'
           e.pop
@@ -368,14 +382,15 @@ module Oxidized
 
       # HTML-escape +text+, wrapping each [from, to) range in <mark>
       def highlight_ranges(text, ranges)
+        coder = HTMLEntities.new
         html = +''
         pos = 0
         ranges.each do |from, to|
-          html << escape_once(text[pos...from])
-          html << "<mark>#{escape_once(text[from...to])}</mark>"
+          html << coder.encode(text[pos...from])
+          html << "<mark>#{coder.encode(text[from...to])}</mark>"
           pos = to
         end
-        html << escape_once(text[pos..])
+        html << coder.encode(text[pos..])
       end
 
       # HTML for one config search snippet: line-numbered text with the
@@ -448,13 +463,17 @@ module Oxidized
         text.gsub(HTML_ESCAPE_ONCE_REGEX, HTML_ESCAPE)
       end
 
+      # Converts text to UTF-8, returns a placeholder message for binary data
       def convert_to_utf8(text)
+        text_to_utf8(text) || 'The text contains binary values - cannot display'
+      end
+
+      # Converts text to UTF-8, returns nil for binary data
+      def text_to_utf8(text)
         detection = ::CharlockHolmes::EncodingDetector.detect(text)
-        if detection[:type] == :text
-          ::CharlockHolmes::Converter.convert text, detection[:encoding], 'UTF-8'
-        else
-          'The text contains binary values - cannot display'
-        end
+        return unless detection[:type] == :text
+
+        ::CharlockHolmes::Converter.convert text, detection[:encoding], 'UTF-8'
       end
 
       def filter_node_vars(serialized_node)
@@ -471,6 +490,17 @@ module Oxidized
         end
 
         data
+      end
+
+      # set node last changed time to last version time
+      # potential can be long operation
+      def assign_mtime_from_versions(node)
+        if node[:mtime] == 'unknown' || node[:mtime].nil?
+          group = node[:group] == 'default' ? nil : node[:group]
+          versions = nodes.version(node[:name], group)
+          node[:mtime] = versions.first[:time] if versions.is_a?(Array) && !versions.empty? && versions.first[:time]
+        end
+        node
       end
     end
   end

@@ -37,6 +37,10 @@ Rails/TimeZone:
 Rails/RakeEnvironment:
   Enabled: false
 
+# Not using Rails, so no ActiveSupport Enumerable#pluck
+Rails/Pluck:
+  Enabled: false
+
 Style/Documentation:
   Enabled: false
 
