@@ -86,7 +86,8 @@ module Oxidized
 
           # used for diff between 2 distant commit
           app.post '/node/version/diffs' do
-            redirect url_for("/node/version/diffs?node=#{params[:node]}&group=#{params[:group]}&oid=#{params[:oid]}&epoch=#{params[:epoch]}&num=#{params[:num]}&oid2=#{params[:oid2]}")
+            query = url_query(params.slice('node', 'group', 'oid', 'epoch', 'num', 'oid2'))
+            redirect url_for("/node/version/diffs?#{query}")
           end
         end
       end

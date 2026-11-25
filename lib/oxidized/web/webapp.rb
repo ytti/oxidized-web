@@ -8,12 +8,14 @@ module Oxidized
     require 'oxidized/web/helpers/conf_search'
     require 'oxidized/web/helpers/formatting'
     require 'oxidized/web/helpers/stats'
+    require 'oxidized/web/helpers/url'
     require 'oxidized/web/routes/nodes'
     require 'oxidized/web/routes/node'
     require 'oxidized/web/routes/node_version'
 
     class WebApp < Sinatra::Base
-      helpers Sinatra::UrlForHelper, Helpers::ConfSearch, Helpers::Formatting, Helpers::Stats
+      helpers Sinatra::UrlForHelper, Helpers::ConfSearch, Helpers::Formatting, Helpers::Stats,
+              Helpers::Url
       set :public_folder, proc { File.join(root, 'public') }
       # <%= escapes HTML, <%== outputs it unescaped
       set :erb, { escape_html: true }

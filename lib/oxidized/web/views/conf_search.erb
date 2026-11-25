@@ -90,7 +90,7 @@
           <% @nodes_match.each do |x| %>
             <tr>
               <td>
-                <a title="configuration" href="<%= url_for("/node/fetch/#{x[:full_name]}") %>">
+                <a title="configuration" href="<%= url_for("/node/fetch/#{url_escape(x[:full_name])}") %>">
                   <i class="bi bi-cloud-download"></i>
                   <%= x[:node] %>
                 </a>

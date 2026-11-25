@@ -2,7 +2,7 @@
 <div class="row">
   <div class="col-4">
     <h4>
-      <a href="<%= url_for("/node/version?node_full=#{node_full}") %>">versions</a>
+      <a href="<%= url_for("/node/version?#{url_query(node_full: node_full)}") %>">versions</a>
       / Diff version <%= @info[:num] %> - <%= @info[:num2] %> for node
       <b><%= @info[:node] %></b>
     </h4>
@@ -24,8 +24,8 @@
 
 <div class="row">
   <div class="col-sm-6">
-    <% params = "node=#{@info[:node]}&group=#{@info[:group]}&oid=#{@info[:oid]}" %>
-    <% params = "#{params}&epoch=#{@info[:time].to_i}&num=#{@info[:num]}" %>
+    <% params = url_query(node: @info[:node], group: @info[:group], oid: @info[:oid],
+                          epoch: @info[:time].to_i, num: @info[:num]) %>
     <form action="<%= url_for("/node/version/diffs?#{params}") %>" method="post" role="form">
       <div class="form-group">
         <select class="form-select" id="oid2" name="oid2">

@@ -27,7 +27,7 @@
         <% nb = @data.count + 1 %>
         <% @data.each do |x| %>
           <% nb -= 1 %>
-          <% params = "node=#{@node}&group=#{@group}&oid=#{x[:oid]}&epoch=#{x[:time].to_i}&num=#{nb}" %>
+          <% params = url_query(node: @node, group: @group, oid: x[:oid], epoch: x[:time].to_i, num: nb) %>
           <tr>
             <td><%= nb %></td>
             <td class="time" epoch="<%= x[:time].to_i %>"><%= x[:time] %></td>

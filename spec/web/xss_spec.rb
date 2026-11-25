@@ -99,7 +99,9 @@ describe Oxidized::API::WebApp do
       get '/nodes'
 
       _(last_response.ok?).must_equal true
-      _(last_response.body).must_include('href="/node/show/sw&quot; onmouseover=&quot;alert(1)"')
+      _(last_response.body).must_include(
+        '<a href="/node/show/sw%22%20onmouseover%3D%22alert%281%29">sw&quot; onmouseover=&quot;alert(1)</a>'
+      )
       _(last_response.body).wont_include('onmouseover="alert(1)')
     end
 

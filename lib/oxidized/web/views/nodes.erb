@@ -39,11 +39,11 @@
         <% @data.sort_by { |e| e[:name] }.each do |node| %>
           <tr>
             <td>
-              <a href="<%= url_for("/node/show/#{node[:name]}") %>"><%= node[:name] %></a>
+              <a href="<%= url_for("/node/show/#{url_escape(node[:name])}") %>"><%= node[:name] %></a>
             </td>
             <td><%= node[:ip] %></td>
-            <td><a href="<%= url_for("/nodes/model/#{node[:model]}") %>"><%= node[:model] %></a></td>
-            <td><a href="<%= url_for("/nodes/group/#{node[:group]}") %>"><%= node[:group] %></a></td>
+            <td><a href="<%= url_for("/nodes/model/#{url_escape(node[:model])}") %>"><%= node[:model] %></a></td>
+            <td><a href="<%= url_for("/nodes/group/#{url_escape(node[:group])}") %>"><%= node[:group] %></a></td>
             <td>
               <div class="<%= node[:status] %>" title="<%= node[:status] %>">
                 <span style="visibility: hidden"><%= node[:status] %></span>
@@ -53,17 +53,17 @@
             <td class="time" epoch="<%= node[:mtime].to_i %>"><%= node[:mtime] %></td>
             <td>
               <a class="link-body-emphasis link-underline-opacity-0" title="Configuration"
-                 href="<%= url_for("/node/fetch/#{node[:full_name]}") %>">
+                 href="<%= url_for("/node/fetch/#{url_escape(node[:full_name])}") %>">
                 <i class="bi bi-cloud-download"></i>
               </a>
               &nbsp;&nbsp;
               <a class="link-body-emphasis link-underline-opacity-0" title="Versions"
-                 href="<%= url_for("/node/version?node_full=#{node[:full_name]}") %>">
+                 href="<%= url_for("/node/version?#{url_query(node_full: node[:full_name])}") %>">
                 <i class="bi bi-stack"></i>
               </a>
               &nbsp;&nbsp;
               <a class="link-body-emphasis link-underline-opacity-0" title="Update configuration"
-                 href="<%= url_for("/node/next/#{node[:full_name]}") %>">
+                 href="<%= url_for("/node/next/#{url_escape(node[:full_name])}") %>">
                 <i class="bi bi-repeat"></i>
               </a>
             </td>
