@@ -48,6 +48,41 @@ describe Oxidized::API::WebApp do
       _(last_response.body).must_include 'Invalid regular expression'
     end
 
+    describe 'regexp timeout' do
+      before do
+        skip 'Regexp timeouts need Ruby >= 3.2' unless Regexp.respond_to?(:timeout)
+        @timeout = app.settings.conf_search_regexp_timeout
+        app.set(:conf_search_regexp_timeout, 0.05)
+        # backreferences prevent Ruby's backtracking memoization
+        @slow_regexp = '^(a|a)*\1$'
+        @slow_config = "#{'a' * 40}!"
+      end
+
+      after do
+        app.set(:conf_search_regexp_timeout, @timeout) if @timeout
+      end
+
+      it 'aborts the search at the first timeout and returns 400' do
+        @nodes.expects(:list).returns(
+          [{ name: 'sw1', full_name: 'sw1', group: nil },
+           { name: 'sw2', full_name: 'sw2', group: nil }]
+        )
+        @nodes.expects(:fetch).with('sw1', nil).returns(@slow_config)
+        @nodes.expects(:fetch).with('sw2', nil).never
+        post '/nodes/conf_search.json', search_in_conf_textbox: @slow_regexp
+        _(last_response.status).must_equal 400
+        _(JSON.parse(last_response.body)['error']).must_match(/took too long/)
+      end
+
+      it 'shows the timeout error in the html view' do
+        @nodes.expects(:list).returns([{ name: 'sw1', full_name: 'sw1', group: nil }])
+        @nodes.expects(:fetch).with('sw1', nil).returns(@slow_config)
+        post '/nodes/conf_search', search_in_conf_textbox: @slow_regexp
+        _(last_response.status).must_equal 400
+        _(last_response.body).must_include 'took too long'
+      end
+    end
+
     it 'returns 200 with matches when regex is valid' do
       @nodes.expects(:list).returns(
         [{ name: 'sw5', full_name: 'sw5', group: nil }]

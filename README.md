@@ -21,6 +21,10 @@ in the `extension` section. For details, see
 If you wonder how to run oxidized-web from git for development, have a look at
 [docs/development.md](docs/development.md).
 
+## Deprecations
+Deprecated features and platforms are listed in
+[docs/deprecated.md](docs/deprecated.md).
+
 ## License and Copyright
 Copyright 2013-2015 Saku Ytti <saku@ytti.fi>
           2013-2015 Samer Abdel-Hafez <sam@arahant.net>

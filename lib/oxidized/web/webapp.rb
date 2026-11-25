@@ -14,6 +14,12 @@ module Oxidized
       # output is stable across Haml versions. Haml 7.3.0 changed the default
       # from "'" to '"' (haml/haml#1188); older versions still default to "'".
       set :haml, { escape_html: true, attr_quote: '"' }
+      # Timeout in seconds for the config search regexp, to protect against
+      # ReDoS. It limits each single regexp match on a config, not the whole
+      # search. When one match takes longer, the whole search is aborted with
+      # an error.
+      # Regexp timeouts need Ruby >= 3.2; on older Rubies there is no timeout.
+      set :conf_search_regexp_timeout, 1.0
 
       get '/' do
         redirect url_for('/nodes')
@@ -91,34 +97,27 @@ module Oxidized
         begin
           pattern = @regex_search ? @search_term : Regexp.escape(@search_term)
           options = @case_sensitive_search ? 0 : Regexp::IGNORECASE
-          @to_research = Regexp.new pattern, options
+          regexp = Regexp.new pattern, options, **conf_search_regexp_timeout
         rescue RegexpError => e
           @error = "Invalid regular expression: #{e.message}"
+        end
+
+        unless @error || @search_term.empty?
+          begin
+            @nodes_match = conf_search_nodes regexp, limit, @search_node
+          rescue StandardError => e
+            raise unless regexp_timeout_error? e
+
+            # abort the whole search on the first timeout
+            @nodes_match = []
+            @error = 'The regular expression took too long to evaluate, please simplify it'
+          end
         end
 
         if @error
           status 400
           @data = { error: @error }
         else
-          (@search_term.empty? ? [] : nodes.list).each do |n|
-            next if @search_node && n[:full_name] != @search_node
-
-            config = nodes.fetch n[:name], n[:group]
-            # no config available (e.g. output file returns nil)
-            next unless config
-
-            # binary configs cannot be searched
-            config = text_to_utf8(config)
-            next unless config
-
-            matches = config_search_matches config, @to_research
-            next if matches.empty?
-
-            # match_count is the number of snippets before the per-node limit
-            @nodes_match.push({ node: n[:name], full_name: n[:full_name],
-                                match_count: matches.length,
-                                matches: limit.zero? ? matches : matches.first(limit) })
-          end
           @data = @nodes_match
         end
         out :conf_search
@@ -316,6 +315,45 @@ module Oxidized
           json = true
         end
         [e.join('.'), json]
+      end
+
+      # Search the configs of all nodes (or only the node with the full name
+      # +search_node+) with +regexp+ and return the matching nodes with at
+      # most +limit+ snippets each (0 = all)
+      def conf_search_nodes(regexp, limit, search_node = nil)
+        nodes.list.filter_map do |n|
+          next if search_node && n[:full_name] != search_node
+
+          config = nodes.fetch n[:name], n[:group]
+          # no config available (e.g. output file returns nil)
+          next unless config
+
+          # binary configs cannot be searched
+          config = text_to_utf8(config)
+          next unless config
+
+          matches = config_search_matches config, regexp
+          next if matches.empty?
+
+          # match_count is the number of snippets before the per-node limit
+          { node: n[:name], full_name: n[:full_name],
+            match_count: matches.length,
+            matches: limit.zero? ? matches : matches.first(limit) }
+        end
+      end
+
+      # Keyword arguments for Regexp.new setting the match timeout.
+      # Regexp timeouts need Ruby >= 3.2
+      # TODO: remove the check when Ruby < 3.2 is no longer supported
+      def conf_search_regexp_timeout
+        return {} unless Regexp.respond_to?(:timeout)
+
+        { timeout: settings.conf_search_regexp_timeout }
+      end
+
+      # Regexp::TimeoutError only exists in Ruby >= 3.2
+      def regexp_timeout_error?(error)
+        defined?(Regexp::TimeoutError) && error.is_a?(Regexp::TimeoutError)
       end
 
       # Number of snippets to return per node from the +search_max_matches+
