@@ -1,4 +1,4 @@
-require 'htmlentities'
+require 'erb'
 
 module Oxidized
   module API
@@ -148,15 +148,14 @@ module Oxidized
 
         # HTML-escape +text+, wrapping each [from, to) range in <mark>
         def highlight_ranges(text, ranges)
-          coder = HTMLEntities.new
           html = +''
           pos = 0
           ranges.each do |from, to|
-            html << coder.encode(text[pos...from])
-            html << "<mark>#{coder.encode(text[from...to])}</mark>"
+            html << ERB::Util.html_escape(text[pos...from])
+            html << "<mark>#{ERB::Util.html_escape(text[from...to])}</mark>"
             pos = to
           end
-          html << coder.encode(text[pos..])
+          html << ERB::Util.html_escape(text[pos..])
         end
 
         # HTML for one config search snippet: line-numbered text with the

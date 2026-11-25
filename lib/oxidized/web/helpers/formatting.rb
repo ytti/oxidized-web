@@ -1,4 +1,4 @@
-require 'htmlentities'
+require 'erb'
 require 'charlock_holmes'
 
 module Oxidized
@@ -6,10 +6,6 @@ module Oxidized
     module Helpers
       # Formatting of times, diffs and text for display
       module Formatting
-        # Taken from Haml 5.0
-        HTML_ESCAPE = { '&' => '&amp;', '<' => '&lt;', '>' => '&gt;', '"' => '&quot;', "'" => '&#39;' }.freeze
-        HTML_ESCAPE_ONCE_REGEX = /['"><]|&(?!(?:[a-zA-Z]+|#(?:\d+|[xX][0-9a-fA-F]+));)/
-
         private
 
         # give the time elapsed between now and a date (Time object)
@@ -32,12 +28,12 @@ module Oxidized
         end
 
         # method the give diffs in separate view (the old and the new) as in github
+        # nil is inserted on one side to align a line added or removed on the other
         def diff_view(diff)
           old_diff = []
           new_diff = []
 
-          utf8_encoded_content = convert_to_utf8(diff)
-          HTMLEntities.new.encode(utf8_encoded_content).each_line do |line|
+          convert_to_utf8(diff).each_line do |line|
             if /^\+/.match(line)
               new_diff.push(line)
             elsif /^-/.match(line)
@@ -54,36 +50,29 @@ module Oxidized
             break if i > [length_o, length_n].min
 
             if /^-.*/.match(old_diff[i]) && !/^\+.*/.match(new_diff[i])
-              # tag removed latter to add color syntax
-              # ugly way to avoid asymmetry if at display the line takes 2 line on the screen
-              insert = "&nbsp;\n"
-              new_diff.insert(i, insert)
+              new_diff.insert(i, nil)
               length_n += 1
             elsif !/^-.*/.match(old_diff[i]) && /^\+.*/.match(new_diff[i])
-              insert = "&nbsp;\n"
-              old_diff.insert(i, insert)
+              old_diff.insert(i, nil)
               length_o += 1
             end
           end
           { old_diff: old_diff, new_diff: new_diff }
         end
 
-        # HTML for one side of a diff_view, one <div> per line. The lines are
-        # already HTML-encoded and may contain &nbsp; for alignment.
+        # HTML for one side of a diff_view, one <div> per line. An empty line
+        # (&nbsp;) aligns the lines with the other side.
         def diff_lines_html(lines)
           lines.map do |line|
+            next "<div>&nbsp;\n</div>" if line.nil?
+
             css_class = if line.start_with?('+') then 'added'
                         elsif line.start_with?('-') then 'deleted'
                         elsif /^@@\s.*@@.*$/.match?(line) then 'diff-index'
                         end
             tag = css_class ? "<div class=\"#{css_class}\">" : '<div>'
-            "#{tag}#{escape_once(line)}</div>"
+            "#{tag}#{ERB::Util.html_escape(line)}</div>"
           end.join
-        end
-
-        def escape_once(text)
-          text = text.to_s
-          text.gsub(HTML_ESCAPE_ONCE_REGEX, HTML_ESCAPE)
         end
 
         # Converts text to UTF-8, returns a placeholder message for binary data

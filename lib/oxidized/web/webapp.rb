@@ -1,7 +1,6 @@
 require 'sinatra/base'
 require 'sinatra/url_for'
 require 'tilt/erubi'
-require 'htmlentities'
 module Oxidized
   module API
     require 'oxidized/web/version'

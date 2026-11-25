@@ -39,7 +39,6 @@ Gem::Specification.new do |s|
   s.add_dependency 'charlock_holmes',     '~> 0.7'
   s.add_dependency 'emk-sinatra-url-for', '~> 0.2'
   s.add_dependency 'erubi',               '~> 1.12'
-  s.add_dependency 'htmlentities',        '~> 4.3'
   s.add_dependency 'json',                '>= 2.3', '< 4.0'
   # Only depend on a minimal version of Oxidized so we don't need to
   # update the gemspec for new Oxidized releases

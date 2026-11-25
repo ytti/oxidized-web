@@ -35,12 +35,7 @@ module Oxidized
             }
 
             the_data = nodes.get_version node, @info[:group].empty? ? nil : @info[:group], @info[:oid]
-            if %w[json text].include?(params[:format])
-              @data = the_data
-            else
-              utf8_encoded_content = convert_to_utf8(the_data)
-              @data = HTMLEntities.new.encode(utf8_encoded_content)
-            end
+            @data = %w[json text].include?(params[:format]) ? the_data : convert_to_utf8(the_data)
             out :version
           end
 
