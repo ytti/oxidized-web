@@ -2,7 +2,7 @@
   <div class="col-sm-12">
     <h4>
       <a href="<%= url_for('/nodes') %>">nodes</a>
-      <span>/</span><%= @data[:name] %>&nbsp;
+      <span>/</span> <%= @data[:name] %>&nbsp;
       <a class="link-body-emphasis link-underline-opacity-0" title="configuration"
          href="<%= url_for("/node/fetch/#{@data[:full_name]}") %>">
         <i class="bi bi-cloud-download"></i>

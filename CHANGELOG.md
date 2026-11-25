@@ -16,7 +16,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Update web libraries to the latest versions (@robertcheramy)
 - The gem only contains the files needed at runtime and the documentation (`lib/`, `docs/`, README.md, CHANGELOG.md, CONTRIBUTING.md and LICENSE). `rake build` aborts if the gem would contain files not tracked by git, `rake release` is disabled in favor of `rake tag` and `rake push` (@robertcheramy)
 - Encode JSON output with the standard library instead of Sinatra's json helper (@robertcheramy)
-- Set HAML's `attr_quote` explicitly to `"` for stable output across HAML versions (@robertcheramy)
 - Set dependency on Oxidized => 0.38.0 to fix support for puma 8 (@robertcheramy)
 - Config search returns 400 with an error message on an invalid regular expression instead of an empty result (@bpbp-boop)
 - Config search aborts with 400 when a regular expression takes more than one second on a config, to protect against ReDoS. Needs Ruby >= 3.2 (@robertcheramy)
