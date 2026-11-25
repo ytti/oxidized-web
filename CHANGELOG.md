@@ -16,7 +16,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Encode JSON output with the standard library instead of Sinatra's json helper (@robertcheramy)
 - Set HAML's `attr_quote` explicitly to `"` for stable output across HAML versions (@robertcheramy)
 - Set dependency on Oxidized => 0.38.0 to fix support for puma 8 (@robertcheramy)
-- Config search returns 400 with an error message on an invalid regular expression instead of an empty result, and redirects to /nodes on an empty search term (@bpbp-boop)
+- Config search returns 400 with an error message on an invalid regular expression instead of an empty result (@bpbp-boop)
 
 ### Fixed
 - Fix `NoMethodError` when `group=` param is absent from `/node/version/view` and `/node/version/diffs` requests. `params[:group]` was assigned directly to `@info[:group]`; `params[:group]` is now normalized to '' so the HAML templates render the no-group branch instead of crashing with a 500 (@makaiver)

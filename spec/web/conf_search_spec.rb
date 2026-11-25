@@ -14,14 +14,26 @@ describe Oxidized::API::WebApp do
   end
 
   describe 'post /nodes/conf_search' do
-    it 'redirects to /nodes when search_in_conf_textbox is missing' do
+    # @nodes has no expectations, so any config lookup would fail these tests
+    it 'shows the search page without results when search_in_conf_textbox is missing' do
       post '/nodes/conf_search'
-      _(last_response.redirect?).must_equal true
+      _(last_response.ok?).must_equal true
+      _(last_response.body).must_include 'Config search'
+      _(last_response.body).must_include 'name="search_in_conf_textbox"'
+      _(last_response.body).wont_include 'versionsTable'
     end
 
-    it 'redirects to /nodes when search_in_conf_textbox is blank' do
+    it 'shows the search page without results when search_in_conf_textbox is blank' do
       post '/nodes/conf_search', search_in_conf_textbox: ''
-      _(last_response.redirect?).must_equal true
+      _(last_response.ok?).must_equal true
+      _(last_response.body).must_include 'Config search'
+      _(last_response.body).wont_include 'Nodes that contain'
+    end
+
+    it 'returns an empty json list when search_in_conf_textbox is blank' do
+      post '/nodes/conf_search.json', search_in_conf_textbox: ''
+      _(last_response.ok?).must_equal true
+      _(JSON.parse(last_response.body)).must_equal []
     end
 
     it 'returns 400 with an error when regex is malformed (no crash)' do

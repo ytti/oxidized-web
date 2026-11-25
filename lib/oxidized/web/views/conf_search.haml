@@ -9,6 +9,8 @@
         in
         %b
           &= @search_node
+      - elsif @search_term.empty?
+        \/ Config search
       - else
         \/ Nodes that contain
         %b
@@ -64,7 +66,7 @@
   .row
     .col-lg-6
       .alert.alert-danger&= @error
-- else
+- elsif !@search_term.empty?
   .row
     .table-responsive
       %table.table.table-sm.table-striped.table-hover#versionsTable

@@ -71,8 +71,8 @@ module Oxidized
       end
 
       post '/nodes/conf_search.?:format?' do
+        # an empty search term shows the search page without results
         @search_term = params[:search_in_conf_textbox].to_s
-        redirect url_for('/nodes') if @search_term.empty?
 
         # regex search is the default; the search form on the results page
         # sends 'off' (via a hidden field) when the checkbox is unticked
@@ -100,7 +100,7 @@ module Oxidized
           status 400
           @data = { error: @error }
         else
-          nodes.list.each do |n|
+          (@search_term.empty? ? [] : nodes.list).each do |n|
             next if @search_node && n[:full_name] != @search_node
 
             node, @json = route_parse n[:name]
