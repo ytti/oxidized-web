@@ -96,6 +96,24 @@ describe Oxidized::API::WebApp do
         )).must_equal true
     end
 
+    it 'shows the configuration verbatim in a pre block' do
+      configuration = "hostname sw5\n  description a & b &amp; <c>\n"
+      @nodes.expects(:get_version).with('sw5', 'my/group', 'c8aa93cab5').returns(configuration)
+
+      get '/node/version/view?node=sw5&group=my/group&oid=c8aa93cab5&epoch=1738781340&num=2'
+      _(last_response.ok?).must_equal true
+      body = last_response.body
+      _(body).must_match(
+        %r{<pre[^>]*>hostname sw5\n  description a &amp; b &amp;amp; &lt;c&gt;\n</pre>}
+      )
+      _(body).must_include '<a href="/node/version?node_full=my/group/sw5">versions</a>'
+      _(body).must_include '<b>sw5</b>'
+      _(body).must_include(
+        'href="/node/version/view?node=sw5&amp;group=my/group&amp;oid=c8aa93cab5&amp;' \
+        'epoch=1738781340&amp;num=2&amp;format=text"'
+      )
+    end
+
     it 'does not display binary content' do
       @nodes.expects(:get_version).with('sw5', nil, 'c8aa93cab5').returns("\xff\x42 binary content\x00")
 
@@ -171,6 +189,46 @@ describe Oxidized::API::WebApp do
           "<span class=\"time\" epoch=\"1738781340\">" \
           "#{Time.at(1738781340)}</span>"
         )).must_equal true
+    end
+
+    it 'renders the old and the new version side by side' do
+      versions = [
+        { oid: "C006", time: Time.parse("2025-02-05 19:49:00 +0100") },
+        { oid: "C003", time: Time.parse("2025-02-05 19:03:00 +0100") }
+      ]
+      diff = { patch: "@@ -1,2 +1,2 @@\n a & b\n-old <x>\n+new &amp;\n+added\n", stat: [2, 1] }
+      @nodes.expects(:version).with('sw5', 'my/group').returns(versions)
+      @nodes.expects(:get_diff).with('sw5', 'my/group', 'C006', nil).returns(diff)
+
+      get '/node/version/diffs?node=sw5&group=my/group&oid=C006&epoch=1738781340&num=2'
+      _(last_response.ok?).must_equal true
+      body = last_response.body
+      # .diffs_old and .diffs_new use "white-space: pre", so the whitespace
+      # between the lines is visible and must not change. The &nbsp; inserted
+      # to align both sides must not be escaped.
+      _(body).must_include(
+        '<div class="diffs_old">' \
+        "<div class=\"diff-index\">@@ -1,2 +1,2 @@\n</div>" \
+        "<div> a &amp; b\n</div>" \
+        "<div class=\"deleted\">-old &lt;x&gt;\n</div>" \
+        "<div>&nbsp;\n</div>" \
+        '</div>'
+      )
+      _(body).must_include(
+        '<div class="diffs_new">' \
+        "<div class=\"diff-index\">@@ -1,2 +1,2 @@\n</div>" \
+        "<div> a &amp; b\n</div>" \
+        "<div class=\"added\">+new &amp;amp;\n</div>" \
+        "<div class=\"added\">+added\n</div>" \
+        '</div>'
+      )
+      _(body).must_include '<span class="added">added 2</span>'
+      _(body).must_include '<span class="deleted">removed 1</span>'
+      _(body).must_include '<a href="/node/version?node_full=my/group/sw5">versions</a>'
+      _(body).must_include(
+        'action="/node/version/diffs?node=sw5&amp;group=my/group&amp;oid=C006&amp;epoch=1738781340&amp;num=2"'
+      )
+      _(body).must_match(%r{<option value="C006">Version 2 \(.* ago\)</option>\s*<option value="C003">Version 1 \(})
     end
 
     it 'returns 200 when group param is absent (no NoMethodError)' do

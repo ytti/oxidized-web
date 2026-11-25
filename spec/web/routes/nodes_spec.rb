@@ -16,7 +16,8 @@ describe Oxidized::API::WebApp do
        { name: 'sw6', ip: '10.10.10.6',  model: 'ios', time: 'time', mtime: 'mtime' },
        { name: 'sw7', ip: '10.10.10.7',  model: 'ios', time: 'time', mtime: 'mtime', group: 'group1' },
        { name: 'sw8', ip: '10.10.10.8',  model: 'aos', time: 'time', mtime: 'mtime', group: 'group1' },
-       { name: 'sw9', ip: '10.10.10.9',  model: 'aos', time: 'time', mtime: 'mtime', group: 'gr/oup1' }]
+       { name: 'sw9', ip: '10.10.10.9',  model: 'aos', time: 'time', mtime: 'mtime', group: 'gr/oup1',
+         full_name: 'gr/oup1/sw9' }]
     )
     app.set(:nodes, @nodes)
     app.set(:configuration, { hide_node_vars: [], mtime_from_versions: false })
@@ -29,6 +30,22 @@ describe Oxidized::API::WebApp do
       _(last_response.ok?).must_equal true
       result = JSON.parse(last_response.body)
       _(result.length).must_equal 6
+    end
+
+    it 'lists the nodes with their links in the html view' do
+      get '/nodes'
+
+      _(last_response.ok?).must_equal true
+      body = last_response.body
+      _(body.scan(%r{<a href="/node/show/([^"]*)">\1</a>}).flatten).must_equal %w[sw4 sw5 sw6 sw7 sw8 sw9]
+      _(body).must_include '<td>10.10.10.9</td>'
+      _(body).must_include '<a href="/nodes/model/aos">aos</a>'
+      _(body).must_include '<a href="/nodes/group/default">default</a>'
+      _(body).must_include '<a href="/nodes/group/gr/oup1">gr/oup1</a>'
+      _(body).must_include '<span style="visibility: hidden">never</span>'
+      _(body).must_include 'href="/node/fetch/gr/oup1/sw9"'
+      _(body).must_include 'href="/node/version?node_full=gr/oup1/sw9"'
+      _(body).must_include 'href="/node/next/gr/oup1/sw9"'
     end
   end
 

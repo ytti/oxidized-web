@@ -300,6 +300,16 @@ describe Oxidized::API::WebApp do
         _(last_response.body).must_include '<mark>description</mark>'
       end
 
+      it 'shows the snippets verbatim in a pre block' do
+        @nodes.stubs(:fetch).with('sw5', nil).returns("a\ndescription <uplink> & core\nb\n")
+        post '/nodes/conf_search', search_in_conf_textbox: 'uplink'
+
+        _(last_response.ok?).must_equal true
+        _(last_response.body).must_match(
+          %r{<pre[^>]*>1: a\n2: description &lt;<mark>uplink</mark>&gt; &amp; core\n3: b</pre>}
+        )
+      end
+
       it 'html-escapes the config in the snippets' do
         @nodes.stubs(:fetch).with('sw5', nil)
               .returns("banner <script>alert(1)</script>\nsnmp community a&amp;b\n")
