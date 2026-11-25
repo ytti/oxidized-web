@@ -14,7 +14,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ### Changed
 - Remove the no longer needed escape_once helper call in node.haml, relying on HAML's global escape_html instead (@robertcheramy)
 - Update web libraries to the latest versions (@robertcheramy)
-- The gem only contains the files needed at runtime and the documentation (`lib/`, `docs/`, README.md, CHANGELOG.md and LICENSE) (@robertcheramy)
+- The gem only contains the files needed at runtime and the documentation (`lib/`, `docs/`, README.md, CHANGELOG.md, CONTRIBUTING.md and LICENSE). `rake build` aborts if the gem would contain files not tracked by git, `rake release` is disabled in favor of `rake tag` and `rake push` (@robertcheramy)
 - Encode JSON output with the standard library instead of Sinatra's json helper (@robertcheramy)
 - Set HAML's `attr_quote` explicitly to `"` for stable output across HAML versions (@robertcheramy)
 - Set dependency on Oxidized => 0.38.0 to fix support for puma 8 (@robertcheramy)
