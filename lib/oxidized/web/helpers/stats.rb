@@ -7,17 +7,22 @@ module Oxidized
 
         # Summary of the Oxidized::Node::Stats of a node for the stats page.
         # last_success/last_failure are a Time, 'never' or nil.
+        #
+        # The counters (successes, failures) count all runs, the history only
+        # the last runs per status. A failure is any status but :success
+        # (:no_connection, :fail, :timelimit...).
         def node_stats_summary(stats)
           successes = stats.successes
           failures = stats.failures
-          success = stats.get(:success)
-          no_connection = stats.get(:no_connection)
+          history = stats.get || {}
+          success_runs = history[:success] || []
+          failure_runs = history.except(:counter, :success).values.flatten
 
-          last_success = success&.last&.dig(:end)
-          last_failure = no_connection&.last&.dig(:end)
-          avg_success_time = success ? success.sum { |x| x[:time] } / successes : 0
-          avg_failure_time = no_connection ? no_connection.sum { |x| x[:time] } / failures : 0
-          avg_times = [avg_success_time, avg_failure_time].select(&:positive?)
+          last_success = success_runs.map { |run| run[:end] }.max
+          last_failure = failure_runs.map { |run| run[:end] }.max
+          avg_times = [success_runs, failure_runs].reject(&:empty?).map do |runs|
+            runs.sum { |run| run[:time] } / runs.size
+          end
           avg_time = avg_times.empty? ? 0 : avg_times.sum / avg_times.size
 
           if last_success && last_failure
@@ -31,7 +36,7 @@ module Oxidized
           end
 
           total_runs = successes + failures
-          failure_rate = (failures / total_runs.to_f) * 100
+          failure_rate = total_runs.zero? ? 0.0 : (failures / total_runs.to_f) * 100
           row_class = if failure_rate >= 75
                         'danger'
                       elsif failure_rate >= 50

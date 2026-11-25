@@ -35,6 +35,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Fix XSS vulnerability (CWE-79) by enabling HAML's escape_html globally; user-controlled values in node names, group names, model names, and URL parameters are now HTML-escaped in all templates (@mattimustang)
 - Fix config search with non-ASCII characters (e.g. UTF-8 or Latin1) and skip binary or missing configs. Fixes: #469 (@janegilv, @robertcheramy)
 - URL-encode node names, groups and models in links and redirects, so that names with characters like `#`, `&`, `+`, `%`, `?` or spaces work (@robertcheramy)
+- Stats page: compute the average run time over the runs kept in the history instead of dividing by the count of all runs, count all failure types (not only `no_connection`) for the last failure and the average, and show a failure rate of 0% instead of NaN for nodes that did not run yet (@robertcheramy)
 
 
 ## [0.18.1 – 2026-01-19]

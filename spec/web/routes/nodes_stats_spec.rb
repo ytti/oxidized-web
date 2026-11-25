@@ -19,8 +19,9 @@ describe Oxidized::API::WebApp do
       stats_ok = mock('Oxidized::Node::Stats')
       stats_ok.stubs(:successes).returns(2)
       stats_ok.stubs(:failures).returns(1)
-      stats_ok.stubs(:get).with(:success).returns([{ end: t, time: 2.0 }, { end: t + 60, time: 4.0 }])
-      stats_ok.stubs(:get).with(:no_connection).returns([{ end: t - 60, time: 1.0 }])
+      stats_ok.stubs(:get).returns(
+        { success: [{ end: t, time: 2.0 }, { end: t + 60, time: 4.0 }], no_connection: [{ end: t - 60, time: 1.0 }] }
+      )
       node_ok = mock('Oxidized::Node')
       node_ok.stubs(:name).returns('sw5')
       node_ok.stubs(:stats).returns(stats_ok)
@@ -28,8 +29,7 @@ describe Oxidized::API::WebApp do
       stats_ko = mock('Oxidized::Node::Stats')
       stats_ko.stubs(:successes).returns(0)
       stats_ko.stubs(:failures).returns(2)
-      stats_ko.stubs(:get).with(:success).returns(nil)
-      stats_ko.stubs(:get).with(:no_connection).returns([{ end: t, time: 3.0 }, { end: t, time: 5.0 }])
+      stats_ko.stubs(:get).returns({ no_connection: [{ end: t, time: 3.0 }, { end: t, time: 5.0 }] })
       node_ko = mock('Oxidized::Node')
       node_ko.stubs(:name).returns('sw6')
       node_ko.stubs(:stats).returns(stats_ko)
