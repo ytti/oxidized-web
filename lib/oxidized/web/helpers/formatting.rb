@@ -6,7 +6,7 @@ module Oxidized
     module Helpers
       # Formatting of times, diffs and text for display
       module Formatting
-        # Taken von Haml 5.0, so it still works in 6.0
+        # Taken from Haml 5.0
         HTML_ESCAPE = { '&' => '&amp;', '<' => '&lt;', '>' => '&gt;', '"' => '&quot;', "'" => '&#39;' }.freeze
         HTML_ESCAPE_ONCE_REGEX = /['"><]|&(?!(?:[a-zA-Z]+|#(?:\d+|[xX][0-9a-fA-F]+));)/
 
@@ -66,6 +66,19 @@ module Oxidized
             end
           end
           { old_diff: old_diff, new_diff: new_diff }
+        end
+
+        # HTML for one side of a diff_view, one <div> per line. The lines are
+        # already HTML-encoded and may contain &nbsp; for alignment.
+        def diff_lines_html(lines)
+          lines.map do |line|
+            css_class = if line.start_with?('+') then 'added'
+                        elsif line.start_with?('-') then 'deleted'
+                        elsif /^@@\s.*@@.*$/.match?(line) then 'diff-index'
+                        end
+            tag = css_class ? "<div class=\"#{css_class}\">" : '<div>'
+            "#{tag}#{escape_once(line)}</div>"
+          end.join
         end
 
         def escape_once(text)

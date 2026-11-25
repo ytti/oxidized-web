@@ -21,6 +21,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Config search returns 400 with an error message on an invalid regular expression instead of an empty result (@bpbp-boop)
 - Config search aborts with 400 when a regular expression takes more than one second on a config, to protect against ReDoS. Needs Ruby >= 3.2 (@robertcheramy)
 - Split webapp.rb into smaller files: helpers in `lib/oxidized/web/helpers/` and routes as Sinatra extensions in `lib/oxidized/web/routes/`. No functional change (@robertcheramy)
+- Replace the HAML templates with ERB templates rendered by Erubi, which escapes HTML by default. The dependency on haml is replaced by erubi. The generated HTML is unchanged apart from whitespace (@robertcheramy)
 
 ### Deprecated
 - Ruby 3.0 and 3.1 are deprecated, removal is planned for June 2028, see [docs/deprecated.md](docs/deprecated.md) (@robertcheramy)

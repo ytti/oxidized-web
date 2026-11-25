@@ -1,0 +1,70 @@
+<div class="row">
+  <div class="col-4">
+    <h4><a href="<%= url_for('/nodes') %>">nodes</a> / Versions for node <b><%= @node %></b></h4>
+  </div>
+  <div class="col-8">
+    <form class="float-end" id="oxButtons">
+      <button class="btn btn-primary" type="button" onclick="history.go();">
+        <i class="bi bi-arrow-clockwise"></i> Refresh page
+      </button>
+    </form>
+  </div>
+</div>
+
+<div class="row">
+  <div class="table-responsive">
+    <table class="table table-sm table-striped table-hover" id="versionsTable">
+      <thead>
+        <tr>
+          <th>Version</th>
+          <th>Date</th>
+          <th>Elapsed time</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% nb = @data.count + 1 %>
+        <% @data.each do |x| %>
+          <% nb -= 1 %>
+          <% params = "node=#{@node}&group=#{@group}&oid=#{x[:oid]}&epoch=#{x[:time].to_i}&num=#{nb}" %>
+          <tr>
+            <td><%= nb %></td>
+            <td class="time" epoch="<%= x[:time].to_i %>"><%= x[:time] %></td>
+            <td><%= time_from_now x[:time] %></td>
+            <td>
+              <a class="link-body-emphasis link-underline-opacity-0" title="configuration"
+                 href="<%= url_for("/node/version/view?#{params}") %>">
+                <i class="bi bi-cloud-download"></i>
+              </a>
+              &nbsp;&nbsp;
+              <% if nb > 1 %>
+                <a class="link-body-emphasis link-underline-opacity-0" title="Compare with previous version"
+                   href="<%= url_for("/node/version/diffs?#{params}") %>">
+                  <i class="bi bi-file-earmark-diff"></i>
+                </a>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+  $(function() {
+    $('#versionsTable').dataTable({
+      "order": [[0, "desc"]],
+      bAutoWidth: false,
+      columnDefs: [
+        {
+          targets: '_all',
+          className: 'text-start'
+        }
+      ],
+      stateSave: true,
+      searching: false
+    });
+  });
+</script>

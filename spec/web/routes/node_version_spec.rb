@@ -13,6 +13,11 @@ describe Oxidized::API::WebApp do
   end
 
   describe 'get /node/version.?:format?' do
+    # a link with the given href and title, independent of the attribute order
+    def link(href, title)
+      /<a(?=[^>]*\bhref="#{Regexp.escape(href)}")(?=[^>]*\btitle="#{Regexp.escape(title)}")[^>]*>/
+    end
+
     before do
       @versions = [
         { oid: "C006", time: Time.parse("2025-02-05 19:49:00 +0100") },
@@ -26,28 +31,27 @@ describe Oxidized::API::WebApp do
 
       get '/node/version?node_full=sw5'
       _(last_response.ok?).must_equal true
-      _(last_response.body.include?(
-          "<tr>\n<td>3</td>\n<td class=\"time\" epoch=\"1738781340\">" \
-          "2025-02-05 19:49:00 +0100</td>\n"
-        )).must_equal true
+      _(last_response.body).must_match(
+        %r{<tr>\s*<td>3</td>\s*<td class="time" epoch="1738781340">2025-02-05 19:49:00 \+0100</td>}
+      )
 
-      _(last_response.body.include?(
-          "href=\"/node/version/view?node=sw5&amp;group=&amp;oid=C006&amp;" \
-          "epoch=1738781340&amp;num=3\" title=\"configuration\">"
-        )).must_equal true
-      _(last_response.body.include?(
-          "href=\"/node/version/diffs?node=sw5&amp;group=&amp;oid=C006&amp;" \
-          "epoch=1738781340&amp;num=3\" title=\"Compare with previous version\">"
-        )).must_equal true
-      _(last_response.body.include?(
-          "href=\"/node/version/view?node=sw5&amp;group=&amp;oid=C001&amp;" \
-          "epoch=1738778460&amp;num=1\" title=\"configuration\">"
-        )).must_equal true
+      _(last_response.body).must_match link(
+        '/node/version/view?node=sw5&amp;group=&amp;oid=C006&amp;epoch=1738781340&amp;num=3',
+        'configuration'
+      )
+      _(last_response.body).must_match link(
+        '/node/version/diffs?node=sw5&amp;group=&amp;oid=C006&amp;epoch=1738781340&amp;num=3',
+        'Compare with previous version'
+      )
+      _(last_response.body).must_match link(
+        '/node/version/view?node=sw5&amp;group=&amp;oid=C001&amp;epoch=1738778460&amp;num=1',
+        'configuration'
+      )
       # Compare to the version previous 1 is not possible, so don't display it
-      _(last_response.body.include?(
-          "href=\"/node/version/diffs?node=sw5&amp;group=&amp;oid=C001&amp;" \
-          "epoch=1738778460&amp;num=1\" title=\"Compare with previous version\">"
-        )).must_equal false
+      _(last_response.body).wont_match link(
+        '/node/version/diffs?node=sw5&amp;group=&amp;oid=C001&amp;epoch=1738778460&amp;num=1',
+        'Compare with previous version'
+      )
     end
 
     it 'fetches all versions of a node with a group' do
@@ -55,10 +59,9 @@ describe Oxidized::API::WebApp do
 
       get '/node/version?node_full=group1/sw5'
       _(last_response.ok?).must_equal true
-      _(last_response.body.include?(
-          "<tr>\n<td>3</td>\n<td class=\"time\" epoch=\"1738781340\">" \
-          "2025-02-05 19:49:00 +0100</td>\n"
-        )).must_equal true
+      _(last_response.body).must_match(
+        %r{<tr>\s*<td>3</td>\s*<td class="time" epoch="1738781340">2025-02-05 19:49:00 \+0100</td>}
+      )
     end
 
     it 'fetches all versions of a node with a group with /' do
@@ -66,10 +69,9 @@ describe Oxidized::API::WebApp do
 
       get '/node/version?node_full=gr/oup1/sw5'
       _(last_response.ok?).must_equal true
-      _(last_response.body.include?(
-          "<tr>\n<td>3</td>\n<td class=\"time\" epoch=\"1738781340\">" \
-          "2025-02-05 19:49:00 +0100</td>\n"
-        )).must_equal true
+      _(last_response.body).must_match(
+        %r{<tr>\s*<td>3</td>\s*<td class="time" epoch="1738781340">2025-02-05 19:49:00 \+0100</td>}
+      )
     end
 
     it 'returns 200 when node_full is absent (no NoMethodError)' do
@@ -89,11 +91,9 @@ describe Oxidized::API::WebApp do
       _(last_response.body.include?('Old configuration of sw5')).must_equal true
       # The test needs to pass in any timezone, so we use Time.parse to get the
       # right string
-      _(last_response.body.include?(
-          "Date of version:\n" \
-          "<span class=\"time\" epoch=\"1738781340\">" \
-          "#{Time.at(1738781340)}</span>"
-        )).must_equal true
+      _(last_response.body).must_match(
+        %r{Date of version:\s*<span class="time" epoch="1738781340">#{Regexp.escape(Time.at(1738781340).to_s)}</span>}
+      )
     end
 
     it 'shows the configuration verbatim in a pre block' do
@@ -184,11 +184,9 @@ describe Oxidized::API::WebApp do
       _(last_response.ok?).must_equal true
       # The test needs to pass in any timezone, so we use Time.parse to get the
       # right string
-      _(last_response.body.include?(
-          "Date of version:\n" \
-          "<span class=\"time\" epoch=\"1738781340\">" \
-          "#{Time.at(1738781340)}</span>"
-        )).must_equal true
+      _(last_response.body).must_match(
+        %r{Date of version:\s*<span class="time" epoch="1738781340">#{Regexp.escape(Time.at(1738781340).to_s)}</span>}
+      )
     end
 
     it 'renders the old and the new version side by side' do

@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
   s.authors           = ['Oxidized Developers']
   s.homepage          = 'https://github.com/ytti/oxidized-web'
   s.summary           = 'sinatra API + webUI for oxidized'
-  s.description       = 'puma+sinatra+haml webUI + REST API for oxidized'
+  s.description       = 'puma+sinatra+erb webUI + REST API for oxidized'
   s.files             = Dir['lib/**/*', 'docs/**/*.md'].select { |f| File.file?(f) } +
                         %w[CHANGELOG.md CONTRIBUTING.md LICENSE README.md]
   s.executables       = %w[]
@@ -38,9 +38,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency 'charlock_holmes',     '~> 0.7'
   s.add_dependency 'emk-sinatra-url-for', '~> 0.2'
-  # HAML 7.0.0 changed default attr_quote from ' to ".
-  # Updating needs the unit tests to be fixed.
-  s.add_dependency 'haml',                '>= 6', '< 8'
+  s.add_dependency 'erubi',               '~> 1.12'
   s.add_dependency 'htmlentities',        '~> 4.3'
   s.add_dependency 'json',                '>= 2.3', '< 4.0'
   # Only depend on a minimal version of Oxidized so we don't need to

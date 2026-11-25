@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%== erb :head %>
+  <body>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary border-bottom border-secondary-subtle mb-4">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="<%= url_for('/') %>">
+          <img src="<%= url_for('/images/oxidizing_40px.png') %>">
+          Oxidized
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#ox-nav"
+                aria-expanded="false" aria-label="Toggle navigation" aria-controls="#ox-nav">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="ox-nav">
+          <ul class="navbar-nav me-auto mb-1">
+            <li class="nav-item">
+              <% stats_page = request.path_info == '/nodes/stats' %>
+              <a class="nav-link<%= ' active' if stats_page %>" aria-current="<%= stats_page ? 'page' : 'false' %>"
+                 href="<%= url_for('/nodes/stats') %>">Stats</a>
+            </li>
+          </ul>
+          <form class="d-flex" role="search" action="<%= url_for('/nodes/conf_search') %>" method="post">
+            <input class="form-control me-2" type="text" name="search_in_conf_textbox"
+                   placeholder="Search in Configs" aria-label="Search in Configs">
+            <button class="btn btn-primary" type="submit">
+              <i class="bi bi-search"></i>
+            </button>
+          </form>
+          <button class="btn btn-outline-secondary ms-2" id="theme-toggle" type="button" aria-label="Toggle theme">
+            <i class="bi bi-moon-fill"></i>
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container-fluid">
+      <%== yield %>
+    </div>
+    <%== erb :footer %>
+  </body>
+</html>
