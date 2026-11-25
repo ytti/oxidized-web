@@ -344,13 +344,15 @@ module Oxidized
       # Each snippet line has +highlights+: [from, to) character ranges of the
       # match on that line.
       def config_search_matches(config, regexp)
+        # most configs do not match; skip building the line index for them
+        return [] unless regexp.match?(config)
+
         lines = config.lines
         return [] if lines.empty?
 
         line_starts = lines.each_with_object([0]) { |line, starts| starts << (starts.last + line.length) }
         lines = lines.map(&:chomp)
         hits = config_search_hits(config, regexp, line_starts)
-        return [] if hits.empty?
 
         highlights = config_search_highlights(hits, lines, line_starts)
         config_search_regions(hits, lines.length).map do |region|
