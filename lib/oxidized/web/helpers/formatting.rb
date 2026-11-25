@@ -27,8 +27,9 @@ module Oxidized
           end
         end
 
-        # method the give diffs in separate view (the old and the new) as in github
-        # nil is inserted on one side to align a line added or removed on the other
+        # Splits a diff into two side-by-side views (old and new), as on GitHub.
+        # nil is inserted on one side to align a line added or removed on the other.
+        # The lines are not HTML-escaped, see diff_lines_html.
         def diff_view(diff)
           old_diff = []
           new_diff = []
