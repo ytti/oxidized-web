@@ -31,66 +31,21 @@
       </thead>
 
       <tbody>
-        <% @data.map do |node, stats| %>
-          <%
-            status = 'no_connection'
-            successes = stats.successes
-            failures = stats.failures
-            avg_success_time = 0
-            avg_failure_time = 0
-            avg_time = 0
-            row_class = ''
-
-            if (success = stats.get(:success))
-              last_success = success.last[:end]
-              avg_success_time = success.collect { |x| x[:time] }
-              avg_success_time = avg_success_time.inject { |sum, x| sum + x }
-              avg_success_time /= successes
-            end
-
-            if (no_connection = stats.get(:no_connection))
-              last_failure = no_connection.last[:end]
-              avg_failure_time = no_connection.collect { |x| x[:time] }
-              avg_failure_time = avg_failure_time.inject { |sum, x| sum + x }
-              avg_failure_time /= failures
-            end
-
-            if avg_success_time > 0 && avg_failure_time > 0
-              avg_time = (avg_success_time + avg_failure_time) / 2
-            elsif avg_success_time > 0
-              avg_time = avg_success_time
-            elsif avg_failure_time > 0
-              avg_time = avg_failure_time
-            end
-            avg_time = "#{'%.2f' % avg_time}" unless avg_time == 'Unknown'
-
-            if last_success && last_failure
-              status = last_success > last_failure ? 'success' : 'no_connection'
-            elsif last_success
-              status = 'success'
-              last_failure = 'never'
-            else
-              last_success = 'never'
-            end
-
-            total_runs = successes + failures
-            failure_rate = (failures / total_runs.to_f) * 100
-            row_class = 'warning' if failure_rate >= 50
-            row_class = 'danger' if failure_rate >= 75
-          %>
-          <tr class="<%= row_class %>">
+        <% @data.each do |node, stats| %>
+          <% s = node_stats_summary(stats) %>
+          <tr class="<%= s[:row_class] %>">
             <td><%= node %></td>
-            <td><%= total_runs %></td>
-            <td><%= failures %></td>
-            <td><%= '%.2f' % failure_rate %>%</td>
-            <td><%= '%.2f' % avg_time %></td>
+            <td><%= s[:total_runs] %></td>
+            <td><%= s[:failures] %></td>
+            <td><%= '%.2f' % s[:failure_rate] %>%</td>
+            <td><%= '%.2f' % s[:avg_time] %></td>
             <td>
-              <div class="<%= status %>" title="<%= status %>">
-                <span style="visibility: hidden"><%= status %></span>
+              <div class="<%= s[:status] %>" title="<%= s[:status] %>">
+                <span style="visibility: hidden"><%= s[:status] %></span>
               </div>
             </td>
-            <td class="time" epoch="<%= last_success.to_i %>"><%= last_success %></td>
-            <td class="time" epoch="<%= last_failure.to_i %>"><%= last_failure %></td>
+            <td class="time" epoch="<%= s[:last_success].to_i %>"><%= s[:last_success] %></td>
+            <td class="time" epoch="<%= s[:last_failure].to_i %>"><%= s[:last_failure] %></td>
           </tr>
         <% end %>
       </tbody>
