@@ -1,6 +1,6 @@
-require_relative '../spec_helper'
+require_relative '../../spec_helper'
 
-# Test helper methods in Oxidized::API::WebApp
+# Test the helper methods of Oxidized::API::Helpers::Formatting
 
 describe Oxidized::API::WebApp do
   include Rack::Test::Methods
