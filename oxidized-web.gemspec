@@ -7,15 +7,18 @@ Gem::Specification.new do |s|
   s.version           = Oxidized::API::WEB_VERSION
   s.licenses          = %w[Apache-2.0]
   s.platform          = Gem::Platform::RUBY
-  s.authors           = ['Saku Ytti', 'Samer Abdel-Hafez']
-  s.email             = %w[saku@ytti.fi sam@arahant.net]
-  s.homepage          = 'http://github.com/ytti/oxidized-web'
+  s.authors           = ['Oxidized Developers']
+  s.homepage          = 'https://github.com/ytti/oxidized-web'
   s.summary           = 'sinatra API + webUI for oxidized'
   s.description       = 'puma+sinatra+haml webUI + REST API for oxidized'
-  s.files             = %x(git ls-files -z -- lib docs README.md CHANGELOG.md LICENSE).split("\x0")
+  s.files             = Dir['lib/**/*', 'docs/**/*.md'].select { |f| File.file?(f) } +
+                        %w[CHANGELOG.md CONTRIBUTING.md LICENSE README.md]
   s.executables       = %w[]
   s.require_path      = 'lib'
 
+  s.metadata['source_code_uri']       = 'https://github.com/ytti/oxidized-web'
+  s.metadata['changelog_uri']         = 'https://github.com/ytti/oxidized-web/blob/master/CHANGELOG.md'
+  s.metadata['bug_tracker_uri']       = 'https://github.com/ytti/oxidized-web/issues'
   s.metadata['rubygems_mfa_required'] = 'true'
 
   # Ruby version strategy

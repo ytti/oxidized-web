@@ -157,8 +157,9 @@ Upload the release branch to github, make a Pull Request for it.
 1. Merge the Pull Request into master with the commit message
    `chore(release): release version 0.xx.y`
 2. `git pull` master
-3. Tag the commit with `git tag -a 0.xx.yy -m "Release 0.xx.yy"` or `rake tag`
-4. Build the gem with ‘rake build’
+3. Tag the commit with `rake tag` (same as `git tag -a 0.xx.yy -m "Release 0.xx.yy"`)
+4. Build the gem with `rake build`. It aborts if the gem would contain files
+   not tracked by git.
 5. Run `git diff` to check if there have been more changes (there shouldn't)
 6. Install an test the gem locally
 ```shell
@@ -180,7 +181,10 @@ Make a release from the tag in github.
 Close the corresponding milestone in github.
 
 ## Release in rubygems
-Push the gem with ‘rake push’
+Push the gem built in the previous steps with `rake push`.
+
+Do not use `rake release` (from bundler): it would tag `v0.xx.yy` instead of
+`0.xx.yy`, so it is disabled in the Rakefile.
 
 You need an account at rubygems which is allowed to push oxidized
 
