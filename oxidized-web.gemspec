@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
   s.homepage          = 'http://github.com/ytti/oxidized-web'
   s.summary           = 'sinatra API + webUI for oxidized'
   s.description       = 'puma+sinatra+haml webUI + REST API for oxidized'
-  s.files             = %x(git ls-files -z).split("\x0")
+  s.files             = %x(git ls-files -z).split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
   s.executables       = %w[]
   s.require_path      = 'lib'
 

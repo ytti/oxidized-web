@@ -102,6 +102,17 @@ at changes you don't understand.
 It is nicer to read in a GUI, so you can use something like
 `git difftool --tool=kdiff3 -d 0.xx.yy` to see it in kdiff3.
 
+## Review deprecations
+Review [deprecated.md](deprecated.md):
+- Remove deprecated features whose planned removal date has passed, and
+  remove them from deprecated.md. Document the removal in CHANGELOG.md.
+- Check that deprecations introduced since the last release are listed, and
+  replace `unreleased` in the column "Since" with the version to be released.
+  To find them, search the changes for "deprecat":
+  `git diff 0.xx.yy | grep -i deprecat`.
+- Check that the planned removal dates are still accurate, and coordinated
+  with oxidized where needed.
+
 ## Update the gem dependencies to the latest versions
 ```
 bundle outdated
