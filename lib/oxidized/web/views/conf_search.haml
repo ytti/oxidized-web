@@ -103,6 +103,9 @@
     $(function() {
       $('#versionsTable').dataTable({
         autoWidth: false,
+        // the search form above searches the configs; a second, client-side
+        // filter on the results would be confusing
+        searching: false,
         "order": [[0, "asc"]]
       });
     });
