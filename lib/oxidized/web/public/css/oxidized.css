@@ -1,5 +1,5 @@
 /* Display status of device in /nodes and /stats */
-.status, .success, .no_connection, .never {
+.status, .success, .no_connection, .fail, .timelimit, .never {
   float: right;
   width: 15px;
   height: 15px;
@@ -12,8 +12,12 @@
   background-color: var(--bs-success);
 }
 
-.no_connection {
+.no_connection, .fail {
   background-color: var(--bs-danger);
+}
+
+.timelimit {
+  background-color: var(--bs-warning);
 }
 
 .never {

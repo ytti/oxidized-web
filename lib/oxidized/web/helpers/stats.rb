@@ -16,22 +16,26 @@ module Oxidized
           failures = stats.failures
           history = stats.get || {}
           success_runs = history[:success] || []
-          failure_runs = history.except(:counter, :success).values.flatten
+          failure_runs = history.except(:counter, :success).flat_map do |status, runs|
+            runs.map { |run| run.merge(status: status.to_s) }
+          end
 
           last_success = success_runs.map { |run| run[:end] }.max
-          last_failure = failure_runs.map { |run| run[:end] }.max
+          last_failure_run = failure_runs.max_by { |run| run[:end] }
+          last_failure = last_failure_run&.dig(:end)
           avg_times = [success_runs, failure_runs].reject(&:empty?).map do |runs|
             runs.sum { |run| run[:time] } / runs.size
           end
           avg_time = avg_times.empty? ? 0 : avg_times.sum / avg_times.size
 
+          # status of the last run: 'success', the failure status or 'never'
           if last_success && last_failure
-            status = last_success > last_failure ? 'success' : 'no_connection'
+            status = last_success > last_failure ? 'success' : last_failure_run[:status]
           elsif last_success
             status = 'success'
             last_failure = 'never'
           else
-            status = 'no_connection'
+            status = last_failure_run ? last_failure_run[:status] : 'never'
             last_success = 'never'
           end
 

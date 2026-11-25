@@ -89,8 +89,21 @@ describe Oxidized::API::WebApp do
 
       result = summary(stats)
       _(result[:last_failure]).must_equal @t
-      _(result[:status]).must_equal 'no_connection'
+      _(result[:status]).must_equal 'fail'
       _(result[:avg_time]).must_equal 2.5
+    end
+
+    it 'shows the status of the last failure' do
+      stats = node_stats(successes: 1, failures: 2,
+                         history: { success: [{ end: @t - 120, time: 1.0 }],
+                                    fail: [{ end: @t - 60, time: 2.0 }],
+                                    timelimit: [{ end: @t, time: 6.0 }] })
+
+      _(summary(stats)[:status]).must_equal 'timelimit'
+
+      stats = node_stats(successes: 0, failures: 1, history: { fail: [{ end: @t, time: 2.0 }] })
+
+      _(summary(stats)[:status]).must_equal 'fail'
     end
 
     it 'handles a node that has not run yet' do
@@ -100,7 +113,7 @@ describe Oxidized::API::WebApp do
       stats.stubs(:get).returns(nil)
 
       _(summary(stats)).must_equal(
-        { total_runs: 0, failures: 0, failure_rate: 0.0, avg_time: 0, status: 'no_connection',
+        { total_runs: 0, failures: 0, failure_rate: 0.0, avg_time: 0, status: 'never',
           last_success: 'never', last_failure: nil, row_class: '' }
       )
     end
