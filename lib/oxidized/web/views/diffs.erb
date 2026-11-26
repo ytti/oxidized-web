@@ -1,0 +1,69 @@
+<% node_full = @info[:group] == '' ? @info[:node] : "#{@info[:group]}/#{@info[:node]}" %>
+<div class="row">
+  <div class="col-4">
+    <h4>
+      <a href="<%= url_for("/node/version?#{url_query(node_full: node_full)}") %>">versions</a>
+      / Diff version <%= @info[:num] %> - <%= @info[:num2] %> for node
+      <b><%= @info[:node] %></b>
+    </h4>
+  </div>
+</div>
+<div class="row">
+  <div class="col-sm-12">
+    Date of version:
+    <span class="time" epoch="<%= @info[:time].to_i %>"><%= @info[:time] %></span>
+  </div>
+</div>
+<div class="row">
+  <div class="col-sm-12">
+    Number of lines changed:
+    <span class="added">added <%= @stat[0] %></span>
+    <span class="deleted">removed <%= @stat[1] %></span>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-sm-6">
+    <% params = url_query(node: @info[:node], group: @info[:group], oid: @info[:oid],
+                          epoch: @info[:time].to_i, num: @info[:num]) %>
+    <form action="<%= url_for("/node/version/diffs?#{params}") %>" method="post" role="form">
+      <div class="form-group">
+        <select class="form-select" id="oid2" name="oid2">
+          <%
+            diff2 = {}
+            num = @oids_dates.count + 1
+            next_id = false
+          %>
+          <% @oids_dates.each do |x| %>
+            <option value="<%= x[:oid] %>">Version <%= num -= 1 %> (<%= time_from_now x[:time] %>)</option>
+            <%
+              if (x[:oid].to_s == @info[:oid2]) || next_id
+                diff2 = { num: num, time: x[:time] }
+                next_id = false
+              elsif (x[:oid].to_s == @info[:oid]) && !@info[:oid2]
+                next_id = true
+              end
+            %>
+          <% end %>
+        </select>
+      </div>
+
+      <button class="btn btn-primary" type="submit">Get Diffs!</button>
+    </form>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-sm-12">
+    <div class="old_version_title">Version <%= diff2[:num] %> (<%= time_from_now diff2[:time] %>)</div>
+    <div class="new_version_title">Version <%= @info[:num] %> (<%= time_from_now @info[:time] %>)</div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-sm-12">
+    <%# .diffs_old/.diffs_new use "white-space: pre": no whitespace between the lines %>
+    <div class="diffs_old"><%== diff_lines_html(@diff[:old_diff]) %></div>
+    <div class="diffs_new"><%== diff_lines_html(@diff[:new_diff]) %></div>
+  </div>
+</div>

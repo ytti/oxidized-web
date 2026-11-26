@@ -12,25 +12,30 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - AGENTS.md: add guidance for AI coding agents, and CONTRIBUTING.md with the AI contribution policy (@robertcheramy)
 
 ### Changed
-- Remove the no longer needed escape_once helper call in node.haml, relying on HAML's global escape_html instead (@robertcheramy)
 - Update web libraries to the latest versions (@robertcheramy)
 - The gem only contains the files needed at runtime and the documentation (`lib/`, `docs/`, README.md, CHANGELOG.md, CONTRIBUTING.md and LICENSE). `rake build` aborts if the gem would contain files not tracked by git, `rake release` is disabled in favor of `rake tag` and `rake push` (@robertcheramy)
 - Encode JSON output with the standard library instead of Sinatra's json helper (@robertcheramy)
-- Set HAML's `attr_quote` explicitly to `"` for stable output across HAML versions (@robertcheramy)
 - Set dependency on Oxidized => 0.38.0 to fix support for puma 8 (@robertcheramy)
 - Config search returns 400 with an error message on an invalid regular expression instead of an empty result (@bpbp-boop)
 - Config search aborts with 400 when a regular expression takes more than one second on a config, to protect against ReDoS. Needs Ruby >= 3.2 (@robertcheramy)
 - Split webapp.rb into smaller files: helpers in `lib/oxidized/web/helpers/` and routes as Sinatra extensions in `lib/oxidized/web/routes/`. No functional change (@robertcheramy)
+- Replace the HAML templates with ERB templates rendered by Erubi, which escapes HTML by default. The dependency on haml is replaced by erubi. The generated HTML is unchanged apart from whitespace (@robertcheramy)
+- Escape device configurations and diffs when rendering the page instead of encoding them in advance, and drop the dependency on htmlentities (@robertcheramy)
+- Show the column "Total Runs" on the stats page by default; it was hidden by a setting copied from the node list (@robertcheramy)
+- Remove the `X-UA-Compatible` meta tag, which only applied to Internet Explorer and was ineffective due to the invalid attribute `meta-equiv` (@robertcheramy)
 
 ### Deprecated
 - Ruby 3.0 and 3.1 are deprecated, removal is planned for June 2028, see [docs/deprecated.md](docs/deprecated.md) (@robertcheramy)
 - The legacy configuration `rest` is listed as deprecated, removal is planned for April 2027 together with oxidized, see [docs/deprecated.md](docs/deprecated.md) (@robertcheramy)
 
 ### Fixed
-- Fix `NoMethodError` when `group=` param is absent from `/node/version/view` and `/node/version/diffs` requests. `params[:group]` was assigned directly to `@info[:group]`; `params[:group]` is now normalized to '' so the HAML templates render the no-group branch instead of crashing with a 500 (@makaiver)
+- Fix `NoMethodError` when `group=` param is absent from `/node/version/view` and `/node/version/diffs` requests. `params[:group]` was assigned directly to `@info[:group]`; `params[:group]` is now normalized to '' so the templates render the no-group branch instead of crashing with a 500 (@makaiver)
 - Fix `NoMethodError` and `RegexpError` crashes on `/node/version`, `/nodes/conf_search` and in `route_parse` when params are missing or contain a malformed regex; return empty results instead of a 500 (@makaiver)
-- Fix XSS vulnerability (CWE-79) by enabling HAML's escape_html globally; user-controlled values in node names, group names, model names, and URL parameters are now HTML-escaped in all templates (@mattimustang)
+- Fix XSS vulnerability (CWE-79) by escaping HTML globally in the templates; user-controlled values in node names, group names, model names, and URL parameters are now HTML-escaped in all templates (@mattimustang)
 - Fix config search with non-ASCII characters (e.g. UTF-8 or Latin1) and skip binary or missing configs. Fixes: #469 (@janegilv, @robertcheramy)
+- URL-encode node names, groups and models in links and redirects, so that names with characters like `#`, `&`, `+`, `%`, `?` or spaces work (@robertcheramy)
+- Stats page: compute the average run time over the runs kept in the history instead of dividing by the count of all runs, count all failure types (not only `no_connection`) for the last failure and the average, and show a failure rate of 0% instead of NaN for nodes that did not run yet (@robertcheramy)
+- Show a colored status box for the statuses `fail` (red) and `timelimit` (orange) in the node list, which had no style. The stats page shows the status of the last failure instead of always `no_connection`, and `never` for nodes that did not run yet (@robertcheramy)
 
 
 ## [0.18.1 – 2026-01-19]

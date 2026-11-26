@@ -1,5 +1,5 @@
 /* Display status of device in /nodes and /stats */
-.status, .success, .no_connection, .never {
+.status, .success, .no_connection, .fail, .timelimit, .never {
   float: right;
   width: 15px;
   height: 15px;
@@ -12,8 +12,12 @@
   background-color: var(--bs-success);
 }
 
-.no_connection {
+.no_connection, .fail {
   background-color: var(--bs-danger);
+}
+
+.timelimit {
+  background-color: var(--bs-warning);
 }
 
 .never {
@@ -36,12 +40,7 @@
   color: var(--bs-warning-text-emphasis);
 }
 
-.diff-empty {
-  background-color: var(--bs-secondary-bg);
-  color: var(--bs-secondary-color);
-}
-
-.diffs, .diffs_old, .diffs_new {
+.diffs_old, .diffs_new {
   background-color: var(--bs-body-bg);
   border: 2px solid var(--bs-border-color);
   border-radius: 5px;

@@ -35,12 +35,7 @@ module Oxidized
             }
 
             the_data = nodes.get_version node, @info[:group].empty? ? nil : @info[:group], @info[:oid]
-            if %w[json text].include?(params[:format])
-              @data = the_data
-            else
-              utf8_encoded_content = convert_to_utf8(the_data)
-              @data = HTMLEntities.new.encode(utf8_encoded_content)
-            end
+            @data = %w[json text].include?(params[:format]) ? the_data : convert_to_utf8(the_data)
             out :version
           end
 
@@ -86,7 +81,8 @@ module Oxidized
 
           # used for diff between 2 distant commit
           app.post '/node/version/diffs' do
-            redirect url_for("/node/version/diffs?node=#{params[:node]}&group=#{params[:group]}&oid=#{params[:oid]}&epoch=#{params[:epoch]}&num=#{params[:num]}&oid2=#{params[:oid2]}")
+            query = url_query(params.slice('node', 'group', 'oid', 'epoch', 'num', 'oid2'))
+            redirect url_for("/node/version/diffs?#{query}")
           end
         end
       end

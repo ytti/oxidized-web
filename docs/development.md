@@ -18,7 +18,7 @@ bundle install
 bundle exec oxidized
 ```
 
-Changes to haml templates are reloaded on the fly. For changes to the ruby
+Changes to ERB templates are reloaded on the fly. For changes to the ruby
 scripts, you have to stop an restart `bundle exec oxidized`.
 
 ## Parallel development between oxidized and oxidized-web

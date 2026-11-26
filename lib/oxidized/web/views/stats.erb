@@ -1,0 +1,84 @@
+<div class="row">
+  <div class="col-4">
+    <h4><a href="<%= url_for('/nodes') %>">nodes</a> / stats</h4>
+  </div>
+  <div class="col-8">
+    <form class="float-end" id="oxButtons">
+      <button class="btn btn-primary" type="button" onclick="history.go();">
+        <i class="bi bi-arrow-clockwise"></i> Refresh page
+      </button>
+      <button class="btn btn-primary" id="resetSearch" type="button">
+        <i class="bi bi-eraser-fill"></i> Reset search
+      </button>
+    </form>
+  </div>
+</div>
+
+<div class="row">
+  <div class="table-responsive">
+    <table class="table table-sm table-striped table-hover" id="statsTable">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Total Runs</th>
+          <th>Total Failures</th>
+          <th>Failure Rate</th>
+          <th>Average Run Time</th>
+          <th>Last Status</th>
+          <th>Last Update</th>
+          <th>Last Failure</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% @data.each do |node, stats| %>
+          <% s = node_stats_summary(stats) %>
+          <tr class="<%= s[:row_class] %>">
+            <td><%= node %></td>
+            <td><%= s[:total_runs] %></td>
+            <td><%= s[:failures] %></td>
+            <td><%= '%.2f' % s[:failure_rate] %>%</td>
+            <td><%= '%.2f' % s[:avg_time] %></td>
+            <td>
+              <div class="<%= s[:status] %>" title="<%= s[:status] %>">
+                <span style="visibility: hidden"><%= s[:status] %></span>
+              </div>
+            </td>
+            <td class="time" epoch="<%= s[:last_success].to_i %>"><%= s[:last_success] %></td>
+            <td class="time" epoch="<%= s[:last_failure].to_i %>"><%= s[:last_failure] %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+  $(function() {
+    var table = $('#statsTable').DataTable({
+      columnDefs: [
+        {
+          /* do not permit to hide Name and Last Status */
+          targets: [0,5],
+          className: 'noVis'
+        },
+      ],
+      buttons:
+        [{
+          extend: 'colvis',
+          columns: ':not(.noVis)',
+          className: 'btn-primary',
+        }],
+      autoWidth: false,
+      lengthMenu: [20, 50, 250, 500, { label: 'All', value: -1 }],
+      stateSave: true,
+    });
+
+    table.buttons(0,0).container().prependTo($('#oxButtons'));
+    table.buttons(0,0).nodes().removeClass('btn-secondary');
+
+    $('#resetSearch').on('click', function() {
+        table.search('').draw();
+    });
+  });
+</script>

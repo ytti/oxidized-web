@@ -1,0 +1,110 @@
+<div class="row">
+  <div class="col-4">
+    <h4>nodes /</h4>
+  </div>
+  <div class="col-8">
+    <form class="float-end" id="oxButtons">
+      <button class="btn btn-primary" type="button" onclick="history.go();">
+        <i class="bi bi-arrow-clockwise"></i> Refresh page
+      </button>
+      <button class="btn btn-primary" id="resetSearch" type="button">
+        <i class="bi bi-eraser-fill"></i> Reset search
+      </button>
+      <button class="btn btn-primary" id="reload" type="button">
+        <i class="bi bi-repeat"></i> Reload node list from source backend
+      </button>
+    </form>
+  </div>
+</div>
+
+<div class="hidden alert" id="flashMessage"></div>
+
+<div class="row">
+  <div class="table-responsive">
+    <table class="table table-sm table-striped table-hover" id="nodesTable">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>IP</th>
+          <th>Model</th>
+          <th>Group</th>
+          <th>Last Status</th>
+          <th>Last Update</th>
+          <th>Last Changed</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% @data.sort_by { |e| e[:name] }.each do |node| %>
+          <tr>
+            <td>
+              <a href="<%= url_for("/node/show/#{url_escape(node[:name])}") %>"><%= node[:name] %></a>
+            </td>
+            <td><%= node[:ip] %></td>
+            <td><a href="<%= url_for("/nodes/model/#{url_escape(node[:model])}") %>"><%= node[:model] %></a></td>
+            <td><a href="<%= url_for("/nodes/group/#{url_escape(node[:group])}") %>"><%= node[:group] %></a></td>
+            <td>
+              <div class="<%= node[:status] %>" title="<%= node[:status] %>">
+                <span style="visibility: hidden"><%= node[:status] %></span>
+              </div>
+            </td>
+            <td class="time" epoch="<%= node[:time].to_i %>"><%= node[:time] %></td>
+            <td class="time" epoch="<%= node[:mtime].to_i %>"><%= node[:mtime] %></td>
+            <td>
+              <a class="link-body-emphasis link-underline-opacity-0" title="Configuration"
+                 href="<%= url_for("/node/fetch/#{url_escape(node[:full_name])}") %>">
+                <i class="bi bi-cloud-download"></i>
+              </a>
+              &nbsp;&nbsp;
+              <a class="link-body-emphasis link-underline-opacity-0" title="Versions"
+                 href="<%= url_for("/node/version?#{url_query(node_full: node[:full_name])}") %>">
+                <i class="bi bi-stack"></i>
+              </a>
+              &nbsp;&nbsp;
+              <a class="link-body-emphasis link-underline-opacity-0" title="Update configuration"
+                 href="<%= url_for("/node/next/#{url_escape(node[:full_name])}") %>">
+                <i class="bi bi-repeat"></i>
+              </a>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+  $(function() {
+    var table = $('#nodesTable').DataTable({
+      columnDefs: [
+        {
+          /* Hide IP address by default */
+          target: 1,
+          visible: false,
+        },
+        {
+          /* do not permit to hide Name and Actions */
+          targets: [0,7],
+          className: 'noVis'
+        },
+      ],
+      buttons:
+        [{
+          extend: 'colvis',
+          columns: ':not(.noVis)',
+          className: 'btn-primary',
+        }],
+      autoWidth: false,
+      lengthMenu: [20, 50, 250, 500, { label: 'All', value: -1 }],
+      stateSave: true,
+    });
+
+    table.buttons(0,0).container().prependTo($('#oxButtons'));
+    table.buttons(0,0).nodes().removeClass('btn-secondary');
+
+    $('#resetSearch').on('click', function() {
+        table.search('').draw();
+    });
+  });
+</script>

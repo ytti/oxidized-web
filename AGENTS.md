@@ -16,7 +16,8 @@ extension and configured in the oxidized configuration under
   puma server.
 - [lib/oxidized/web/webapp.rb](lib/oxidized/web/webapp.rb) – the Sinatra
   application (routes for the web UI and the JSON API).
-- [lib/oxidized/web/views/](lib/oxidized/web/views/) – HAML templates.
+- [lib/oxidized/web/views/](lib/oxidized/web/views/) – ERB templates, rendered
+  by Erubi.
 - [lib/oxidized/web/public/](lib/oxidized/web/public/) – CSS, JavaScript and
   images. `public/weblibs/` contains third-party web libraries copied from
   `node_modules` by `rake weblibs`; do not edit them by hand.
@@ -58,7 +59,9 @@ libraries.
 - Strings: prefer `"double quotes"`; use `'single quotes'` to signal that string
   interpolation is intentionally not wanted (not enforced by RuboCop).
 - Max line length is 120.
-- HAML escapes HTML globally (`escape_html`). Do not bypass it for
+- ERB templates escape HTML globally (`escape_html`): `<%= %>` escapes,
+  `<%== %>` outputs raw HTML. Only use `<%== %>` for HTML that is already
+  escaped (e.g. rendered templates or helpers like `snippet_html`), never for
   user-controlled data (node names, groups, models, URL parameters, device
   configurations); keep the XSS regression tests in
   [spec/web/xss_spec.rb](spec/web/xss_spec.rb) passing.

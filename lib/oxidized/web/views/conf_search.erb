@@ -1,0 +1,138 @@
+<div class="row">
+  <div class="col-8">
+    <h4>
+      <a href="<%= url_for('/nodes') %>">nodes</a>
+      <% if @search_node %>
+        / Matches for <b><%= @search_term %></b> in <b><%= @search_node %></b>
+      <% elsif @search_term.empty? %>
+        / Config search
+      <% else %>
+        / Nodes that contain <b><%= @search_term %></b>
+      <% end %>
+    </h4>
+    <% if @search_node %>
+      <form action="<%= url_for('/nodes/conf_search') %>" method="post">
+        <input type="hidden" name="search_in_conf_textbox" value="<%= @search_term %>">
+        <input type="hidden" name="search_regex_checkbox" value="<%= @regex_search ? 'on' : 'off' %>">
+        <input type="hidden" name="search_case_sensitive_checkbox" value="<%= @case_sensitive_search ? 'on' : 'off' %>">
+        <input type="hidden" name="search_max_matches" value="<%= @max_matches %>">
+        <button class="btn btn-link btn-sm p-0" type="submit">
+          <i class="bi bi-arrow-left"></i>
+          Back to all nodes
+        </button>
+      </form>
+    <% end %>
+  </div>
+  <div class="col-4">
+    <form class="float-end" id="oxButtons">
+      <button class="btn btn-primary" type="button" onclick="history.go();">
+        <i class="bi bi-arrow-clockwise"></i>
+        Refresh page
+      </button>
+    </form>
+  </div>
+</div>
+
+<div class="row mb-3">
+  <div class="col-lg-6">
+    <form action="<%= url_for('/nodes/conf_search') %>" method="post">
+      <div class="input-group">
+        <input class="form-control" type="text" name="search_in_conf_textbox" value="<%= @search_term %>"
+               aria-label="Search in Configs">
+        <button class="btn btn-primary" type="submit">
+          <i class="bi bi-search"></i>
+          Search
+        </button>
+      </div>
+      <div class="form-check mt-1">
+        <input type="hidden" name="search_regex_checkbox" value="off">
+        <input class="form-check-input" id="conf-search-regex" type="checkbox" name="search_regex_checkbox"
+               value="on"<%= ' checked' if @regex_search %>>
+        <label class="form-check-label" for="conf-search-regex">Use regular expression</label>
+      </div>
+      <div class="form-check">
+        <input type="hidden" name="search_case_sensitive_checkbox" value="off">
+        <input class="form-check-input" id="conf-search-case-sensitive" type="checkbox"
+               name="search_case_sensitive_checkbox" value="on"<%= ' checked' if @case_sensitive_search %>>
+        <label class="form-check-label" for="conf-search-case-sensitive">Case sensitive</label>
+      </div>
+      <div class="mt-1">
+        <label class="form-label me-1" for="conf-search-max-matches">Snippets per node</label>
+        <select class="form-select form-select-sm d-inline-block w-auto" id="conf-search-max-matches"
+                name="search_max_matches">
+          <% conf_search_max_matches_options.each do |n| %>
+            <option value="<%= n %>"<%= ' selected' if n == @max_matches %>><%= n.zero? ? 'all' : n %></option>
+          <% end %>
+        </select>
+      </div>
+    </form>
+  </div>
+</div>
+
+<% if @error %>
+  <div class="row">
+    <div class="col-lg-6">
+      <div class="alert alert-danger"><%= @error %></div>
+    </div>
+  </div>
+<% elsif !@search_term.empty? %>
+  <div class="row">
+    <div class="table-responsive">
+      <table class="table table-sm table-striped table-hover" id="versionsTable">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Matches</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <% @nodes_match.each do |x| %>
+            <tr>
+              <td>
+                <a title="configuration" href="<%= url_for("/node/fetch/#{url_escape(x[:full_name])}") %>">
+                  <i class="bi bi-cloud-download"></i>
+                  <%= x[:node] %>
+                </a>
+              </td>
+              <td>
+                <% x[:matches].each do |m| %>
+                  <pre class="border rounded p-2 mb-2"><%== snippet_html(m) %></pre>
+                <% end %>
+                <% hidden = x[:match_count] - x[:matches].length %>
+                <% if hidden.positive? %>
+                  <form class="conf-search-more" action="<%= url_for('/nodes/conf_search') %>" method="post">
+                    <input type="hidden" name="search_in_conf_textbox" value="<%= @search_term %>">
+                    <input type="hidden" name="search_regex_checkbox" value="<%= @regex_search ? 'on' : 'off' %>">
+                    <input type="hidden" name="search_case_sensitive_checkbox"
+                           value="<%= @case_sensitive_search ? 'on' : 'off' %>">
+                    <input type="hidden" name="search_max_matches" value="<%= @max_matches %>">
+                    <input type="hidden" name="search_node" value="<%= x[:full_name] %>">
+                    <span class="text-body-secondary">
+                      … <%= hidden %> more <%= hidden == 1 ? 'snippet' : 'snippets' %>
+                    </span>
+                    <button class="btn btn-link btn-sm p-0 align-baseline" type="submit">
+                      show all <%= x[:match_count] %> in <%= x[:node] %>
+                    </button>
+                  </form>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    $(function() {
+      $('#versionsTable').dataTable({
+        autoWidth: false,
+        // the search form above searches the configs; a second, client-side
+        // filter on the results would be confusing
+        searching: false,
+        "order": [[0, "asc"]]
+      });
+    });
+  </script>
+<% end %>

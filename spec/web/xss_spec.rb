@@ -59,6 +59,18 @@ describe Oxidized::API::WebApp do
       _(last_response.body).must_include('&lt;script&gt;alert(1)&lt;/script&gt;')
       _(last_response.body).wont_include('<script>alert(1)</script>')
     end
+
+    it 'escapes the search term in attributes and text on /nodes/conf_search' do
+      malicious = '"><script>alert(1)</script>'
+      @nodes.expects(:list).returns([])
+
+      post '/nodes/conf_search', search_in_conf_textbox: malicious
+
+      _(last_response.ok?).must_equal true
+      _(last_response.body).must_include('value="&quot;&gt;&lt;script&gt;alert(1)&lt;/script&gt;"')
+      _(last_response.body).must_match(%r{<b>\s*&quot;&gt;&lt;script&gt;alert\(1\)&lt;/script&gt;\s*</b>})
+      _(last_response.body).wont_include('<script>alert(1)</script>')
+    end
   end
 
   describe 'stored XSS prevention' do
@@ -75,6 +87,22 @@ describe Oxidized::API::WebApp do
       _(last_response.body).must_include('&#39;&gt;&lt;script&gt;alert(1)&lt;/script&gt;')
       _(last_response.body).wont_include("'><script>alert(1)</script>")
       _(last_response.body).wont_include('<script>alert(1)</script>')
+    end
+
+    it 'escapes double quotes of node names in attributes on /nodes' do
+      malicious = 'sw" onmouseover="alert(1)'
+      @nodes.expects(:list).returns(
+        [{ name: malicious, ip: '10.0.0.1', model: 'ios',
+           full_name: malicious, group: 'default', time: Time.now, mtime: Time.now }]
+      )
+
+      get '/nodes'
+
+      _(last_response.ok?).must_equal true
+      _(last_response.body).must_include(
+        '<a href="/node/show/sw%22%20onmouseover%3D%22alert%281%29">sw&quot; onmouseover=&quot;alert(1)</a>'
+      )
+      _(last_response.body).wont_include('onmouseover="alert(1)')
     end
 
     it 'escapes node names in /nodes/stats' do

@@ -1,23 +1,23 @@
 require 'sinatra/base'
 require 'sinatra/url_for'
-require 'tilt/haml'
-require 'htmlentities'
+require 'tilt/erubi'
 module Oxidized
   module API
     require 'oxidized/web/version'
     require 'oxidized/web/helpers/conf_search'
     require 'oxidized/web/helpers/formatting'
+    require 'oxidized/web/helpers/stats'
+    require 'oxidized/web/helpers/url'
     require 'oxidized/web/routes/nodes'
     require 'oxidized/web/routes/node'
     require 'oxidized/web/routes/node_version'
 
     class WebApp < Sinatra::Base
-      helpers Sinatra::UrlForHelper, Helpers::ConfSearch, Helpers::Formatting
+      helpers Sinatra::UrlForHelper, Helpers::ConfSearch, Helpers::Formatting, Helpers::Stats,
+              Helpers::Url
       set :public_folder, proc { File.join(root, 'public') }
-      # attr_quote: use double quotes for HTML attributes. Set explicitly so the
-      # output is stable across Haml versions. Haml 7.3.0 changed the default
-      # from "'" to '"' (haml/haml#1188); older versions still default to "'".
-      set :haml, { escape_html: true, attr_quote: '"' }
+      # <%= escapes HTML, <%== outputs it unescaped
+      set :erb, { escape_html: true }
       # Timeout in seconds for the config search regexp, to protect against
       # ReDoS. It limits each single regexp match on a config, not the whole
       # search. When one match takes longer, the whole search is aborted with
@@ -56,7 +56,7 @@ module Oxidized
           content_type :text
           @data
         else
-          haml template, layout: true
+          erb template, layout: true
         end
       end
 

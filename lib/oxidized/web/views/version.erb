@@ -1,0 +1,25 @@
+<% node_full = @info[:group] == '' ? @info[:node] : "#{@info[:group]}/#{@info[:node]}" %>
+<div class="row">
+  <div class="col-8">
+    <h4>
+      <a href="<%= url_for("/node/version?#{url_query(node_full: node_full)}") %>">versions</a>
+      / version <%= @info[:num] %> for node <b><%= @info[:node] %></b>
+    </h4>
+  </div>
+  <div class="col-4">
+    <div class="float-end">
+      <a class="btn btn-primary" href="<%= "#{request.path}?#{request.query_string}&format=text" %>">raw</a>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-sm-12">
+    Date of version: <span class="time" epoch="<%= @info[:time].to_i %>"><%= @info[:time] %></span>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-sm-12">
+    <pre class="bg-body-tertiary border border-secondary-subtle rounded"><%= @data %></pre>
+  </div>
+</div>

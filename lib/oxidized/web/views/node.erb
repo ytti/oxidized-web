@@ -1,0 +1,21 @@
+<div class="row">
+  <div class="col-sm-12">
+    <h4>
+      <a href="<%= url_for('/nodes') %>">nodes</a>
+      <span>/</span> <%= @data[:name] %>&nbsp;
+      <a class="link-body-emphasis link-underline-opacity-0" title="configuration"
+         href="<%= url_for("/node/fetch/#{url_escape(@data[:full_name])}") %>">
+        <i class="bi bi-cloud-download"></i>
+      </a>
+      <a class="link-body-emphasis link-underline-opacity-0" title="versions"
+         href="<%= url_for("/node/version?#{url_query(node_full: @data[:full_name])}") %>">
+        <i class="bi bi-stack"></i>
+      </a>
+      <a class="link-body-emphasis link-underline-opacity-0" title="update"
+         href="<%= url_for("/node/next/#{url_escape(@data[:full_name])}") %>">
+        <i class="bi bi-repeat"></i>
+      </a>
+    </h4>
+    <pre class="bg-body-tertiary border border-secondary-subtle rounded"><code><%= JSON.pretty_generate(@data) %></code></pre>
+  </div>
+</div>
