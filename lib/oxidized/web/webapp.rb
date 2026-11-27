@@ -25,6 +25,12 @@ module Oxidized
       # Regexp timeouts need Ruby >= 3.2; on older Rubies there is no timeout.
       set :conf_search_regexp_timeout, 1.0
 
+      if ENV["BASIC_AUTH_USERNAME"] && ENV["BASIC_AUTH_PASSWORD"]
+        use Rack::Auth::Basic, "Restricted Area" do |username, password|
+          username == ENV["BASIC_AUTH_USERNAME"] and password == ENV["BASIC_AUTH_PASSWORD"]
+        end
+      end
+
       get '/' do
         redirect url_for('/nodes')
       end
